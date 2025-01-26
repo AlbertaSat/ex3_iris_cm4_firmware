@@ -10,7 +10,7 @@
 #define TMP1_GEN_ERROR_FLG (1 << 4)
 #define TMP2_GEN_ERROR_FLG (1 << 5)
 #define TMP3_GEN_ERROR_FLG (1 << 6)
-#define TMP3_GEN_ERROR_FLG (1 << 7)
+#define TMP4_GEN_ERROR_FLG (1 << 7)
 
 // Temperature Specific Error Flags
 #define TMP_I2C_BUS_ERROR_FLG 0

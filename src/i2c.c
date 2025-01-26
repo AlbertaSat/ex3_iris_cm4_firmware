@@ -41,20 +41,24 @@
  * @param devID I2C address of peripheral on bus that user wants to access
  * @return Either ID of I2C bus instance or Error Code if unsuccessful
  */
-int i2c_setup_interface(char *i2cBus, int devID) {
+int i2c_setup_interface(char *i2cBus, uint8_t devID) {
 
     int fd;
+    char logBuffer[255];
+
     //Open I2C bus linux interface
     fd = open(i2cBus, O_RDWR);
     if (fd < 0){
-        log_write(LOG_ERROR, fprintf("Unable to open I2C Bus: %s", strerror(errno)));
+        snprintf(logBuffer, sizeof(logBuffer), "Unable to open I2C Bus: %s", strerror(errno));
+        log_write(LOG_ERROR, logBuffer);
         return I2C_SETUP_ERROR;
     }
 
     //Configure Bus Slave Addr
     if (ioctl(fd, I2C_SLAVE, devID) < 0){
-       log_write(LOG_ERROR, fprintf("Unable to configure peripheral I2C Address: %s", strerror(errno)));
-       return I2C_SETUP_ERROR;
+        snprintf(logBuffer, sizeof(logBuffer), "Unable to configure peripheral I2C Address: %s", strerror(errno));
+        log_write(LOG_ERROR, logBuffer);
+        return I2C_SETUP_ERROR;
     }
     return fd;
 }
@@ -66,7 +70,7 @@ int i2c_setup_interface(char *i2cBus, int devID) {
  * @param devID I2C address of peripheral user wants to access
  * @return Either ID of I2C bus instance or Error Code if unsuccessful
  */
-int i2c_setup(int i2cBus, int devID){
+int i2c_setup(int i2cBus, uint8_t devID){
 
     char *device;
     switch (i2cBus){
@@ -124,6 +128,7 @@ enum IRIS_ERROR i2c_interface (int fd, int rwType, int sizeByte, uint8_t *data){
                 return I2C_WRITE_ERROR;
         }
     }
+    return NO_ERROR;
 }
 
 /**

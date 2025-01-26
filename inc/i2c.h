@@ -8,8 +8,8 @@
 #define I2C_MAX_WRITE 255
 #define I2C_MAX_READ  255
 
-int i2c_setup_interface(char *i2cBus, int devID);
-int i2c_setup(int i2cBus, int devID);
+int i2c_setup_interface(char *i2cBus, uint8_t devID);
+int i2c_setup(int i2cBus, uint8_t devID);
 enum IRIS_ERROR i2c_interface (int fd, int rwType, int sizeByte, uint8_t *data);
 enum IRIS_ERROR i2c_write_reg8 (int fd, int writeNum, uint8_t *data);
 enum IRIS_ERROR i2c_read_reg8 (int fd, int readNum, uint8_t *data);

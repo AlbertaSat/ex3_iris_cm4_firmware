@@ -5,7 +5,7 @@
 #include "error_handler.h"
 #include "usb_hub.h"
 
-
+#include <stdio.h>
 
 
 
@@ -21,7 +21,7 @@ enum IRIS_ERROR usb_hub_setup(void){
     char logBuffer[255];
     enum IRIS_ERROR error = NO_ERROR;
 
-    uint8_t* hubAddr = USB_HUB_I2C_ADDR;
+    uint8_t hubAddr = USB_HUB_I2C_ADDR;
 
     uint8_t regAddr[3] = {CFG_DATA_BYTE_1, CFG_DATA_BYTE_2, CFG_DATA_BYTE_3};
     uint8_t regConfig[3] = {CFG_DATA_BYTE_1_POR, CFG_DATA_BYTE_2_POR, CFG_DATA_BYTE_3_POR};
@@ -69,10 +69,9 @@ enum IRIS_ERROR usb_hub_func_validate(struct gpiod_line_request *gpio_request){
     int bus;
     int ErrorCheck;
     int inputVal;
-    enum IRIS_ERROR error = NO_ERROR;
     char logBuffer[255];
 
-    uint8_t* hubAddr = USB_HUB_I2C_ADDR;
+    uint8_t hubAddr = USB_HUB_I2C_ADDR;
 
     uint8_t regAddr[3] = {CFG_DATA_BYTE_1, CFG_DATA_BYTE_2, CFG_DATA_BYTE_3};
     uint8_t regConfig[3] = {CFG_DATA_BYTE_1_POR, CFG_DATA_BYTE_2_POR, CFG_DATA_BYTE_3_POR};
@@ -135,10 +134,9 @@ enum IRIS_ERROR usb_hub_func_validate(struct gpiod_line_request *gpio_request){
 enum IRIS_ERROR usb_hub_reset_trig(struct gpiod_line_request *gpio_request){
 
     int errorCheck;
-    enum IRIS_ERROR error = NO_ERROR;
     char logBuffer[255];
 
-    uint8_t* hubAddr = USB_HUB_I2C_ADDR;
+    uint8_t hubAddr = USB_HUB_I2C_ADDR;
 
     snprintf(logBuffer, sizeof(logBuffer), "USB-HUB-RESET: Begin reset of USB Hub 0x%02x", hubAddr);
     log_write(LOG_INFO, logBuffer);

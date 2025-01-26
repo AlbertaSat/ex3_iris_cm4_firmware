@@ -6,7 +6,7 @@ typedef enum LOG_LEVEL{
     LOG_DEBUG,
     LOG_WARNING,
     LOG_ERROR
-};
+} LOG_LEVEL;
 
 //! NEED TO AUTOMATE MAKING LOG FILE NAME
 #define LOG_FILE_PATH "TestLog.txt"

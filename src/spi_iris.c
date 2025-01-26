@@ -182,7 +182,7 @@ struct gpiod_line_request *spi_cs_setup(void){
     struct gpiod_line_request *request = NULL;
     char *gpioDev = GPIOCHIP;
     //create request for SPI CS configuration
-    request = gpio_config_input_detect(GPIOCHIP, SPI_CE_N, EDGE_FALL, "IRIS SPI CS");
+    request = gpio_config_input_detect(gpioDev, SPI_CE_N, EDGE_FALL, "IRIS SPI CS");
 
     return request;
 
@@ -199,7 +199,7 @@ int spi_bus_setup(void){
     spi_config_t spi_config_test;
     int spi_dev;
 
-    spi_config_test.mode = SPI_MODE_0;
+    spi_config_test.mode = SPI_MODE_TYP_0;
     spi_config_test.speed = SPI_SPEED;
     spi_config_test.delay = SPI_DELAY;
     spi_config_test.bits_per_word = SPI_BITS_PER_WORD;
@@ -339,9 +339,9 @@ enum IRIS_ERROR spi_file_read(int spi_dev, struct gpiod_line_request **spi_cs_re
  */
 enum IRIS_ERROR spi_bus_test(int spi_dev, struct gpiod_line_request *spi_cs_request, struct gpiod_edge_event_buffer *event_buffer){
 
-    int buffer[9] = SPI_TEST_MSG;
+    uint8_t buffer[9] = SPI_TEST_MSG;
     int rwVal = 0;
-    int rwNum = sizeof(buffer);
+    uint16_t rwNum = sizeof(buffer);
     enum IRIS_ERROR error = NO_ERROR;
 
     log_write(LOG_INFO, "SPI-BUS-TEST: Begin SPI bus test transfer too OBC");

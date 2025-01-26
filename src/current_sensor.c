@@ -46,6 +46,10 @@ enum IRIS_ERROR current_error_code(uint8_t currAddr, enum IRIS_ERROR errorType){
                     return CURR2_SETUP_ERROR;
                 case CURRENT_SENSOR_ADDR_CAM:
                     return CURR3_SETUP_ERROR;
+                default:
+                    // This will only happen if there is a coding error when using this function
+                    log_write(LOG_ERROR, "Invalid Current Sensor ERROR");
+                    exit(EXIT_FAILURE);
             }
 
         case CURR1_VERIFICATION_ERROR:
@@ -56,6 +60,10 @@ enum IRIS_ERROR current_error_code(uint8_t currAddr, enum IRIS_ERROR errorType){
                     return CURR2_VERIFICATION_ERROR;
                 case CURRENT_SENSOR_ADDR_CAM:
                     return CURR3_VERIFICATION_ERROR;
+                default:
+                    // This will only happen if there is a coding error when using this function
+                    log_write(LOG_ERROR, "Invalid Current Sensor ERROR");
+                    exit(EXIT_FAILURE);
             }
         
         case CURR1_RESET_ERROR:
@@ -66,6 +74,10 @@ enum IRIS_ERROR current_error_code(uint8_t currAddr, enum IRIS_ERROR errorType){
                     return CURR2_RESET_ERROR;
                 case CURRENT_SENSOR_ADDR_CAM:
                     return CURR3_RESET_ERROR;
+                default:
+                    // This will only happen if there is a coding error when using this function
+                    log_write(LOG_ERROR, "Invalid Current Sensor ERROR");
+                    exit(EXIT_FAILURE);
             }
 
         case CURR1_VAL_READ_ERROR:
@@ -76,6 +88,10 @@ enum IRIS_ERROR current_error_code(uint8_t currAddr, enum IRIS_ERROR errorType){
                     return CURR2_VAL_READ_ERROR;
                 case CURRENT_SENSOR_ADDR_CAM:
                     return CURR3_VAL_READ_ERROR;
+                default:
+                    // This will only happen if there is a coding error when using this function
+                    log_write(LOG_ERROR, "Invalid Current Sensor ERROR");
+                    exit(EXIT_FAILURE);
             }
 
         case CURR1_LIMIT_ERROR:
@@ -86,7 +102,17 @@ enum IRIS_ERROR current_error_code(uint8_t currAddr, enum IRIS_ERROR errorType){
                     return CURR2_LIMIT_ERROR;
                 case CURRENT_SENSOR_ADDR_CAM:
                     return CURR3_LIMIT_ERROR;
+                default:
+                    // This will only happen if there is a coding error when using this function
+                    log_write(LOG_ERROR, "Invalid Current Sensor ERROR");
+                    exit(EXIT_FAILURE);
             }
+
+        default:
+            // This will only happen if there is a coding error when using this function
+            log_write(LOG_ERROR, "Invalid Current Sensor ERROR");
+            exit(EXIT_FAILURE);
+
     }
 }
 
@@ -103,7 +129,6 @@ enum IRIS_ERROR current_setup(uint8_t currAddr){
     enum IRIS_ERROR error = NO_ERROR;
     char logBuffer[255];
 
-    uint16_t regData[2] = {0};
     uint16_t regConfig[11] = {0};
     uint8_t regAddr[11] = { CURR_REG_CFG,
                             CURR_REG_FLAG_CFG,
@@ -237,7 +262,7 @@ int current_func_validate(uint8_t currAddr){
     }
 
     for(int index = 0; index < sizeof(regAddr); index++){
-        tempErrorCheck = i2c_reg16_write_read(bus, (&regAddr + index), 1, regData);
+        tempErrorCheck = i2c_reg16_write_read(bus, (regAddr + index), 1, regData);
         if (tempErrorCheck == I2C_WR_R_ERROR){
             snprintf(logBuffer, sizeof(logBuffer), "Current Monitor 0x%02x - I2C Reg 0x%02x Read Failed", currAddr, regAddr[index]);
             log_write(LOG_ERROR, logBuffer);
@@ -284,7 +309,7 @@ enum IRIS_ERROR current_monitor_reset_trig(uint8_t currAddr){
     }
 
     //Sets Register reset bit in Current sensor
-    errorCheck = i2c_write_reg16(bus, 1, &reg, 0xB99F);
+    errorCheck = i2c_write_reg16(bus, 1, &reg, (uint16_t)0xB99F);
     if (errorCheck == I2C_WRITE_ERROR){
         snprintf(logBuffer, sizeof(logBuffer), "Current Monitor 0x%02x - I2C Reg 0x%02x Write Failed", currAddr, 0xB99F);
         log_write(LOG_ERROR, logBuffer);
@@ -327,7 +352,7 @@ int current_monitor_status(uint8_t currAddr){
 }
 
 int8_t read_current(uint8_t currAddr){
-
+    return 0;
 }
 
 int read_power(){

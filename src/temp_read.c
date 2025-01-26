@@ -53,6 +53,10 @@ enum IRIS_ERROR temp_error_code(uint8_t tempAddr, enum IRIS_ERROR errorType){
                     return TEMP3_SETUP_ERROR;
                 case TEMP_SENSOR_4_ADDR:
                     return TEMP4_SETUP_ERROR;
+                default:
+                    // This will only happen if there is a coding error when using this function
+                    log_write(LOG_ERROR, "Invalid Temp Sensor ERROR");
+                    exit(EXIT_FAILURE);
             }
 
         case TEMP1_VERIFICATION_ERROR:
@@ -65,6 +69,10 @@ enum IRIS_ERROR temp_error_code(uint8_t tempAddr, enum IRIS_ERROR errorType){
                     return TEMP3_VERIFICATION_ERROR;
                 case TEMP_SENSOR_4_ADDR:
                     return TEMP4_VERIFICATION_ERROR;
+                default:
+                    // This will only happen if there is a coding error when using this function
+                    log_write(LOG_ERROR, "Invalid Temp Sensor ERROR");
+                    exit(EXIT_FAILURE);
             }
 
         case TEMP1_RESET_ERROR:
@@ -77,6 +85,10 @@ enum IRIS_ERROR temp_error_code(uint8_t tempAddr, enum IRIS_ERROR errorType){
                     return TEMP3_RESET_ERROR;
                 case TEMP_SENSOR_4_ADDR:
                     return TEMP4_RESET_ERROR;
+                default:
+                    // This will only happen if there is a coding error when using this function
+                    log_write(LOG_ERROR, "Invalid Temp Sensor ERROR");
+                    exit(EXIT_FAILURE);
             }
 
         case TEMP1_TEMP_READ_ERROR:
@@ -89,6 +101,10 @@ enum IRIS_ERROR temp_error_code(uint8_t tempAddr, enum IRIS_ERROR errorType){
                     return TEMP3_TEMP_READ_ERROR;
                 case TEMP_SENSOR_4_ADDR:
                     return TEMP4_TEMP_READ_ERROR;
+                default:
+                    // This will only happen if there is a coding error when using this function
+                    log_write(LOG_ERROR, "Invalid Temp Sensor ERROR");
+                    exit(EXIT_FAILURE);
             }
 
         case TEMP1_LIMIT_ERROR:
@@ -101,7 +117,15 @@ enum IRIS_ERROR temp_error_code(uint8_t tempAddr, enum IRIS_ERROR errorType){
                     return TEMP3_LIMIT_ERROR;
                 case TEMP_SENSOR_4_ADDR:
                     return TEMP4_LIMIT_ERROR;
+                default:
+                    // This will only happen if there is a coding error when using this function
+                    log_write(LOG_ERROR, "Invalid Temp Sensor ERROR");
+                    exit(EXIT_FAILURE);
             }
+        default:
+            // This will only happen if there is a coding error when using this function
+            log_write(LOG_ERROR, "Invalid Temp Sensor ERROR");
+            exit(EXIT_FAILURE);
     }
 }
 
@@ -207,12 +231,12 @@ enum IRIS_ERROR temp_func_validate(uint8_t tempAddr){
     }
 
     // Check Bit[0:1] of Register
-    if (regData[0] & (0x01) == 0x01){
+    if ((regData[0] & (0x01)) == 0x01){
         snprintf(logBuffer, sizeof(logBuffer), "Temp Sensor 0x%02x - Open Circuit Flag Asserted in Reg 0x%02x", tempAddr, regAddr[0]);
         log_write(LOG_ERROR, logBuffer);
         error = temp_error_code(tempAddr, TEMP1_VERIFICATION_ERROR);
     }
-    if (regData[0] & (0x02) == 0x02){
+    if ((regData[0] & (0x02)) == 0x02){
         snprintf(logBuffer, sizeof(logBuffer), "Temp Sensor 0x%02x - Low Supply Voltage Flag Asserted in Reg 0x%02x", tempAddr, regAddr[0]);
         log_write(LOG_ERROR, logBuffer);
         error = temp_error_code(tempAddr, TEMP1_VERIFICATION_ERROR);
@@ -286,42 +310,42 @@ void temperature_limit(enum IRIS_ERROR *errorBuffer){
     temp4 = read_temperature(TEMP_SENSOR_4_ADDR);
 
     //DETERMINE IF TEMPERATURE LIMIT REACHED
-    if(temp1 != TEMP1_TEMP_READ_ERROR)
+    if(temp1 != TEMP1_TEMP_READ_ERROR){
         if((temp1 > TEMP1_MAX) || (temp1 < TEMP1_MIN)){
             errorBuffer[(1 + errorBuffer[0]++)] = TEMP1_LIMIT_ERROR;
             log_write(LOG_WARNING, "Temp Sensor 1 - Temperature Limit Reached");
         }
-    else{
+    }else{
         errorBuffer[(1 + errorBuffer[0]++)] = TEMP1_TEMP_READ_ERROR;
         log_write(LOG_WARNING, "Temp Sensor 1 - Failed to Read Temperature");
     }
     
-    if(temp2 != TEMP2_TEMP_READ_ERROR)
+    if(temp2 != TEMP2_TEMP_READ_ERROR){
         if((temp2 > TEMP2_MAX) || (temp2 < TEMP2_MIN)){
             errorBuffer[(1 + errorBuffer[0]++)] = TEMP2_LIMIT_ERROR;
             log_write(LOG_WARNING, "Temp Sensor 2 - Temperature Limit Reached");
         }
-    else{
+    }else{
         errorBuffer[(1 + errorBuffer[0]++)] = TEMP2_TEMP_READ_ERROR;
         log_write(LOG_WARNING, "Temp Sensor 2 - Failed to Read Temperature");
     }
     
-    if(temp3 != TEMP3_TEMP_READ_ERROR)
+    if(temp3 != TEMP3_TEMP_READ_ERROR){
         if((temp3 > TEMP3_MAX) || (temp3 < TEMP3_MIN)){
             errorBuffer[(1 + errorBuffer[0]++)] = TEMP3_LIMIT_ERROR;
             log_write(LOG_WARNING, "Temp Sensor 3 - Temperature Limit Reached");
         }
-    else{
+    }else{
         errorBuffer[(1 + errorBuffer[0]++)] = TEMP3_TEMP_READ_ERROR;
         log_write(LOG_WARNING, "Temp Sensor 3 - Failed to Read Temperature");
     }
     
-    if(temp4 != TEMP4_TEMP_READ_ERROR)
+    if(temp4 != TEMP4_TEMP_READ_ERROR){
         if((temp4 > TEMP4_MAX) || (temp4 < TEMP4_MIN)){
             errorBuffer[(1 + errorBuffer[0]++)] = TEMP4_LIMIT_ERROR;
             log_write(LOG_WARNING, "Temp Sensor 4 - Temperature Limit Reached");
         }
-    else{
+    }else{
         errorBuffer[(1 + errorBuffer[0]++)] = TEMP4_TEMP_READ_ERROR;
         log_write(LOG_WARNING, "Temp Sensor 4 - Failed to Read Temperature");
     }

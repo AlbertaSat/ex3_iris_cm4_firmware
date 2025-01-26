@@ -14,7 +14,7 @@ typedef struct {
     uint16_t delay;
 } spi_config_t;
 
-#define SPI_MODE_0 0
+#define SPI_MODE_TYP_0 0
 #define SPI_SPEED 1000000
 #define SPI_DELAY 100
 #define SPI_BITS_PER_WORD 8

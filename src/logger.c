@@ -28,7 +28,6 @@
 //! NEED TO ADD IT SO IT APPENDS FILE
 void log_write(enum LOG_LEVEL logLev, const char *msg){
 
-    char *logMsg = NULL;
     FILE *fp;
 
     //Check if any Logging is Active
