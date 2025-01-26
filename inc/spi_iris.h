@@ -15,7 +15,7 @@ typedef struct {
 } spi_config_t;
 
 #define SPI_MODE_0 0
-#define SPI_SPEED 10000000
+#define SPI_SPEED 1000000
 #define SPI_DELAY 100
 #define SPI_BITS_PER_WORD 8
 #define SPI_DEVICE "/dev/spidev0.0"

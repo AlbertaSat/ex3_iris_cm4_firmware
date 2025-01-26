@@ -36,7 +36,6 @@
 #define CM4_GPIO_7 7
 
 #define SPI_CE_N 8
-//#define SPI_CE_N 17
 #define SPI_MISO 9
 #define SPI_MOSI 10
 #define SPI_SCLK 11
@@ -64,6 +63,22 @@
 
 #define ID_SCL0 45
 #define ID_SDA0 46
+
+#define NO_CHANGE 0xFFFF
+
+#define HUB_HS_IND_DEF 0
+#define HUB_SETUP_IND_DEF 0
+
+typedef struct {
+    uint16_t dir;
+    uint16_t edge;
+    uint16_t drive;
+    uint16_t bias;
+    uint16_t active_low;
+    uint16_t event_clock;
+    uint16_t debounce;
+    uint16_t output;
+} gpio_config_t;
 
 int gpio_config_port(const char *chip_path, int offset, int dir, int outputVal, const char *consumer);
 struct gpiod_line_request *cs_toggle(struct gpiod_line_request *cs_request, int state);

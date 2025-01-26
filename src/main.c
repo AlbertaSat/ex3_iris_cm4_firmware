@@ -6,8 +6,11 @@
 #include "temp_read.h"
 #include "error_handler.h"
 #include "current_sensor.h"
+#include "usb_hub.h"
+#include "watchdog.h"
 
 #include <linux/spi/spidev.h>
+#include <pthread.h>
 
 #include <stdio.h>
 #include <stdint.h>
@@ -28,6 +31,11 @@
 #define MAX_SPI_INIT_ATTEMPTS  5
 #define MAX_GPIO_INIT_ATTEMPTS 5
 #define MAX_TEMP_HOUSE_KEEPING_ATTEMPTS 5
+#define MAX_CURR_HOUSE_KEEPING_ATTEMPTS 5
+#define MAX_USBHUB_INIT_ATTEMPTS 5
+#define SPI_ERROR_TRANSFER_CMD 100
+
+
 //! WORK IN PROGRESS FILE CONTAINING TEST CODE AND UNFINISHED CODE
 
 
@@ -124,10 +132,26 @@
 
 ////////////////////////////////////////////////////////////////////////////////////
 
-int usb_hub_init(enum IRIS_ERROR *errorBuffer){
 
-    return -1;
 
+void usb_hub_init(enum IRIS_ERROR *errorBuffer, struct gpiod_line_request *gpio_request){
+
+    enum IRIS_ERROR errorCheck = NO_ERROR;
+    int loopCounter = 0;
+
+    log_write(LOG_INFO, "USB-HUB-INIT: Started USB Hub Initialization");
+        
+    do{
+        errorCheck = usb_hub_setup();
+        if (errorCheck == NO_ERROR){
+            errorCheck = usb_hub_func_validate(gpio_request);
+        }
+        loopCounter++;
+    }while((errorCheck != NO_ERROR) && (loopCounter < MAX_USBHUB_INIT_ATTEMPTS));
+        
+    if(errorCheck != NO_ERROR){
+        errorBuffer[(1 + errorBuffer[0]++)] = errorCheck;
+    }
 }
 
 void current_monitor_init(enum IRIS_ERROR *errorBuffer){
@@ -212,6 +236,39 @@ void temp_sensor_house_keeping(enum IRIS_ERROR *errorBuffer){
     }
 
     temperature_limit(errorBuffer);
+}
+
+
+void curr_sensor_house_keeping(enum IRIS_ERROR *errorBuffer){
+
+    enum IRIS_ERROR errorCheck = NO_ERROR;
+    int loopCounter = 0;
+    uint8_t currAddr[3] = {CURRENT_SENSOR_ADDR_3V3, CURRENT_SENSOR_ADDR_5V,
+                           CURRENT_SENSOR_ADDR_CAM};
+
+    log_write(LOG_INFO, "CURR-SENSOR-HOUSE-KEEPING: Started Current Sensor Verification");
+
+    for (int x = 0; x < sizeof(currAddr); x++){
+        errorCheck = NO_ERROR;
+        do{
+            errorCheck = current_func_validate(currAddr[x]);
+            if (errorCheck != NO_ERROR){
+                errorCheck = current_monitor_reset_trig(currAddr[x]);
+                if(errorCheck == NO_ERROR){
+                    errorCheck = current_setup(currAddr[x]);
+                }
+            }
+            loopCounter++;
+        }while((errorCheck != NO_ERROR) && (loopCounter < MAX_CURR_HOUSE_KEEPING_ATTEMPTS));
+        
+        if(errorCheck != NO_ERROR){
+            errorBuffer[(1 + errorBuffer[0]++)] = errorCheck;
+        }
+    }
+
+    log_write(LOG_INFO, "CURR-SENSOR-HOUSE-KEEPING: Finished Current Sensor Verification");
+
+    //current_limit(errorBuffer);
 
 }
 
@@ -280,21 +337,20 @@ enum IRIS_ERROR spi_init(int *spi_dev, struct gpiod_line_request **spi_cs_reques
     //     }while((errorCheck == SPI_TEST_ERROR) && (loopCounter < MAX_SPI_INIT_ATTEMPTS));
     // }
 
+    log_write(LOG_INFO, "SPI-INIT: Finished setup attempt of SPI interface with OBC");
+
     return errorCheck;
 }
 
-void system_init(enum IRIS_ERROR *errorBuffer) {
+void system_init(enum IRIS_ERROR *errorBuffer, struct gpiod_line_request *gpio_request) {
 
-    enum IRIS_ERROR temp_errorCode = 0;
-    enum IRIS_ERROR curr_errorCode = 0;
-    enum IRIS_ERROR usbHub_errorCode = 0;
     
     //! ADD FUNCTIONS TO VERIFY THAT INTERFACE / DEVICES ARE WORKING PROPERLY
     temp_sensor_init(errorBuffer);
     current_monitor_init(errorBuffer);
-    usbHub_errorCode = usb_hub_init(errorBuffer);
+    usb_hub_init(errorBuffer, gpio_request);
+    //watchdog_setup();
 
-    int errorOffset = errorBuffer[0];
 
 }
 
@@ -344,17 +400,17 @@ void spi_cmd_loop(int spi_dev,
     
 }
 
-void system_house_keeping(enum IRIS_ERROR *errorBuffer){
+void system_house_keeping(enum IRIS_ERROR *errorBuffer, struct gpiod_line_request *gpio_request){
 
     int errorCode;
     // Temperature Sensor 
     temp_sensor_house_keeping(errorBuffer);
 
     // Current Sensor 
-    // errorCode = current_limit();
+    curr_sensor_house_keeping(errorBuffer);
 
     // USB Hub House Keeping
-    // errorCode = usb_hub_validate();
+    //usb_hub_func_validate(errorBuffer, gpio_request);
 
     // GPIO House Keeping
     // errorCode = gpio_config_validate();
@@ -368,17 +424,27 @@ void iris_error_transfer(int spi_dev,
 
     bool cs_edge = false;
     int errorAmt = errorBuffer[0];
-    
-    
+    int spiError = 0;
+
     cs_edge = signal_edge_detect(spi_cs_request, event_buffer);
 
     if (cs_edge == false){
-        spi_write(spi_dev, errorBuffer ,errorAmt, spi_cs_request);
-        //cmd = rx_buffer;
-        //cmd_extracter(cmd, rx_buffer, SPI_RX_LEN);
-        //cmd_center();
+        errorBuffer[0] = SPI_ERROR_TRANSFER_CMD;
+        spi_write(spi_dev, errorBuffer, errorAmt  + 1, spi_cs_request);
+        if(spiError == -1){
+            return 0; //ADD ERROR CODE
+        }
     }
 }
+
+void printNumber(){
+
+    int x = 0;
+    while(true){
+        printf("TEST: %d\n", x++);
+    }
+}
+
 
 //! THE MAIN MAIN FUNCTION
 void main(void){
@@ -394,17 +460,21 @@ void main(void){
     int spi_dev = 0;
     char arg[5][100] = {0};
     char cmd[100] = {0};
-    
+    pthread_t id; 
+    int state = NULL;
     char *file_path = "/home/iris/Iris_Firmware/PXL_20250115_191406313.RAW-02.ORIGINAL.dng";
     //char *file_path = "/home/iris/Iris_Firmware/Testing_What.txt";
     //char *file_path = "/home/iris/Iris_Firmware/Testing_Main.txt";
     //! ADD ERROR RESPONSE TO FAILURE TO SETUP SPI_INTERFACE
+    //pthread_create(&id, NULL, printNumber, &arg);
+    
     spiInitError = spi_init(&spi_dev, &spi_cs_request, &event_buffer);
-    //gpio_request = gpio_init(event_buffer);
+    gpio_request = gpio_init(event_buffer);
 
     // System Init
-    //* system_init(errorBuffer);
-    //! MAYBE ADD RESET FOR COLD + HOT    
+    //system_init(errorBuffer, gpio_request);
+
+    //! MAYBE ADD RESET FOR COLD + HOT
     //! MAYBE ADD AN ERROR STATE WHICH WAIT X AMOUNT OF TIME UNTIL A COMMAND IS RECEIVED FROM OC BEFORE DOING A RESTARBT
     //! ADD WATCHDOG
     while(true){
@@ -415,15 +485,62 @@ void main(void){
             //* either succeeds or OBC resets IRIS
             spiInitError = spi_init(&spi_dev, &spi_cs_request, &event_buffer);
         }else{
-            //spi_cmd_loop(spi_dev, spi_cs_request, event_buffer);
-            spi_file_write(spi_dev, &spi_cs_request, file_path, &event_buffer);
-            //spi_file_read(spi_dev, &spi_cs_request, &event_buffer, file_path);
-            //system_house_keeping();
-            //iris_error_transfer();
+            spi_cmd_loop(spi_dev, spi_cs_request, event_buffer);
+            //spi_read(spi_dev, cmd, 255, spi_cs_request);
+            //system_house_keeping(errorBuffer, gpio_request);
+            //iris_error_transfer(spi_dev, spi_cs_request, event_buffer, errorBuffer);
         }
     }
 
 }
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+// void main(void){
+//     struct gpiod_line_request *gpio_request = NULL;
+//     struct gpiod_line_request *spi_cs_request = NULL;
+//     struct gpiod_edge_event_buffer *event_buffer = NULL;
+    
+//     struct gpiod_line_request *clk_request = NULL;
+
+//     enum IRIS_ERROR spiInitError = NO_ERROR;
+//     enum IRIS_ERROR errorBuffer[256] = {NO_ERROR};
+    
+//     int spi_dev = 0;
+//     char arg[5][100] = {0};
+//     char cmd[100] = {0};
+    
+//     char *file_path = "/home/iris/Iris_Firmware/PXL_20250115_191406313.RAW-02.ORIGINAL.dng";
+//     //char *file_path = "/home/iris/Iris_Firmware/Testing_What.txt";
+//     //char *file_path = "/home/iris/Iris_Firmware/Testing_Main.txt";
+//     //! ADD ERROR RESPONSE TO FAILURE TO SETUP SPI_INTERFACE
+//     spiInitError = spi_init(&spi_dev, &spi_cs_request, &event_buffer);
+//     //gpio_request = gpio_init(event_buffer);
+
+//     // System Init
+//     //* system_init(errorBuffer);
+//     //! MAYBE ADD RESET FOR COLD + HOT    
+//     //! MAYBE ADD AN ERROR STATE WHICH WAIT X AMOUNT OF TIME UNTIL A COMMAND IS RECEIVED FROM OC BEFORE DOING A RESTARBT
+//     //! ADD WATCHDOG
+//     while(true){
+
+//         if (spiInitError != NO_ERROR) {
+//             //! MAYBE ADD SOME WATCHDOG ON IRIS THAT RESET ITSELF
+//             //* If SPI BUS doesn't initialize than we will continue to try until it
+//             //* either succeeds or OBC resets IRIS
+//             spiInitError = spi_init(&spi_dev, &spi_cs_request, &event_buffer);
+//         }else{
+//             //spi_cmd_loop(spi_dev, spi_cs_request, event_buffer);
+//             spi_file_write(spi_dev, &spi_cs_request, file_path, &event_buffer);
+//             //spi_file_read(spi_dev, &spi_cs_request, &event_buffer, file_path);
+//             //system_house_keeping();
+//             //iris_error_transfer();
+//         }
+//     }
+
+// }
 
 ////////////////////////////////////////////////////////////////////////////////////
 // void main(void){
