@@ -44,7 +44,7 @@
                           TMP_REG_CFG_2_POR}
 
 #define TEMP_REG_ADDR {TMP_REG_CFG_1, \
-                       TMP_REG_CFG_2}      
+                       TMP_REG_CFG_2}
 
 //Temperature I2C Address
 #define TEMP_SENSOR_1_ADDR 0x4C
@@ -59,10 +59,10 @@
 #define TEMP4_MAX 100
 
 //Min Temperatures
-#define TEMP1_MIN -35
-#define TEMP2_MIN -35
-#define TEMP3_MIN -35
-#define TEMP4_MIN -35
+#define TEMP1_MIN -50
+#define TEMP2_MIN -50
+#define TEMP3_MIN -50
+#define TEMP4_MIN -50
 
 enum IRIS_ERROR temp_error_code(uint8_t tempAddr, enum IRIS_ERROR errorType);
 enum IRIS_ERROR temp_setup(uint8_t tempAddr);

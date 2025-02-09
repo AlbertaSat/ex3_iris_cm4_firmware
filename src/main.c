@@ -174,6 +174,7 @@ void current_monitor_init(enum IRIS_ERROR *errorBuffer){
             loopCounter++;
         }while((errorCheck != NO_ERROR) && (loopCounter < MAX_CURR_INIT_ATTEMPTS));
         
+        loopCounter = 0;
         if(errorCheck != NO_ERROR){
             errorBuffer[(1 + errorBuffer[0]++)] = errorCheck;
         }
@@ -200,6 +201,7 @@ void temp_sensor_init(enum IRIS_ERROR *errorBuffer){
             loopCounter++;
         }while((errorCheck != NO_ERROR) && (loopCounter < MAX_TEMP_INIT_ATTEMPTS));
         
+        loopCounter = 0;
         if(errorCheck != NO_ERROR){
             errorBuffer[(1 + errorBuffer[0]++)] = errorCheck;
         }
@@ -348,7 +350,7 @@ void system_init(enum IRIS_ERROR *errorBuffer, struct gpiod_line_request *gpio_r
     //! ADD FUNCTIONS TO VERIFY THAT INTERFACE / DEVICES ARE WORKING PROPERLY
     temp_sensor_init(errorBuffer);
     current_monitor_init(errorBuffer);
-    usb_hub_init(errorBuffer, gpio_request);
+    //usb_hub_init(errorBuffer, gpio_request);
     //watchdog_setup();
 
 
@@ -457,6 +459,8 @@ void main(void){
     enum IRIS_ERROR spiInitError = NO_ERROR;
     enum IRIS_ERROR errorBuffer[256] = {NO_ERROR};
     
+    uint8_t errorCheck = 0;
+
     int spi_dev = 0;
     char arg[5][100] = {0};
     char cmd[100] = {0};
@@ -471,9 +475,19 @@ void main(void){
     spiInitError = spi_init(&spi_dev, &spi_cs_request, &event_buffer);
     gpio_request = gpio_init(event_buffer);
 
-    // System Init
-    //system_init(errorBuffer, gpio_request);
 
+    errorCheck = gpiod_line_request_set_value(gpio_request, PWR_5V_CAM_EN, GPIOD_LINE_VALUE_ACTIVE);
+    if (errorCheck == -1){
+        log_write(LOG_ERROR, "USB-HUB-RESET: Failed to deassert reset GPIO USB Hub");
+        return USB_HUB_RESET_ERROR;
+    }
+
+    IRIS_ERROR temp = 0;
+    // System Init
+    //usb_hub_func_TESTING(gpio_request);
+    system_init(errorBuffer, gpio_request);
+
+    //usb_hub_func_TESTING(gpio_request);
     //! MAYBE ADD RESET FOR COLD + HOT
     //! MAYBE ADD AN ERROR STATE WHICH WAIT X AMOUNT OF TIME UNTIL A COMMAND IS RECEIVED FROM OC BEFORE DOING A RESTARBT
     //! ADD WATCHDOG
@@ -485,7 +499,21 @@ void main(void){
             //* either succeeds or OBC resets IRIS
             spiInitError = spi_init(&spi_dev, &spi_cs_request, &event_buffer);
         }else{
-            spi_cmd_loop(spi_dev, spi_cs_request, event_buffer);
+            read_bus_voltage(CURRENT_SENSOR_ADDR_3V3);
+            read_current(CURRENT_SENSOR_ADDR_3V3);
+            read_power(CURRENT_SENSOR_ADDR_3V3);
+
+            read_bus_voltage(CURRENT_SENSOR_ADDR_5V);
+            read_current(CURRENT_SENSOR_ADDR_5V);
+            read_power(CURRENT_SENSOR_ADDR_5V);
+            read_pk_power(CURRENT_SENSOR_ADDR_5V);
+
+            read_bus_voltage(CURRENT_SENSOR_ADDR_CAM);
+            read_current(CURRENT_SENSOR_ADDR_CAM);
+            read_power(CURRENT_SENSOR_ADDR_CAM);
+
+            temperature_limit(errorBuffer);
+            //spi_cmd_loop(spi_dev, spi_cs_request, event_buffer);
             //spi_read(spi_dev, cmd, 255, spi_cs_request);
             //system_house_keeping(errorBuffer, gpio_request);
             //iris_error_transfer(spi_dev, spi_cs_request, event_buffer, errorBuffer);

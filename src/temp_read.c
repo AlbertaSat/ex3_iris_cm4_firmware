@@ -208,7 +208,7 @@ enum IRIS_ERROR temp_func_validate(uint8_t tempAddr){
 
     //Reads and verifies the configuration registers of the Temp Sensor
     for(int index = 0; index < sizeof(regAddr); index++){
-        tempErrorCheck = i2c_reg8_write_read(bus, (&regAddr + index), 1, regData);
+        tempErrorCheck = i2c_reg8_write_read(bus, (regAddr + index), 1, regData);
         if (tempErrorCheck == I2C_WR_R_ERROR){
             snprintf(logBuffer, sizeof(logBuffer), "Temp Sensor 0x%02x - I2C Reg 0x%02x Read Failed", tempAddr, regAddr[index]);
             log_write(LOG_ERROR, logBuffer);
@@ -304,6 +304,8 @@ void temperature_limit(enum IRIS_ERROR *errorBuffer){
     int8_t temp3 = 0;
     int8_t temp4 = 0;
 
+    char logBuffer[255];
+
     temp1 = read_temperature(TEMP_SENSOR_1_ADDR);
     temp2 = read_temperature(TEMP_SENSOR_2_ADDR);
     temp3 = read_temperature(TEMP_SENSOR_3_ADDR);
@@ -313,7 +315,8 @@ void temperature_limit(enum IRIS_ERROR *errorBuffer){
     if(temp1 != TEMP1_TEMP_READ_ERROR){
         if((temp1 > TEMP1_MAX) || (temp1 < TEMP1_MIN)){
             errorBuffer[(1 + errorBuffer[0]++)] = TEMP1_LIMIT_ERROR;
-            log_write(LOG_WARNING, "Temp Sensor 1 - Temperature Limit Reached");
+            snprintf(logBuffer, sizeof(logBuffer), "TEMP-LIMIT: Temperature 1 Limit Reached - Measured %dC", temp1);
+            log_write(LOG_WARNING, logBuffer);
         }
     }else{
         errorBuffer[(1 + errorBuffer[0]++)] = TEMP1_TEMP_READ_ERROR;
@@ -323,7 +326,8 @@ void temperature_limit(enum IRIS_ERROR *errorBuffer){
     if(temp2 != TEMP2_TEMP_READ_ERROR){
         if((temp2 > TEMP2_MAX) || (temp2 < TEMP2_MIN)){
             errorBuffer[(1 + errorBuffer[0]++)] = TEMP2_LIMIT_ERROR;
-            log_write(LOG_WARNING, "Temp Sensor 2 - Temperature Limit Reached");
+            snprintf(logBuffer, sizeof(logBuffer), "TEMP-LIMIT: Temperature 2 Limit Reached - Measured %dC", temp2);
+            log_write(LOG_WARNING, logBuffer);
         }
     }else{
         errorBuffer[(1 + errorBuffer[0]++)] = TEMP2_TEMP_READ_ERROR;
@@ -333,7 +337,8 @@ void temperature_limit(enum IRIS_ERROR *errorBuffer){
     if(temp3 != TEMP3_TEMP_READ_ERROR){
         if((temp3 > TEMP3_MAX) || (temp3 < TEMP3_MIN)){
             errorBuffer[(1 + errorBuffer[0]++)] = TEMP3_LIMIT_ERROR;
-            log_write(LOG_WARNING, "Temp Sensor 3 - Temperature Limit Reached");
+            snprintf(logBuffer, sizeof(logBuffer), "TEMP-LIMIT: Temperature 3 Limit Reached - Measured %dC", temp3);
+            log_write(LOG_WARNING, logBuffer);
         }
     }else{
         errorBuffer[(1 + errorBuffer[0]++)] = TEMP3_TEMP_READ_ERROR;
@@ -343,7 +348,8 @@ void temperature_limit(enum IRIS_ERROR *errorBuffer){
     if(temp4 != TEMP4_TEMP_READ_ERROR){
         if((temp4 > TEMP4_MAX) || (temp4 < TEMP4_MIN)){
             errorBuffer[(1 + errorBuffer[0]++)] = TEMP4_LIMIT_ERROR;
-            log_write(LOG_WARNING, "Temp Sensor 4 - Temperature Limit Reached");
+            snprintf(logBuffer, sizeof(logBuffer), "TEMP-LIMIT: Temperature 4 Limit Reached - Measured %dC", temp4);
+            log_write(LOG_WARNING, logBuffer);
         }
     }else{
         errorBuffer[(1 + errorBuffer[0]++)] = TEMP4_TEMP_READ_ERROR;
@@ -400,4 +406,3 @@ int read_temperature(uint8_t tempAddr){
     i2c_close(bus);
     return convert_temp_read(*regData);
 }
-

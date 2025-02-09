@@ -240,8 +240,18 @@ enum IRIS_ERROR i2c_read_reg16 (int fd, int readNum, uint16_t *data){
  */
 enum IRIS_ERROR i2c_reg8_write_read (int fd, uint8_t *reg, int readNum, uint8_t *data){
 
-    i2c_write_reg8 (fd, 1, reg);
-    return i2c_read_reg8 (fd, readNum, data);
+    IRIS_ERROR error = NO_ERROR;
+    error = i2c_write_reg8 (fd, 1, reg);
+    if (error == NO_ERROR){
+        error = i2c_read_reg8 (fd, readNum, data);
+    }
+    
+    if(error == I2C_READ_ERROR || error == I2C_WRITE_ERROR){
+        return I2C_WR_R_ERROR;
+    }else{
+        return NO_ERROR;
+    }
+    
 
 }
 
@@ -257,9 +267,18 @@ enum IRIS_ERROR i2c_reg8_write_read (int fd, uint8_t *reg, int readNum, uint8_t 
  */
 enum IRIS_ERROR i2c_reg16_write_read (int fd, uint8_t *reg, int readNum, uint16_t *data){
 
-    i2c_write_reg8 (fd, 1, reg);
-    return i2c_read_reg16 (fd, readNum, data);
+    IRIS_ERROR error = NO_ERROR;
+    error = i2c_write_reg8 (fd, 1, reg);
+    if(error == NO_ERROR){
+        error = i2c_read_reg16 (fd, readNum, data);
+    }
 
+    if(error == I2C_READ_ERROR || error == I2C_WRITE_ERROR){
+        return I2C_WR_R_ERROR;
+    }else{
+        return NO_ERROR;
+    }
+    
 }
 
 /**
