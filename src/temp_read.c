@@ -297,7 +297,7 @@ enum IRIS_ERROR temp_reset_trig(uint8_t tempAddr){
  * 
  * @param errorBuffer Pointer to Buffer containing any errors that occur during operation
  */
-void temperature_limit(enum IRIS_ERROR *errorBuffer){
+void temperature_limit(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount){
 
     int8_t temp1 = 0;
     int8_t temp2 = 0;
@@ -314,45 +314,45 @@ void temperature_limit(enum IRIS_ERROR *errorBuffer){
     //DETERMINE IF TEMPERATURE LIMIT REACHED
     if(temp1 != TEMP1_TEMP_READ_ERROR){
         if((temp1 > TEMP1_MAX) || (temp1 < TEMP1_MIN)){
-            errorBuffer[(1 + errorBuffer[0]++)] = TEMP1_LIMIT_ERROR;
+            errorBuffer[(*errorCount)++] = TEMP1_LIMIT_ERROR;
             snprintf(logBuffer, sizeof(logBuffer), "TEMP-LIMIT: Temperature 1 Limit Reached - Measured %dC", temp1);
             log_write(LOG_WARNING, logBuffer);
         }
     }else{
-        errorBuffer[(1 + errorBuffer[0]++)] = TEMP1_TEMP_READ_ERROR;
+        errorBuffer[(*errorCount)++] = TEMP1_TEMP_READ_ERROR;
         log_write(LOG_WARNING, "Temp Sensor 1 - Failed to Read Temperature");
     }
     
     if(temp2 != TEMP2_TEMP_READ_ERROR){
         if((temp2 > TEMP2_MAX) || (temp2 < TEMP2_MIN)){
-            errorBuffer[(1 + errorBuffer[0]++)] = TEMP2_LIMIT_ERROR;
+            errorBuffer[(*errorCount)++] = TEMP2_LIMIT_ERROR;
             snprintf(logBuffer, sizeof(logBuffer), "TEMP-LIMIT: Temperature 2 Limit Reached - Measured %dC", temp2);
             log_write(LOG_WARNING, logBuffer);
         }
     }else{
-        errorBuffer[(1 + errorBuffer[0]++)] = TEMP2_TEMP_READ_ERROR;
+        errorBuffer[(*errorCount)++] = TEMP2_TEMP_READ_ERROR;
         log_write(LOG_WARNING, "Temp Sensor 2 - Failed to Read Temperature");
     }
     
     if(temp3 != TEMP3_TEMP_READ_ERROR){
         if((temp3 > TEMP3_MAX) || (temp3 < TEMP3_MIN)){
-            errorBuffer[(1 + errorBuffer[0]++)] = TEMP3_LIMIT_ERROR;
+            errorBuffer[(*errorCount)++] = TEMP3_LIMIT_ERROR;
             snprintf(logBuffer, sizeof(logBuffer), "TEMP-LIMIT: Temperature 3 Limit Reached - Measured %dC", temp3);
             log_write(LOG_WARNING, logBuffer);
         }
     }else{
-        errorBuffer[(1 + errorBuffer[0]++)] = TEMP3_TEMP_READ_ERROR;
+        errorBuffer[(*errorCount)++] = TEMP3_TEMP_READ_ERROR;
         log_write(LOG_WARNING, "Temp Sensor 3 - Failed to Read Temperature");
     }
     
     if(temp4 != TEMP4_TEMP_READ_ERROR){
         if((temp4 > TEMP4_MAX) || (temp4 < TEMP4_MIN)){
-            errorBuffer[(1 + errorBuffer[0]++)] = TEMP4_LIMIT_ERROR;
+            errorBuffer[(*errorCount)++] = TEMP4_LIMIT_ERROR;
             snprintf(logBuffer, sizeof(logBuffer), "TEMP-LIMIT: Temperature 4 Limit Reached - Measured %dC", temp4);
             log_write(LOG_WARNING, logBuffer);
         }
     }else{
-        errorBuffer[(1 + errorBuffer[0]++)] = TEMP4_TEMP_READ_ERROR;
+        errorBuffer[(*errorCount)++] = TEMP4_TEMP_READ_ERROR;
         log_write(LOG_WARNING, "Temp Sensor 4 - Failed to Read Temperature");
     }
 

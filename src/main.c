@@ -19,6 +19,7 @@
 #include <unistd.h>
 #include <errno.h>
 
+#include <time.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -132,9 +133,20 @@
 
 ////////////////////////////////////////////////////////////////////////////////////
 
+double get_time_seconds() {
+    struct timespec ts;
+    clock_gettime(CLOCK_REALTIME, &ts);
+    return ts.tv_sec + ts.tv_nsec / 1.0e9;
+}
 
+void set_time_seconds(double setTime) {
+    struct timespec ts;
+    ts.tv_sec = setTime;
+    ts.tv_nsec = 0;
+    clock_settime(CLOCK_REALTIME, &ts);
+}
 
-void usb_hub_init(enum IRIS_ERROR *errorBuffer, struct gpiod_line_request *gpio_request){
+void usb_hub_init(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount, struct gpiod_line_request *gpio_request){
 
     enum IRIS_ERROR errorCheck = NO_ERROR;
     int loopCounter = 0;
@@ -150,11 +162,11 @@ void usb_hub_init(enum IRIS_ERROR *errorBuffer, struct gpiod_line_request *gpio_
     }while((errorCheck != NO_ERROR) && (loopCounter < MAX_USBHUB_INIT_ATTEMPTS));
         
     if(errorCheck != NO_ERROR){
-        errorBuffer[(1 + errorBuffer[0]++)] = errorCheck;
+        errorBuffer[(*errorCount)++] = errorCheck;
     }
 }
 
-void current_monitor_init(enum IRIS_ERROR *errorBuffer){
+void current_monitor_init(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount){
 
     enum IRIS_ERROR errorCheck = NO_ERROR;
     int loopCounter = 0;
@@ -176,13 +188,13 @@ void current_monitor_init(enum IRIS_ERROR *errorBuffer){
         
         loopCounter = 0;
         if(errorCheck != NO_ERROR){
-            errorBuffer[(1 + errorBuffer[0]++)] = errorCheck;
+            errorBuffer[(*errorCount)++] = errorCheck;
         }
     }
 
 }
 
-void temp_sensor_init(enum IRIS_ERROR *errorBuffer){
+void temp_sensor_init(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount){
 
     enum IRIS_ERROR errorCheck = NO_ERROR;
     int loopCounter = 0;
@@ -203,20 +215,21 @@ void temp_sensor_init(enum IRIS_ERROR *errorBuffer){
         
         loopCounter = 0;
         if(errorCheck != NO_ERROR){
-            errorBuffer[(1 + errorBuffer[0]++)] = errorCheck;
+            errorBuffer[(*errorCount)++] = errorCheck;
         }
     }
 
 }
 
 
-void temp_sensor_house_keeping(enum IRIS_ERROR *errorBuffer){
+void temp_sensor_house_keeping(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount){
 
     enum IRIS_ERROR errorCheck = NO_ERROR;
     int loopCounter = 0;
     uint8_t tempAddr[4] = {TEMP_SENSOR_1_ADDR, TEMP_SENSOR_2_ADDR,
                            TEMP_SENSOR_3_ADDR, TEMP_SENSOR_4_ADDR};
 
+    log_write(LOG_INFO, "TEMP-SENSOR-HOUSE-KEEPING: Started Temperature Sensor Houekeeping");
     log_write(LOG_INFO, "TEMP-SENSOR-HOUSE-KEEPING: Started Temperature Sensor Verification");
 
     for (int x = 0; x < sizeof(tempAddr); x++){
@@ -233,21 +246,27 @@ void temp_sensor_house_keeping(enum IRIS_ERROR *errorBuffer){
         }while((errorCheck != NO_ERROR) && (loopCounter < MAX_TEMP_HOUSE_KEEPING_ATTEMPTS));
         
         if(errorCheck != NO_ERROR){
-            errorBuffer[(1 + errorBuffer[0]++)] = errorCheck;
+            errorBuffer[(*errorCount)++] = errorCheck;
         }
     }
 
-    temperature_limit(errorBuffer);
+    log_write(LOG_INFO, "TEMP-SENSOR-HOUSE-KEEPING: Finished Temperature Sensor Verification");
+
+    temperature_limit(errorBuffer, errorCount);
+
+    log_write(LOG_INFO, "TEMP-SENSOR-HOUSE-KEEPING: Finished Temperature Sensor Housekeeping");
+
 }
 
 
-void curr_sensor_house_keeping(enum IRIS_ERROR *errorBuffer){
+void curr_sensor_house_keeping(enum IRIS_ERROR *errorBuffer, uint16_t* errorCount){
 
     enum IRIS_ERROR errorCheck = NO_ERROR;
     int loopCounter = 0;
     uint8_t currAddr[3] = {CURRENT_SENSOR_ADDR_3V3, CURRENT_SENSOR_ADDR_5V,
                            CURRENT_SENSOR_ADDR_CAM};
 
+    log_write(LOG_INFO, "CURR-SENSOR-HOUSE-KEEPING: Started Current Sensor Housekeeping");
     log_write(LOG_INFO, "CURR-SENSOR-HOUSE-KEEPING: Started Current Sensor Verification");
 
     for (int x = 0; x < sizeof(currAddr); x++){
@@ -264,18 +283,20 @@ void curr_sensor_house_keeping(enum IRIS_ERROR *errorBuffer){
         }while((errorCheck != NO_ERROR) && (loopCounter < MAX_CURR_HOUSE_KEEPING_ATTEMPTS));
         
         if(errorCheck != NO_ERROR){
-            errorBuffer[(1 + errorBuffer[0]++)] = errorCheck;
+            errorBuffer[(*errorCount)++] = errorCheck;
         }
     }
 
     log_write(LOG_INFO, "CURR-SENSOR-HOUSE-KEEPING: Finished Current Sensor Verification");
 
-    //current_limit(errorBuffer);
+    current_limit(errorBuffer, errorCount);
+
+    log_write(LOG_INFO, "CURR-SENSOR-HOUSE-KEEPING: Finished Current Sensor Housekeeping");
 
 }
 
 
-struct gpiod_line_request *gpio_init(enum IRIS_ERROR *errorBuffer) {
+struct gpiod_line_request *gpio_init(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount) {
 
     struct gpiod_line_request *request = NULL;
     char *gpioDev = GPIOCHIP;
@@ -296,7 +317,7 @@ struct gpiod_line_request *gpio_init(enum IRIS_ERROR *errorBuffer) {
     }while((request == NULL) && (loopCounter < MAX_GPIO_INIT_ATTEMPTS));
 
     if(request == NULL){
-        errorBuffer[(1 + errorBuffer[0]++)] = GPIO_SETUP_ERROR;
+        errorBuffer[(*errorCount)++] = GPIO_SETUP_ERROR;
     }
 
     log_write(LOG_INFO, "GPIO-INIT: Completed setup attempt of GPIO interface");
@@ -344,15 +365,16 @@ enum IRIS_ERROR spi_init(int *spi_dev, struct gpiod_line_request **spi_cs_reques
     return errorCheck;
 }
 
-void system_init(enum IRIS_ERROR *errorBuffer, struct gpiod_line_request *gpio_request) {
+void system_init(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount, struct gpiod_line_request *gpio_request) {
 
-    
-    //! ADD FUNCTIONS TO VERIFY THAT INTERFACE / DEVICES ARE WORKING PROPERLY
-    temp_sensor_init(errorBuffer);
-    current_monitor_init(errorBuffer);
+    log_write(LOG_INFO, "SYSTEM-INIT: Start System intialization process");
+
+    temp_sensor_init(errorBuffer, errorCount);
+    current_monitor_init(errorBuffer, errorCount);
     //usb_hub_init(errorBuffer, gpio_request);
     //watchdog_setup();
 
+    log_write(LOG_INFO, "SYSTEM-INIT: Finished System intialization process");
 
 }
 
@@ -402,17 +424,17 @@ void spi_cmd_loop(int spi_dev,
     
 }
 
-void system_house_keeping(enum IRIS_ERROR *errorBuffer, struct gpiod_line_request *gpio_request){
+void system_house_keeping(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount, struct gpiod_line_request *gpio_request){
 
     int errorCode;
     // Temperature Sensor 
-    temp_sensor_house_keeping(errorBuffer);
+    temp_sensor_house_keeping(errorBuffer, errorCount);
 
     // Current Sensor 
-    curr_sensor_house_keeping(errorBuffer);
+    curr_sensor_house_keeping(errorBuffer, errorCount);
 
     // USB Hub House Keeping
-    //usb_hub_func_validate(errorBuffer, gpio_request);
+    //usb_hub_func_validate(errorBuffer, errorCount, gpio_request);
 
     // GPIO House Keeping
     // errorCode = gpio_config_validate();
@@ -422,17 +444,17 @@ void system_house_keeping(enum IRIS_ERROR *errorBuffer, struct gpiod_line_reques
 void iris_error_transfer(int spi_dev, 
                          struct gpiod_line_request *spi_cs_request, 
                          struct gpiod_edge_event_buffer *event_buffer,
-                         enum IRIS_ERROR *errorBuffer){
+                         enum IRIS_ERROR *errorBuffer,
+                         uint16_t *errorCount){
 
     bool cs_edge = false;
-    int errorAmt = errorBuffer[0];
     int spiError = 0;
 
     cs_edge = signal_edge_detect(spi_cs_request, event_buffer);
 
     if (cs_edge == false){
         errorBuffer[0] = SPI_ERROR_TRANSFER_CMD;
-        spi_write(spi_dev, errorBuffer, errorAmt  + 1, spi_cs_request);
+        spi_write(spi_dev, errorBuffer, *errorCount, spi_cs_request);
         if(spiError == -1){
             return 0; //ADD ERROR CODE
         }
@@ -457,13 +479,15 @@ void main(void){
     struct gpiod_line_request *clk_request = NULL;
 
     enum IRIS_ERROR spiInitError = NO_ERROR;
-    enum IRIS_ERROR errorBuffer[256] = {NO_ERROR};
+    
+    uint16_t errorCount = 0;
+    enum IRIS_ERROR errorBuffer[65535] = {NO_ERROR};
     
     uint8_t errorCheck = 0;
 
     int spi_dev = 0;
     char arg[5][100] = {0};
-    char cmd[100] = {0};
+    char cmd[100] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
     pthread_t id; 
     int state = NULL;
     char *file_path = "/home/iris/Iris_Firmware/PXL_20250115_191406313.RAW-02.ORIGINAL.dng";
@@ -473,7 +497,7 @@ void main(void){
     //pthread_create(&id, NULL, printNumber, &arg);
     
     spiInitError = spi_init(&spi_dev, &spi_cs_request, &event_buffer);
-    gpio_request = gpio_init(event_buffer);
+    gpio_request = gpio_init(errorBuffer, &errorCount);
 
 
     errorCheck = gpiod_line_request_set_value(gpio_request, PWR_5V_CAM_EN, GPIOD_LINE_VALUE_ACTIVE);
@@ -485,12 +509,16 @@ void main(void){
     IRIS_ERROR temp = 0;
     // System Init
     //usb_hub_func_TESTING(gpio_request);
-    system_init(errorBuffer, gpio_request);
+    system_init(errorBuffer, &errorCount, gpio_request);
 
     //usb_hub_func_TESTING(gpio_request);
     //! MAYBE ADD RESET FOR COLD + HOT
     //! MAYBE ADD AN ERROR STATE WHICH WAIT X AMOUNT OF TIME UNTIL A COMMAND IS RECEIVED FROM OC BEFORE DOING A RESTARBT
     //! ADD WATCHDOG
+
+
+    double the_time = get_time_seconds();
+
     while(true){
 
         if (spiInitError != NO_ERROR) {
@@ -499,22 +527,36 @@ void main(void){
             //* either succeeds or OBC resets IRIS
             spiInitError = spi_init(&spi_dev, &spi_cs_request, &event_buffer);
         }else{
-            read_bus_voltage(CURRENT_SENSOR_ADDR_3V3);
-            read_current(CURRENT_SENSOR_ADDR_3V3);
-            read_power(CURRENT_SENSOR_ADDR_3V3);
+            // read_bus_voltage(CURRENT_SENSOR_ADDR_3V3);
+            // read_current(CURRENT_SENSOR_ADDR_3V3);
+            // read_power(CURRENT_SENSOR_ADDR_3V3);
 
-            read_bus_voltage(CURRENT_SENSOR_ADDR_5V);
-            read_current(CURRENT_SENSOR_ADDR_5V);
-            read_power(CURRENT_SENSOR_ADDR_5V);
-            read_pk_power(CURRENT_SENSOR_ADDR_5V);
+            // read_bus_voltage(CURRENT_SENSOR_ADDR_5V);
+            // read_current(CURRENT_SENSOR_ADDR_5V);
+            // read_power(CURRENT_SENSOR_ADDR_5V);
+            // read_pk_power(CURRENT_SENSOR_ADDR_5V);
 
-            read_bus_voltage(CURRENT_SENSOR_ADDR_CAM);
-            read_current(CURRENT_SENSOR_ADDR_CAM);
-            read_power(CURRENT_SENSOR_ADDR_CAM);
+            // read_bus_voltage(CURRENT_SENSOR_ADDR_CAM);
+            // read_current(CURRENT_SENSOR_ADDR_CAM);
+            // read_power(CURRENT_SENSOR_ADDR_CAM);
+            if(get_time_seconds() - the_time > 10){
+                printf("\n%f\n", the_time);
+                set_time_seconds(1000);
+                the_time = get_time_seconds();
+                printf("\n%f\n", the_time);
+                while(true){
 
-            temperature_limit(errorBuffer);
+                }
+            }
+
+            if(errorCount > 65530){
+                printf("WHAT");
+            }
+
+            current_limit(errorBuffer, &errorCount);
             //spi_cmd_loop(spi_dev, spi_cs_request, event_buffer);
             //spi_read(spi_dev, cmd, 255, spi_cs_request);
+            //spi_write(spi_dev, cmd, 9, spi_cs_request);
             //system_house_keeping(errorBuffer, gpio_request);
             //iris_error_transfer(spi_dev, spi_cs_request, event_buffer, errorBuffer);
         }

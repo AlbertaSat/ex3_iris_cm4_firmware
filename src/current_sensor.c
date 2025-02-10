@@ -148,7 +148,7 @@ enum IRIS_ERROR current_setup(uint8_t currAddr){
                             CURR_REG_FLAG_CFG
                           };
 
-    snprintf(logBuffer, sizeof(logBuffer), "CURRENT-MONITOR-SETUP: Begin functional verification of Current Sensor 0x%02x", currAddr);
+    snprintf(logBuffer, sizeof(logBuffer), "CURRENT-SENSOR-SETUP: Begin functional verification of Current Sensor 0x%02x", currAddr);
     log_write(LOG_INFO, logBuffer);
 
     //Sets up what configuration settings to use on Current Sensor
@@ -170,14 +170,15 @@ enum IRIS_ERROR current_setup(uint8_t currAddr){
             regConfig[x] = regConfigTemp[x];
         }
     }else{
-        log_write(LOG_ERROR, "Invalid Current Monitior I2C Address");
+        // This will only happen if there is a coding error when using this function
+        log_write(LOG_ERROR, "Invalid Current Sensor Address");
         exit(EXIT_FAILURE);
     }
 
     //Setup I2C Interface with Temp Sensor
     bus = i2c_setup(I2C_BUS_INDEX, currAddr);
     if (bus == I2C_SETUP_ERROR){
-        snprintf(logBuffer, sizeof(logBuffer), "Current Monitor 0x%02x - I2C Bus Failed to Open", currAddr);
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Bus Failed to Open", currAddr);
         log_write(LOG_ERROR, logBuffer);
         return current_error_code(currAddr, CURR1_SETUP_ERROR);
     }
@@ -186,13 +187,13 @@ enum IRIS_ERROR current_setup(uint8_t currAddr){
     for(int index = 0; index < sizeof(regAddr); index++){
         tempErrorCheck = i2c_write_reg16(bus, 2, (regAddr + index), (regConfig + index));
         if (tempErrorCheck == I2C_WR_R_ERROR){
-            snprintf(logBuffer, sizeof(logBuffer), "Current Monitor 0x%02x - I2C Reg 0x%02x Write Failed", currAddr, regAddr[index]);
+            snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Reg 0x%02x Write Failed", currAddr, regAddr[index]);
             log_write(LOG_ERROR, logBuffer);
             error = current_error_code(currAddr, CURR1_SETUP_ERROR);
         }
     }
 
-    snprintf(logBuffer, sizeof(logBuffer), "CURRENT-MONITOR-SETUP: Completed attempt for setup of Current Monitor Sensor 0x%02x", currAddr);
+    snprintf(logBuffer, sizeof(logBuffer), "CURRENT-SENSOR-SETUP: Completed attempt for setup of Current Monitor Sensor 0x%02x", currAddr);
     log_write(LOG_INFO, logBuffer);
 
     i2c_close(bus);
@@ -210,7 +211,7 @@ enum IRIS_ERROR current_setup(uint8_t currAddr){
 //! ADD CODE FOR RESETING DEVICE AND CHECKING FOR FAULTS IE OPEN CIRCUIT
 //! ADD CODE FOR DEALING WITH DIFFERNET ERROR (WRONG CONFIG REG, INVALID TEMP MEAS)
 //! ADD CODE TO CHECK FOR PVLD ERROR
-int current_func_validate(uint8_t currAddr){
+enum IRIS_ERROR current_func_validate(uint8_t currAddr){
     
     int bus; 
     int tempErrorCheck;
@@ -243,40 +244,38 @@ int current_func_validate(uint8_t currAddr){
         for(int x = 0; x < sizeof(regConfigTemp); x++){
             regConfig[x] = regConfigTemp[x];
         }
-
     }else if(currAddr == CURRENT_SENSOR_ADDR_5V){
         uint16_t regConfigTemp[13] = CURR_SENSOR_REG_DEFAULT_5V;
         for(int x = 0; x < sizeof(regConfigTemp); x++){
             regConfig[x] = regConfigTemp[x];
         }
-
     }else if(currAddr == CURRENT_SENSOR_ADDR_CAM){
         uint16_t regConfigTemp[13] = CURR_SENSOR_REG_DEFAULT_CAM;
         for(int x = 0; x < sizeof(regConfigTemp); x++){
             regConfig[x] = regConfigTemp[x];
         }
-
     }else{
-        log_write(LOG_ERROR, "XXX");
-        return 255;
+        // This will only happen if there is a coding error when using this function
+        log_write(LOG_ERROR, "Invalid Current Sensor Address");
+        exit(EXIT_FAILURE);
     }
 
     bus = i2c_setup(I2C_BUS_INDEX, currAddr);
     if (bus == I2C_SETUP_ERROR){
-        snprintf(logBuffer, sizeof(logBuffer), "Current Monitor 0x%02x - I2C Bus Failed to Open", currAddr);
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Bus Failed to Open", currAddr);
         log_write(LOG_ERROR, logBuffer);
-        return 255;
+        return current_error_code(currAddr, CURR1_VERIFICATION_ERROR);
     }
 
     for(int index = 0; index < sizeof(regAddr); index++){
         tempErrorCheck = i2c_reg16_write_read(bus, (regAddr + index), 1, regData);
         if (tempErrorCheck == I2C_WR_R_ERROR){
-            snprintf(logBuffer, sizeof(logBuffer), "Current Monitor 0x%02x - I2C Reg 0x%02x Read Failed", currAddr, regAddr[index]);
+            snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Reg 0x%02x Read Failed", currAddr, regAddr[index]);
             log_write(LOG_ERROR, logBuffer);
-            error = current_error_code(currAddr, CURR1_VERIFICATION_ERROR);   
+            error = current_error_code(currAddr, CURR1_VERIFICATION_ERROR);
         }
         if (regData[0] != regConfig[index]){
-            snprintf(logBuffer, sizeof(logBuffer), "Current Monitor 0x%02x - I2C Reg 0x%02x Value Incorrect 0x%02x", currAddr, regAddr[index], regData[0]);
+            snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Reg 0x%02x Value Incorrect 0x%02x", currAddr, regAddr[index], regData[0]);
             log_write(LOG_ERROR, logBuffer);
             error = current_error_code(currAddr, CURR1_VERIFICATION_ERROR);
         }
@@ -304,13 +303,13 @@ enum IRIS_ERROR current_monitor_reset_trig(uint8_t currAddr){
     char logBuffer[255];
     uint8_t reg = CURR_REG_CFG;
 
-    snprintf(logBuffer, sizeof(logBuffer), "CURRENT-MONITOR-RESET: Begin reset of Current Monitor 0x%02x", currAddr);
+    snprintf(logBuffer, sizeof(logBuffer), "CURRENT-SENSOR-RESET: Begin reset of Current Sensor 0x%02x", currAddr);
     log_write(LOG_INFO, logBuffer);
 
     //Setup I2C Interface with Temp Sensor
     bus = i2c_setup(I2C_BUS_INDEX, currAddr);
     if (bus == I2C_SETUP_ERROR){
-        snprintf(logBuffer, sizeof(logBuffer), "Current Monitor 0x%02x - I2C Bus Failed to Open", currAddr);
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Bus Failed to Open", currAddr);
         log_write(LOG_ERROR, logBuffer);
         return current_error_code(currAddr, CURR1_RESET_ERROR);
     }
@@ -318,65 +317,78 @@ enum IRIS_ERROR current_monitor_reset_trig(uint8_t currAddr){
     //Sets Register reset bit in Current sensor
     errorCheck = i2c_write_reg16(bus, 1, &reg, (uint16_t)0xB99F);
     if (errorCheck == I2C_WR_R_ERROR){
-        snprintf(logBuffer, sizeof(logBuffer), "Current Monitor 0x%02x - I2C Reg 0x%02x Write Failed", currAddr, 0xB99F);
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Reg 0x%02x Write Failed", currAddr, 0xB99F);
         log_write(LOG_ERROR, logBuffer);
         i2c_close(bus);
         return current_error_code(currAddr, CURR1_RESET_ERROR);
     }
 
-    snprintf(logBuffer, sizeof(logBuffer), "CURRENT-MONITOR-RESET: Successful reset trigger of Current Monitor 0x%02x", currAddr);
+    snprintf(logBuffer, sizeof(logBuffer), "CURRENT-SENSOR-RESET: Successful reset trigger of Current Sensor 0x%02x", currAddr);
     log_write(LOG_INFO, logBuffer);
 
     i2c_close(bus);
     return NO_ERROR;
-    
+
 }
 
 //! RETURNS ERROR CODE WHERE
 //! errorCode[3:0] = [temp4_MAX, temp3_MAX, temp2_MAX, temp1_MAX]
 //! errorCode[7:4] = [temp4_RD_ERR, temp3_RD_ERR, temp2_RD_ERR, temp1_RD_ERR]
-int current_monitor_status(uint8_t currAddr){
+int current_monitor_status(uint8_t currAddr, uint16_t *errorCount){
     
     int errorCheck = 0;
     int monitorStatus = 0;
     int bus;
+    char logBuffer[255];
     uint8_t reg = CURR_REG_STATUS;
 
     bus = i2c_setup(I2C_BUS_INDEX, currAddr);
-    if (bus == -1){
-        log_write(LOG_ERROR, "Current Sensor - I2C Bus Failed to Open");
-        return 0xFFFF;
+    if (bus == I2C_SETUP_ERROR){
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Bus Failed to Open", currAddr);
+        log_write(LOG_ERROR, logBuffer);
+        //error = current_error_code(currAddr, CURR1_VERIFICATION_ERROR);
     }
     errorCheck = i2c_reg16_write_read(bus, &reg, 2, monitorStatus);
-    if (errorCheck == -1){
+    if (errorCheck == I2C_WR_R_ERROR){
         log_write(LOG_ERROR, "Current Sensor - I2C reg read/write Failed");
         i2c_close(bus);
         return 0xFFFF;
     }
+
     i2c_close(bus);
     return (monitorStatus >> 3);
 
 }
 
+/**
+ * @brief Reads the Current stored in the Sensors Register
+ * 
+ * @param currAddr I2C Address of Current sensors
+ * @return Measured Current in Amps
+ */
 float read_current(uint8_t currAddr){
-    
+
     int errorCheck = 0;
     int currReg = 0;
     int bus;
     double current = 0;
+    char logBuffer[255];
     uint8_t reg = CURR_REG_CURRENT;
 
     bus = i2c_setup(I2C_BUS_INDEX, currAddr);
-    if (bus == -1){
-        log_write(LOG_ERROR, "Current Sensor - I2C Bus Failed to Open");
-        return 0xFFFF;
+    if (bus == I2C_SETUP_ERROR){
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Bus Failed to Open", currAddr);
+        log_write(LOG_ERROR, logBuffer);
+        return current_error_code(currAddr, CURR1_VAL_READ_ERROR);
     }
+
     errorCheck = i2c_reg16_write_read(bus, &reg, 1, &currReg);
-    if (errorCheck == -1){
-        log_write(LOG_ERROR, "Current Sensor - I2C reg read/write Failed");
-        i2c_close(bus);
-        return 0xFFFF;
+    if (errorCheck == I2C_WR_R_ERROR){
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Reg 0x%02x Read Failed", currAddr, reg);
+        log_write(LOG_ERROR, logBuffer);
+        return current_error_code(currAddr, CURR1_VAL_READ_ERROR);
     }
+
     i2c_close(bus);
 
     switch (currAddr){
@@ -389,31 +401,46 @@ float read_current(uint8_t currAddr){
         case CURRENT_SENSOR_ADDR_CAM:
             current = currReg * CURR_LSB_VAL_CAM;
             break;
+        default:
+            // This will only happen if there is a coding error when using this function
+            log_write(LOG_ERROR, "Invalid Current Sensor Address");
+            exit(EXIT_FAILURE);
     }
 
-    printf("\n%f A\n",current);
+    return current;
 
 }
 
+
+/**
+ * @brief Reads the Power stored in the Sensors Register
+ * 
+ * @param currAddr I2C Address of Current sensors
+ * @return Measured Power in Watts
+ */
 float read_power(uint8_t currAddr){
 
     int errorCheck = 0;
     int pwrReg = 0;
     int bus;
     double power = 0;
+    char logBuffer[255];
     uint8_t reg = CURR_REG_POWER;
 
     bus = i2c_setup(I2C_BUS_INDEX, currAddr);
-    if (bus == -1){
-        log_write(LOG_ERROR, "Current Sensor - I2C Bus Failed to Open");
-        return 0xFFFF;
+    if (bus == I2C_SETUP_ERROR){
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Bus Failed to Open", currAddr);
+        log_write(LOG_ERROR, logBuffer);
+        return current_error_code(currAddr, CURR1_VAL_READ_ERROR);
     }
+
     errorCheck = i2c_reg16_write_read(bus, &reg, 1, &pwrReg);
-    if (errorCheck == -1){
-        log_write(LOG_ERROR, "Current Sensor - I2C reg read/write Failed");
-        i2c_close(bus);
-        return 0xFFFF;
+    if (errorCheck == I2C_WR_R_ERROR){
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Reg 0x%02x Read Failed", currAddr, reg);
+        log_write(LOG_ERROR, logBuffer);
+        return current_error_code(currAddr, CURR1_VAL_READ_ERROR);
     }
+
     i2c_close(bus);
 
     switch (currAddr){
@@ -426,31 +453,46 @@ float read_power(uint8_t currAddr){
         case CURRENT_SENSOR_ADDR_CAM:
             power = pwrReg * PWR_LSB_VAL_CAM;
             break;
+        default:
+            // This will only happen if there is a coding error when using this function
+            log_write(LOG_ERROR, "Invalid Current Sensor Address");
+            exit(EXIT_FAILURE);
     }
 
-    printf("\n%f W\n",power);
+    return power;
 
 }
 
+
+/**
+ * @brief Reads the Max Power stored in the Sensors Register
+ * 
+ * @param currAddr I2C Address of Current sensors
+ * @return Measured Maximum Power in Watts
+ */
 float read_pk_power(uint8_t currAddr){
 
     int errorCheck = 0;
     int pwrReg = 0;
     int bus;
     double power = 0;
+    char logBuffer[255];
     uint8_t reg = CURR_REG_POWER_PK;
 
     bus = i2c_setup(I2C_BUS_INDEX, currAddr);
-    if (bus == -1){
-        log_write(LOG_ERROR, "Current Sensor - I2C Bus Failed to Open");
-        return 0xFFFF;
+    if (bus == I2C_SETUP_ERROR){
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Bus Failed to Open", currAddr);
+        log_write(LOG_ERROR, logBuffer);
+        return current_error_code(currAddr, CURR1_VAL_READ_ERROR);
     }
+
     errorCheck = i2c_reg16_write_read(bus, &reg, 1, &pwrReg);
-    if (errorCheck == -1){
-        log_write(LOG_ERROR, "Current Sensor - I2C reg read/write Failed");
-        i2c_close(bus);
-        return 0xFFFF;
+    if (errorCheck == I2C_WR_R_ERROR){
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Reg 0x%02x Read Failed", currAddr, reg);
+        log_write(LOG_ERROR, logBuffer);
+        return current_error_code(currAddr, CURR1_VAL_READ_ERROR);
     }
+
     i2c_close(bus);
 
     switch (currAddr){
@@ -463,35 +505,105 @@ float read_pk_power(uint8_t currAddr){
         case CURRENT_SENSOR_ADDR_CAM:
             power = pwrReg * PWR_LSB_VAL_CAM;
             break;
+        default:
+            // This will only happen if there is a coding error when using this function
+            log_write(LOG_ERROR, "Invalid Current Sensor Address");
+            exit(EXIT_FAILURE);
     }
 
-    printf("\n%f W\n",power);
+    return power;
 
 }
 
+
+
+/**
+ * @brief Reads the Bus Voltage stored in the Sensors Register
+ * 
+ * @param currAddr I2C Address of Current sensors
+ * @return Measured Bus Voltage in Volts
+ */
 float read_bus_voltage(uint8_t currAddr){
 
     int errorCheck = 0;
     int voltReg = 0;
     int bus;
     double voltage = 0;
+    char logBuffer[255];
     uint8_t reg = CURR_REG_BUS_VOLT;
 
     bus = i2c_setup(I2C_BUS_INDEX, currAddr);
-    if (bus == -1){
-        log_write(LOG_ERROR, "Current Sensor - I2C Bus Failed to Open");
-        return 0xFFFF;
+    if (bus == I2C_SETUP_ERROR){
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Bus Failed to Open", currAddr);
+        log_write(LOG_ERROR, logBuffer);
+        return current_error_code(currAddr, CURR1_VAL_READ_ERROR);
     }
+
     errorCheck = i2c_reg16_write_read(bus, &reg, 1, &voltReg);
-    if (errorCheck == -1){
-        log_write(LOG_ERROR, "Current Sensor - I2C reg read/write Failed");
-        i2c_close(bus);
-        return 0xFFFF;
+    if (errorCheck == I2C_WR_R_ERROR){
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Reg 0x%02x Read Failed", currAddr, reg);
+        log_write(LOG_ERROR, logBuffer);
+        return current_error_code(currAddr, CURR1_VAL_READ_ERROR);
     }
+
     i2c_close(bus);
 
     voltage = (voltReg >> 3) * 0.004; // LSB = 10uV
 
-    printf("\n%f V\n", voltage);
+    return voltage;
+
 }
 
+/**
+ * @brief Checks if current limit is reached on any of the sensors. This limit is a warning, since the 
+ *        actual limit is programmed into the Current Sensors where it will disable the PSU if reached.
+ * 
+ * @param errorBuffer Pointer to Buffer containing any errors that occur during operation
+ */
+void current_limit(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount){
+
+    float curr3v3 = 0;
+    float curr5v = 0;
+    float currcam = 0;
+
+    char logBuffer[255];
+
+    curr3v3 = read_current(CURRENT_SENSOR_ADDR_3V3);
+    curr5v = read_current(CURRENT_SENSOR_ADDR_5V);
+    currcam = read_current(CURRENT_SENSOR_ADDR_CAM);
+
+    //DETERMINE IF CURRENT LIMIT REACHED
+    if(curr3v3 != CURR1_VAL_READ_ERROR){
+        if(curr3v3 > CURR_3V3_MAX){
+            errorBuffer[(*errorCount)++] = CURR1_LIMIT_ERROR;
+            snprintf(logBuffer, sizeof(logBuffer), "CURR-LIMIT: 3V3 Current Limit Reached - Measured %fA", curr3v3);
+            log_write(LOG_WARNING, logBuffer);
+        }
+    }else{
+        errorBuffer[(*errorCount)++] = CURR1_VAL_READ_ERROR;
+        log_write(LOG_WARNING, "3V3 Current Sensor - Failed to Read Current");
+    }
+    
+    if(curr5v != CURR2_VAL_READ_ERROR){
+        if(curr5v > CURR_5V_MAX){
+            errorBuffer[(*errorCount)++] = CURR2_LIMIT_ERROR;
+            snprintf(logBuffer, sizeof(logBuffer), "CURR-LIMIT: CM4 Current Limit Reached - Measured %fA", curr5v);
+            log_write(LOG_WARNING, logBuffer);
+        }
+    }else{
+        errorBuffer[(*errorCount)++] = CURR2_VAL_READ_ERROR;
+        log_write(LOG_WARNING, "CM4 Current Sensor - Failed to Read Current");
+    }
+    
+    if(currcam != CURR3_VAL_READ_ERROR){
+        if(currcam > CURR_CAM_MAX){
+            errorBuffer[(*errorCount)++] = CURR3_LIMIT_ERROR;
+            snprintf(logBuffer, sizeof(logBuffer), "CURR-LIMIT: Camera Current Limit Reached - Measured %fA", currcam);
+            log_write(LOG_WARNING, logBuffer);
+        }
+    }else{
+        errorBuffer[(*errorCount)++] = CURR3_VAL_READ_ERROR;
+        log_write(LOG_WARNING, "Camera Current Sensor - Failed to Read Current");
+    }
+
+}

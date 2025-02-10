@@ -169,16 +169,26 @@
                                      CURR_REG_FLAG_CFG_POR_CAM}
 
 //------- Current Sensor I2C Address -------//
+// Note: Error Codes for Sensors are Numerical
+//       3V3 ERROR : CURR1
+//       5V ERROR  : CURR2
+//       CAM ERROR : CURR3
+
 #define CURRENT_SENSOR_ADDR_3V3 0x45
 #define CURRENT_SENSOR_ADDR_5V  0x40
 #define CURRENT_SENSOR_ADDR_CAM 0x41
 
+//Max Current WARNINGS!
+#define CURR_3V3_MAX  0.100 //250mA
+#define CURR_5V_MAX   0.500 //600mA
+#define CURR_CAM_MAX  0.001 //1000mA
+
 
 enum IRIS_ERROR current_error_code(uint8_t currAddr, enum IRIS_ERROR errorType);
 enum IRIS_ERROR current_setup(uint8_t currAddr);
-int current_func_validate(uint8_t currAddr);
+enum IRIS_ERROR current_func_validate(uint8_t currAddr);
 enum IRIS_ERROR current_monitor_reset_trig(uint8_t currAddr);
-int current_monitor_status(uint8_t currAddr);
+int current_monitor_status(uint8_t currAddr, uint16_t *errorCount);
 float read_current(uint8_t currAddr);
 float read_power(uint8_t currAddr);
 float read_bus_voltage(uint8_t currAddr);

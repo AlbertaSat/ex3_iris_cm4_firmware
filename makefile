@@ -48,7 +48,7 @@ $(BUILD_DIR):
 all: clean $(NAME)
 
 # Build Components
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o  $@
 
 # Build the target Application

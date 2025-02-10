@@ -18,8 +18,9 @@
 #define TMP_CFG2_ERROR_FLG    2
 #define TMP_DIODE_ERROR_FLG   3
 
+typedef int8_t IRIS_ERROR_t;
 
-typedef enum IRIS_ERROR{
+typedef enum IRIS_ERROR {
     NO_ERROR,
 
     I2C_SETUP_ERROR,
