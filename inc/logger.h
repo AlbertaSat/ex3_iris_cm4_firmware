@@ -9,8 +9,6 @@ typedef enum LOG_LEVEL{
 } LOG_LEVEL;
 
 //! NEED TO AUTOMATE MAKING LOG FILE NAME
-#define LOG_FILE_PATH "TestLog.txt"
-
 #define KNRM  "\x1B[0m"
 #define KRED  "\x1B[31m"
 #define KGRN  "\x1B[32m"
@@ -25,6 +23,11 @@ typedef enum LOG_LEVEL{
 #define DEBUG_ACTIVE   1
 #define ERROR_ACTIVE   1
 #define LOG_TO_FILE    1
+
+#define LOG_DIRECTORY "/home/iris/ex3_iris_cm4_firmware"
+#define LOG_FILENAME  "Iris_Log.txt"
+
+#define MAX_FILE_SIZE_MB 2000
 
 void logger_init();
 void log_write(enum LOG_LEVEL logLev, const char *msg);

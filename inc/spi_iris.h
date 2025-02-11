@@ -25,6 +25,8 @@ typedef struct {
 #define SPI_TEST_TIMEOUT 0.5 //0.5s Timeout
 #define SPI_TEST_CMD 0x6A //! This command is determined at a later date
 
+#define END_SPI_CMD 0xFF
+
 #define SPI_TEST_MSG {SPI_TEST_CMD, 0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, 0xDE, 0xF0};
 
 int spi_open(char *device, spi_config_t config);

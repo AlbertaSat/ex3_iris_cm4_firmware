@@ -1,0 +1,2 @@
+
+#define TIME_SYNC_DELAY_NS 2000000000 // 2Sec

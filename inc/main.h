@@ -20,6 +20,21 @@
 
 #define BOOTNUMOFFSET 6
 
+#define MAX_ITERATIONS 100
+#define EDGE_EVENT_BUFF_SIZE 255
+#define SPI_MAX_LOOP_AMT 65535
+#define SPI_RX_LEN 255
+
+#define MAX_TEMP_INIT_ATTEMPTS 5
+#define MAX_CURR_INIT_ATTEMPTS 5
+#define MAX_SPI_INIT_ATTEMPTS  5
+#define MAX_GPIO_INIT_ATTEMPTS 5
+#define MAX_TEMP_HOUSE_KEEPING_ATTEMPTS 5
+#define MAX_CURR_HOUSE_KEEPING_ATTEMPTS 5
+#define MAX_USBHUB_INIT_ATTEMPTS 5
+#define SPI_ERROR_TRANSFER_CMD 100
+
+
 void main(void);
 void spi_cmd_loop(int spi_dev, 
                   struct gpiod_line_request *spi_cs_request, 

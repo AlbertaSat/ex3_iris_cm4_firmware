@@ -120,7 +120,7 @@ enum IRIS_ERROR i2c_interface (int fd, int rwType, int sizeByte, uint8_t *data){
     if (error == sizeByte){
         return 0;
     }else{
-        log_write(LOG_ERROR, "Invalid I2C Interface Operation (R/W)");
+        log_write(LOG_ERROR, "Failed I2C Interface Operation (R/W)");
         switch (rwType){
             case I2C_READ:
                 return I2C_READ_ERROR;

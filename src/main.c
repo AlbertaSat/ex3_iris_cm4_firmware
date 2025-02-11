@@ -8,6 +8,7 @@
 #include "current_sensor.h"
 #include "usb_hub.h"
 #include "watchdog.h"
+#include "timing.h"
 
 #include <linux/spi/spidev.h>
 #include <pthread.h>
@@ -19,22 +20,11 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include <time.h>
+
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_ITERATIONS 5
-#define EDGE_EVENT_BUFF_SIZE 5
-#define SPI_MAX_LOOP_AMT 65535
-#define SPI_RX_LEN 255
-#define MAX_TEMP_INIT_ATTEMPTS 5
-#define MAX_CURR_INIT_ATTEMPTS 5
-#define MAX_SPI_INIT_ATTEMPTS  5
-#define MAX_GPIO_INIT_ATTEMPTS 5
-#define MAX_TEMP_HOUSE_KEEPING_ATTEMPTS 5
-#define MAX_CURR_HOUSE_KEEPING_ATTEMPTS 5
-#define MAX_USBHUB_INIT_ATTEMPTS 5
-#define SPI_ERROR_TRANSFER_CMD 100
+
 
 
 //! WORK IN PROGRESS FILE CONTAINING TEST CODE AND UNFINISHED CODE
@@ -133,18 +123,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////
 
-double get_time_seconds() {
-    struct timespec ts;
-    clock_gettime(CLOCK_REALTIME, &ts);
-    return ts.tv_sec + ts.tv_nsec / 1.0e9;
-}
 
-void set_time_seconds(double setTime) {
-    struct timespec ts;
-    ts.tv_sec = setTime;
-    ts.tv_nsec = 0;
-    clock_settime(CLOCK_REALTIME, &ts);
-}
 
 void usb_hub_init(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount, struct gpiod_line_request *gpio_request){
 
@@ -339,13 +318,13 @@ enum IRIS_ERROR spi_init(int *spi_dev, struct gpiod_line_request **spi_cs_reques
             errorCheck = SPI_SETUP_ERROR;
             continue;
         } 
-        *spi_cs_request = spi_cs_setup();   
+        *spi_cs_request = spi_cs_setup();
         if (*spi_cs_request == NULL){
             errorCheck = SPI_SETUP_ERROR;
-            continue;     
+            continue;
         }
         *event_buffer = gpiod_edge_event_buffer_new(EDGE_EVENT_BUFF_SIZE);
-        if (*event_buffer == NULL){ 
+        if (*event_buffer == NULL){
             errorCheck = SPI_SETUP_ERROR;
             continue;
         }
@@ -496,9 +475,10 @@ void main(void){
     //! ADD ERROR RESPONSE TO FAILURE TO SETUP SPI_INTERFACE
     //pthread_create(&id, NULL, printNumber, &arg);
     
+    log_file_init();
+
     spiInitError = spi_init(&spi_dev, &spi_cs_request, &event_buffer);
     gpio_request = gpio_init(errorBuffer, &errorCount);
-
 
     errorCheck = gpiod_line_request_set_value(gpio_request, PWR_5V_CAM_EN, GPIOD_LINE_VALUE_ACTIVE);
     if (errorCheck == -1){
@@ -517,7 +497,8 @@ void main(void){
     //! ADD WATCHDOG
 
 
-    double the_time = get_time_seconds();
+
+    //double the_time = get_time_seconds();
 
     while(true){
 
@@ -527,7 +508,9 @@ void main(void){
             //* either succeeds or OBC resets IRIS
             spiInitError = spi_init(&spi_dev, &spi_cs_request, &event_buffer);
         }else{
-            // read_bus_voltage(CURRENT_SENSOR_ADDR_3V3);
+
+            //time_sync(spi_cs_request, event_buffer);
+            read_bus_voltage(CURRENT_SENSOR_ADDR_3V3);
             // read_current(CURRENT_SENSOR_ADDR_3V3);
             // read_power(CURRENT_SENSOR_ADDR_3V3);
 
@@ -539,21 +522,21 @@ void main(void){
             // read_bus_voltage(CURRENT_SENSOR_ADDR_CAM);
             // read_current(CURRENT_SENSOR_ADDR_CAM);
             // read_power(CURRENT_SENSOR_ADDR_CAM);
-            if(get_time_seconds() - the_time > 10){
-                printf("\n%f\n", the_time);
-                set_time_seconds(1000);
-                the_time = get_time_seconds();
-                printf("\n%f\n", the_time);
-                while(true){
+            // if(get_time_seconds() - the_time > 10){
+            //     printf("\n%f\n", the_time);
+            //     set_time_seconds(1000);
+            //     the_time = get_time_seconds();
+            //     printf("\n%f\n", the_time);
+            //     while(true){
 
-                }
-            }
+            //     }
+            // }
 
-            if(errorCount > 65530){
-                printf("WHAT");
-            }
+            // if(errorCount > 65530){
+            //     printf("WHAT");
+            // }
 
-            current_limit(errorBuffer, &errorCount);
+            // current_limit(errorBuffer, &errorCount);
             //spi_cmd_loop(spi_dev, spi_cs_request, event_buffer);
             //spi_read(spi_dev, cmd, 255, spi_cs_request);
             //spi_write(spi_dev, cmd, 9, spi_cs_request);
