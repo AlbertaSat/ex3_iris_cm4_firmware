@@ -98,30 +98,6 @@ int spi_close(int fd) {
 }
 
 /**
- * @brief Write than Read data as 8-bit packets from SPI Peripheral
- * 
- * @param fd Configured SPI bus instance
- * @param tx_buffer Pointer to array buffer storing data to be written
- * @param tx_len Number of 8-bit packets to write to SPI Peripheral
- * @param rx_buffer Pointer to array buffer that will store data being read
- * @param rx_len Number of 8-bit packets to read from SPI Peripheral
- * @param cs_request Pointer to structure that contains the CS instance
- * @return Iris error code indicating the success or failure of function
- */
-//! NEED TO ADD ERROR CHECKING
-int spi_xfer(int fd, uint8_t *tx_buffer, uint8_t tx_len, uint8_t *rx_buffer, uint8_t rx_len, struct gpiod_line_request *cs_request){
-    struct spi_ioc_transfer spi_msg[1];
-    memset(spi_msg, 0, sizeof(spi_msg));
-
-    spi_msg[0].rx_buf = (unsigned long)rx_buffer;
-    spi_msg[0].tx_buf = (unsigned long)tx_buffer;
-    spi_msg[0].len = tx_len;
-
-
-    return ioctl(fd, SPI_IOC_MESSAGE(1), spi_msg);
-}
-
-/**
  * @brief Read data as 8-bit packets from SPI Peripheral
  * 
  * @param fd Configured SPI bus instance
@@ -131,7 +107,7 @@ int spi_xfer(int fd, uint8_t *tx_buffer, uint8_t tx_len, uint8_t *rx_buffer, uin
  * @return Iris error code indicating the success or failure of function
  */
 //! NEED TO ADD ERROR CHECKING
-int spi_read(int fd, uint8_t *rx_buffer, uint8_t rx_len, struct gpiod_line_request *cs_request){
+enum IRIS_ERROR spi_read(int fd, uint8_t *rx_buffer, uint8_t rx_len, struct gpiod_line_request *cs_request){
     struct spi_ioc_transfer spi_msg[1];
     int val;
     memset(spi_msg, 0, sizeof(spi_msg));
@@ -143,7 +119,11 @@ int spi_read(int fd, uint8_t *rx_buffer, uint8_t rx_len, struct gpiod_line_reque
     val = ioctl(fd, SPI_IOC_MESSAGE(1), spi_msg);
     cs_request = cs_toggle(cs_request, CS_MONITOR);
 
-    return val;
+    if(val == rx_len){
+        return NO_ERROR;
+    }else{
+        return SPI_READ_ERROR;
+    }
 }
 
 /**
@@ -156,7 +136,7 @@ int spi_read(int fd, uint8_t *rx_buffer, uint8_t rx_len, struct gpiod_line_reque
  * @return Iris error code indicating the success or failure of function
  */
 //! NEED TO ADD ERROR CHECKING
-int spi_write(int fd, uint8_t *tx_buffer, uint16_t tx_len, struct gpiod_line_request *cs_request){
+enum IRIS_ERROR spi_write(int fd, uint8_t *tx_buffer, uint16_t tx_len, struct gpiod_line_request *cs_request){
     struct spi_ioc_transfer spi_msg[1];
     memset(spi_msg, 0, sizeof(spi_msg));
     int val;
@@ -168,7 +148,11 @@ int spi_write(int fd, uint8_t *tx_buffer, uint16_t tx_len, struct gpiod_line_req
     val = ioctl(fd, SPI_IOC_MESSAGE(1), spi_msg);
     cs_request = cs_toggle(cs_request, CS_MONITOR);
 
-    return val;
+    if(val == tx_len){
+        return NO_ERROR;
+    }else{
+        return SPI_WRITE_ERROR;
+    }
 }
 
 
@@ -224,6 +208,21 @@ uint8_t checksum_calc(uint8_t *tx_buffer, uint8_t bytesRead){
 
 }
 
+
+/**
+ * @brief Reinitialize the SPI Interface
+ * 
+ * @return Instance of SPI Interface
+ */
+enum IRIS_ERROR spi_reinit(int *spi_dev, struct gpiod_line_request **spi_cs_request, struct gpiod_edge_event_buffer **event_buffer){
+
+    spi_close(*spi_dev);
+    gpiod_edge_event_buffer_free(*event_buffer);
+    gpiod_line_request_release(*spi_cs_request);
+
+    return spi_init(spi_dev, spi_cs_request, event_buffer);
+
+}
 
 
 
@@ -316,15 +315,6 @@ enum IRIS_ERROR spi_file_read(int spi_dev, struct gpiod_line_request **spi_cs_re
     log_write(LOG_ERROR, logBuffer);
     return SPI_FILE_WRITE_ERROR;
 }
-
-
-
-
-
-
-
-
-
 
 
 /**

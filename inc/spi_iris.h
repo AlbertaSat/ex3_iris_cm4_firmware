@@ -26,16 +26,15 @@ typedef struct {
 #define SPI_TEST_CMD 0x6A //! This command is determined at a later date
 
 #define END_SPI_CMD 0xFF
-
+#define SPI_ERROR_BUFFER_LEN 4096
 #define SPI_TEST_MSG {SPI_TEST_CMD, 0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, 0xDE, 0xF0};
 
 int spi_open(char *device, spi_config_t config);
 int spi_bus_setup(void);
 int spi_close(int fd);
 
-int spi_xfer(int fd, uint8_t *tx_buffer, uint8_t tx_len, uint8_t *rx_buffer, uint8_t rx_len, struct gpiod_line_request *cs_request);
-int spi_read(int fd, uint8_t *rx_buffer, uint8_t rx_len, struct gpiod_line_request *cs_request);
-int spi_write(int fd, uint8_t *tx_buffer, uint16_t tx_len, struct gpiod_line_request *cs_request);
+enum IRIS_ERROR spi_read(int fd, uint8_t *rx_buffer, uint8_t rx_len, struct gpiod_line_request *cs_request);
+enum IRIS_ERROR spi_write(int fd, uint8_t *tx_buffer, uint16_t tx_len, struct gpiod_line_request *cs_request);
 
 struct gpiod_line_request *spi_cs_setup(void);
 enum IRIS_ERROR spi_file_write(int spi_dev, struct gpiod_line_request **spi_cs_request, char *file_path, struct gpiod_edge_event_buffer **event_buffer);

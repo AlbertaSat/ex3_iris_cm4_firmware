@@ -125,7 +125,7 @@
 
 
 
-void usb_hub_init(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount, struct gpiod_line_request *gpio_request){
+void usb_hub_init(enum IRIS_ERROR *errorBuffer, uint8_t *errorCount, struct gpiod_line_request *gpio_request){
 
     enum IRIS_ERROR errorCheck = NO_ERROR;
     int loopCounter = 0;
@@ -145,7 +145,7 @@ void usb_hub_init(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount, struct gpi
     }
 }
 
-void current_monitor_init(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount){
+void current_monitor_init(enum IRIS_ERROR *errorBuffer, uint8_t *errorCount){
 
     enum IRIS_ERROR errorCheck = NO_ERROR;
     int loopCounter = 0;
@@ -173,7 +173,7 @@ void current_monitor_init(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount){
 
 }
 
-void temp_sensor_init(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount){
+void temp_sensor_init(enum IRIS_ERROR *errorBuffer, uint8_t *errorCount){
 
     enum IRIS_ERROR errorCheck = NO_ERROR;
     int loopCounter = 0;
@@ -201,7 +201,7 @@ void temp_sensor_init(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount){
 }
 
 
-void temp_sensor_house_keeping(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount){
+void temp_sensor_house_keeping(enum IRIS_ERROR *errorBuffer, uint8_t *errorCount){
 
     enum IRIS_ERROR errorCheck = NO_ERROR;
     int loopCounter = 0;
@@ -238,7 +238,7 @@ void temp_sensor_house_keeping(enum IRIS_ERROR *errorBuffer, uint16_t *errorCoun
 }
 
 
-void curr_sensor_house_keeping(enum IRIS_ERROR *errorBuffer, uint16_t* errorCount){
+void curr_sensor_house_keeping(enum IRIS_ERROR *errorBuffer, uint8_t* errorCount){
 
     enum IRIS_ERROR errorCheck = NO_ERROR;
     int loopCounter = 0;
@@ -275,7 +275,7 @@ void curr_sensor_house_keeping(enum IRIS_ERROR *errorBuffer, uint16_t* errorCoun
 }
 
 
-struct gpiod_line_request *gpio_init(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount) {
+struct gpiod_line_request *gpio_init(enum IRIS_ERROR *errorBuffer, uint8_t *errorCount) {
 
     struct gpiod_line_request *request = NULL;
     char *gpioDev = GPIOCHIP;
@@ -344,7 +344,7 @@ enum IRIS_ERROR spi_init(int *spi_dev, struct gpiod_line_request **spi_cs_reques
     return errorCheck;
 }
 
-void system_init(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount, struct gpiod_line_request *gpio_request) {
+void system_init(enum IRIS_ERROR *errorBuffer, uint8_t *errorCount, struct gpiod_line_request *gpio_request) {
 
     log_write(LOG_INFO, "SYSTEM-INIT: Start System intialization process");
 
@@ -380,30 +380,34 @@ bool signal_edge_detect(struct gpiod_line_request *request, struct gpiod_edge_ev
     return true;
 }
 
-void spi_cmd_loop(int spi_dev, 
+IRIS_ERROR spi_cmd_loop(int spi_dev, 
                   struct gpiod_line_request *spi_cs_request, 
                   struct gpiod_edge_event_buffer *event_buffer) {
-    
+
     bool cs_edge = false;
     uint8_t rx_buffer[SPI_RX_LEN] = {};
-    char cmd[SPI_RX_LEN] = {0};
-    char arg[5][100] = {0};
-    int num_arg = 0;
+    uint8_t cmd = 0;
+    uint8_t arg[SPI_RX_LEN] = {0};
+    int narg = 0;
+    IRIS_ERROR error = NO_ERROR;
+
     for(int index = 0; (index < SPI_MAX_LOOP_AMT) && (cs_edge == false); index++){
         cs_edge = signal_edge_detect(spi_cs_request, event_buffer);
 
         if (cs_edge == true){
-            spi_read(spi_dev, rx_buffer, SPI_RX_LEN, spi_cs_request);
-            num_arg = cmd_extracter(cmd, arg, rx_buffer, SPI_RX_LEN);
-            //cmd = rx_buffer;
-            //cmd_extracter(cmd, rx_buffer, SPI_RX_LEN);
-            //cmd_center();
+            error = spi_read(spi_dev, rx_buffer, SPI_RX_LEN, spi_cs_request);
+            if(error != NO_ERROR){
+                return error;
+            }
+            narg = cmd_extracter(&cmd, arg, rx_buffer, SPI_RX_LEN);
+            error = cmd_center(cmd, arg, narg, spi_dev, spi_cs_request);
+            return error;
         }
     }
-    
+    return error;
 }
 
-void system_house_keeping(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount, struct gpiod_line_request *gpio_request){
+void system_house_keeping(enum IRIS_ERROR *errorBuffer, uint8_t *errorCount, struct gpiod_line_request *gpio_request){
 
     int errorCode;
     // Temperature Sensor 
@@ -420,35 +424,6 @@ void system_house_keeping(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount, st
 
 }
 
-void iris_error_transfer(int spi_dev, 
-                         struct gpiod_line_request *spi_cs_request, 
-                         struct gpiod_edge_event_buffer *event_buffer,
-                         enum IRIS_ERROR *errorBuffer,
-                         uint16_t *errorCount){
-
-    bool cs_edge = false;
-    int spiError = 0;
-
-    cs_edge = signal_edge_detect(spi_cs_request, event_buffer);
-
-    if (cs_edge == false){
-        errorBuffer[0] = SPI_ERROR_TRANSFER_CMD;
-        spi_write(spi_dev, errorBuffer, *errorCount, spi_cs_request);
-        if(spiError == -1){
-            return 0; //ADD ERROR CODE
-        }
-    }
-}
-
-void printNumber(){
-
-    int x = 0;
-    while(true){
-        printf("TEST: %d\n", x++);
-    }
-}
-
-
 //! THE MAIN MAIN FUNCTION
 void main(void){
     struct gpiod_line_request *gpio_request = NULL;
@@ -458,15 +433,16 @@ void main(void){
     struct gpiod_line_request *clk_request = NULL;
 
     enum IRIS_ERROR spiInitError = NO_ERROR;
-    
-    uint16_t errorCount = 0;
-    enum IRIS_ERROR errorBuffer[65535] = {NO_ERROR};
+    enum IRIS_ERROR spiError = NO_ERROR;
+
+    uint8_t errorCount = 0;
+    enum IRIS_ERROR errorBuffer[ERROR_BUFFER_SIZE] = {NO_ERROR};
     
     uint8_t errorCheck = 0;
 
     int spi_dev = 0;
     char arg[5][100] = {0};
-    char cmd[100] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+    char cmd[4096] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
     pthread_t id; 
     int state = NULL;
     char *file_path = "/home/iris/Iris_Firmware/PXL_20250115_191406313.RAW-02.ORIGINAL.dng";
@@ -502,15 +478,19 @@ void main(void){
 
     while(true){
 
+        //! ADD SOMTHING TO DETECT SPI ERROR AND RESTART THE INTERFACE
         if (spiInitError != NO_ERROR) {
             //! MAYBE ADD SOME WATCHDOG ON IRIS THAT RESET ITSELF
             //* If SPI BUS doesn't initialize than we will continue to try until it
             //* either succeeds or OBC resets IRIS
             spiInitError = spi_init(&spi_dev, &spi_cs_request, &event_buffer);
-        }else{
+        }else if(spiError != NO_ERROR){
 
+            spiInitError = spi_reinit(&spi_dev, &spi_cs_request, &event_buffer);
+            spiError = NO_ERROR;
+        }else{
             //time_sync(spi_cs_request, event_buffer);
-            read_bus_voltage(CURRENT_SENSOR_ADDR_3V3);
+            //read_bus_voltage(CURRENT_SENSOR_ADDR_3V3);
             // read_current(CURRENT_SENSOR_ADDR_3V3);
             // read_power(CURRENT_SENSOR_ADDR_3V3);
 
@@ -537,9 +517,9 @@ void main(void){
             // }
 
             // current_limit(errorBuffer, &errorCount);
-            //spi_cmd_loop(spi_dev, spi_cs_request, event_buffer);
+            spiError = spi_cmd_loop(spi_dev, spi_cs_request, event_buffer);
             //spi_read(spi_dev, cmd, 255, spi_cs_request);
-            //spi_write(spi_dev, cmd, 9, spi_cs_request);
+            //spi_write(spi_dev, cmd, 4096, spi_cs_request);
             //system_house_keeping(errorBuffer, gpio_request);
             //iris_error_transfer(spi_dev, spi_cs_request, event_buffer, errorBuffer);
         }

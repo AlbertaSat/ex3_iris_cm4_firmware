@@ -264,7 +264,7 @@ enum IRIS_ERROR temp_reset_trig(uint8_t tempAddr){
     char logBuffer[255];
     uint8_t regData[2] = {TMP_REG_SW_RST, 0x01};
 
-    snprintf(logBuffer, sizeof(logBuffer), "TEMP-RESET: Begin reset of Temperature Sensor 0x%02x",tempAddr);
+    snprintf(logBuffer, sizeof(logBuffer), "TEMP-RESET-TRIG: Begin trigger reset of Temperature Sensor 0x%02x",tempAddr);
     log_write(LOG_INFO, logBuffer);
 
     //Setup I2C Interface with Temp Sensor
@@ -284,20 +284,64 @@ enum IRIS_ERROR temp_reset_trig(uint8_t tempAddr){
         return temp_error_code(tempAddr, TEMP1_RESET_ERROR);
     }
 
-    snprintf(logBuffer, sizeof(logBuffer), "TEMP-RESET: Successful reset trigger of Temperature Sensor 0x%02x",tempAddr);
+    snprintf(logBuffer, sizeof(logBuffer), "TEMP-RESET-TRIG: Successfully triggered reset trigger of Temperature Sensor 0x%02x",tempAddr);
     log_write(LOG_INFO, logBuffer);
 
     i2c_close(bus);
     return NO_ERROR;
 }
 
+/**
+ * @brief Completes a reset of selected temperature sensors. 
+ *        Note: This WILL reconfigure the sensor.
+ * 
+ * @param tempAddr I2C Address of Temperature senors user wants to reset
+ * @return Iris error code indicating the success or failure of function
+ */
+enum IRIS_ERROR temp_reset(uint8_t tempAddr){
+
+    int errorCheck;
+    int loopCounter = 0;
+    char logBuffer[255];
+
+    snprintf(logBuffer, sizeof(logBuffer), "TEMP-SENSOR-RESET: Begin reset of Temperature Sensor 0x%02x", tempAddr);
+    log_write(LOG_INFO, logBuffer);
+
+    errorCheck = NO_ERROR;
+
+    // Attempt to trigger reset of temp sensor
+    do{
+        errorCheck = temp_reset_trig(tempAddr);
+        loopCounter++;
+    }while((errorCheck != NO_ERROR) && (loopCounter < MAX_TEMP_INIT_ATTEMPTS));
+
+    // Return error code if unable to trigger 'reset' of current sensor
+    if(errorCheck != NO_ERROR){
+        return errorCheck;
+    }
+
+    // Attempt to setup temp sensor
+    do{
+        errorCheck = temp_setup(tempAddr);
+        if (errorCheck == NO_ERROR){
+            errorCheck = temp_func_validate(tempAddr);
+        }
+        loopCounter++;
+    }while((errorCheck != NO_ERROR) && (loopCounter < MAX_TEMP_INIT_ATTEMPTS));
+
+
+    snprintf(logBuffer, sizeof(logBuffer), "TEMP-SENSOR-RESET: Finished reset attempt of Temperature Sensor 0x%02x", tempAddr);
+    log_write(LOG_INFO, logBuffer);
+
+    return errorCheck;
+}
 
 /**
  * @brief Checks if temperature limit is reached on any of the sensors 
  * 
  * @param errorBuffer Pointer to Buffer containing any errors that occur during operation
  */
-void temperature_limit(enum IRIS_ERROR *errorBuffer, uint16_t *errorCount){
+void temperature_limit(enum IRIS_ERROR *errorBuffer, uint8_t *errorCount){
 
     int8_t temp1 = 0;
     int8_t temp2 = 0;

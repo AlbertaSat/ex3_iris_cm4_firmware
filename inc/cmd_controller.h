@@ -12,7 +12,10 @@ typedef enum IRIS_CMD{
 	CURR_SENSOR_VALIDATE,
 	CURR_SENSOR_STATUS,
 	CURR_SENSOR_RESET,
-	CURR_SENSOR_READ,
+	CURR_SENSOR_READ_CURRENT,
+	CURR_SENSOR_READ_VOLTAGE,
+	CURR_SENSOR_READ_POWER,
+	CURR_SENSOR_READ_PK_POWER,
 	CURR_SENSOR_READ_LIMIT,
 	
     TEMP_SENSOR_SETUP,
@@ -38,8 +41,7 @@ typedef enum IRIS_CMD{
 
 
 
-
-void cmd_center(uint8_t cmd, uint8_t *args, int nargs, int spi_dev, struct gpiod_line_request **spi_cs_request);
+enum IRIS_ERROR cmd_center(uint8_t cmd, uint8_t *args, int nargs, int spi_dev, struct gpiod_line_request **spi_cs_request);
 
 int cmd_extracter(uint8_t *cmd, uint8_t *arg, uint8_t *rx_buffer, uint8_t rx_len);
 

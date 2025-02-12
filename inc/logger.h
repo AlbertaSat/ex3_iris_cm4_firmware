@@ -29,7 +29,6 @@ typedef enum LOG_LEVEL{
 
 #define MAX_FILE_SIZE_MB 2000
 
-void logger_init();
 void log_write(enum LOG_LEVEL logLev, const char *msg);
 
 #endif /* LOG_H */

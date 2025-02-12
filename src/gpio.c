@@ -128,8 +128,8 @@ struct gpiod_line_request *cs_toggle(struct gpiod_line_request *cs_request, int 
 	if (state == CS_MONITOR){
 		gpiod_line_settings_set_direction(settings, GPIOD_LINE_DIRECTION_INPUT);
 		gpiod_line_settings_set_output_value(settings, GPIOD_LINE_VALUE_INACTIVE);
-		gpiod_line_settings_set_bias(settings, GPIOD_LINE_BIAS_DISABLED);
-		gpiod_line_settings_set_edge_detection(settings, GPIOD_LINE_EDGE_BOTH);
+		gpiod_line_settings_set_bias(settings, GPIOD_LINE_BIAS_PULL_UP);
+		gpiod_line_settings_set_edge_detection(settings, GPIOD_LINE_EDGE_FALLING);
 
 	}else if (state == CS_RW){
 		gpiod_line_settings_set_direction(settings, GPIOD_LINE_DIRECTION_OUTPUT);
@@ -273,8 +273,7 @@ struct gpiod_line_request *gpio_config_input_detect(const char *chip_path, int o
 
 	gpiod_line_settings_set_direction(settings, GPIOD_LINE_DIRECTION_INPUT);
 	gpiod_line_settings_set_output_value(settings, GPIOD_LINE_VALUE_INACTIVE);
-	//gpiod_line_settings_set_drive(settings, GPIOD_LINE_DRIVE_OPEN_DRAIN);
-	gpiod_line_settings_set_bias(settings, GPIOD_LINE_BIAS_DISABLED);
+	gpiod_line_settings_set_bias(settings, GPIOD_LINE_BIAS_PULL_UP);
 
 	if (edgeDetect == EDGE_RIS){
 		gpiod_line_settings_set_edge_detection(settings, GPIOD_LINE_EDGE_RISING);

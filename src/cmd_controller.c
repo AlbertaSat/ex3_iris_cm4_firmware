@@ -50,23 +50,42 @@ uint8_t cmd_to_temp_addr(uint8_t arg){
     }
 }
 
-void cmd_return(int spi_dev, struct gpiod_line_request **spi_cs_request, uint8_t *buffer, uint8_t numWrites){
+IRIS_ERROR current_val_error_16bit_to_8bit(IRIS_ERROR error){
 
-    spi_write(spi_dev, buffer, numWrites, spi_cs_request);
-// RETURN DATA PACKET
+    switch (error){
+
+        case CURR1_VAL_READ_ERROR_16BIT:
+            return CURR1_VAL_READ_ERROR_8BIT;
+        case CURR2_VAL_READ_ERROR_16BIT:
+            return CURR2_VAL_READ_ERROR_8BIT;
+        case CURR3_VAL_READ_ERROR_16BIT:
+            return CURR3_VAL_READ_ERROR_8BIT;
+        default:
+            return CMD_FORMAT_ERROR;
+    }
 
 }
+IRIS_ERROR cmd_return(int spi_dev, struct gpiod_line_request **spi_cs_request, uint8_t *buffer, uint8_t numWrites){
 
-void cmd_center(uint8_t cmd, 
-                uint8_t *args,
-                int nargs,
-                int spi_dev, 
-                struct gpiod_line_request **spi_cs_request){
+    return spi_write(spi_dev, buffer, numWrites, spi_cs_request);
+}
+
+IRIS_ERROR cmd_center(uint8_t cmd, 
+                      uint8_t *args,
+                      int nargs,
+                      int spi_dev, 
+                      struct gpiod_line_request **spi_cs_request){
 
     int ncmdArg;
     uint8_t addr = 0;
+    uint16_t dataBuf = 0;
     enum IRIS_ERROR error = NO_ERROR;
-    uint8_t cmdReturn[2] = {CMD_RETURN, NO_ERROR};
+
+    uint8_t cmdReturn[8] = {NO_ERROR};
+    cmdReturn[0] = CMD_RETURN;
+
+    uint8_t errorCount = 0;
+    enum IRIS_ERROR errorBuffer[8] = {NO_ERROR};
 
     switch(cmd){
 
@@ -74,35 +93,205 @@ void cmd_center(uint8_t cmd,
             addr = cmd_to_current_addr(args[0]);
             if (addr == CMD_FORMAT_ERROR){
                 cmdReturn[1] = CMD_FORMAT_ERROR;
-                cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+                error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
                 break;
             }
             cmdReturn[1] = current_setup(addr);
-            cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+            error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
             break;
-            //ADD CODE
+
         case CURR_SENSOR_VALIDATE:
-            //ADD CODE
+            addr = cmd_to_current_addr(args[0]);
+            if (addr == CMD_FORMAT_ERROR){
+                cmdReturn[1] = CMD_FORMAT_ERROR;
+                error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+                break;
+            }
+            cmdReturn[1] = current_func_validate(addr);
+            error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+            break;
+
         case CURR_SENSOR_STATUS:
             //ADD CODE
         case CURR_SENSOR_RESET:
-            //ADD CODE
-        case CURR_SENSOR_READ:
-            //ADD CODE
+            addr = cmd_to_current_addr(args[0]);
+            if (addr == CMD_FORMAT_ERROR){
+                cmdReturn[1] = CMD_FORMAT_ERROR;
+                error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+                break;
+            }
+            cmdReturn[1] = current_monitor_reset(addr);
+            error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+            break;
+
+        case CURR_SENSOR_READ_CURRENT:
+            addr = cmd_to_current_addr(args[0]);
+            if (addr == CMD_FORMAT_ERROR){
+                cmdReturn[1] = CMD_FORMAT_ERROR;
+                error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+                break;
+            }
+            dataBuf = read_current(addr);
+
+            if ((dataBuf == CURR1_VAL_READ_ERROR_16BIT) ||
+                (dataBuf == CURR2_VAL_READ_ERROR_16BIT) ||
+                (dataBuf == CURR3_VAL_READ_ERROR_16BIT)){
+
+                    cmdReturn[1] = current_val_error_16bit_to_8bit(dataBuf);
+                    error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+                    break;
+                }
+            cmdReturn[1] = NO_ERROR;
+            cmdReturn[2] = (dataBuf >> 8) & 0xFF;  // MSB
+            cmdReturn[3] =  dataBuf & 0xFF;        // LSB
+            error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 4);
+            break;
+
+        case CURR_SENSOR_READ_VOLTAGE:
+            addr = cmd_to_current_addr(args[0]);
+            if (addr == CMD_FORMAT_ERROR){
+                cmdReturn[1] = CMD_FORMAT_ERROR;
+                error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+                break;
+            }
+            dataBuf = read_bus_voltage(addr);
+
+            if ((dataBuf == CURR1_VAL_READ_ERROR_16BIT) ||
+                (dataBuf == CURR2_VAL_READ_ERROR_16BIT) ||
+                (dataBuf == CURR3_VAL_READ_ERROR_16BIT)){
+
+                    cmdReturn[1] = current_val_error_16bit_to_8bit(dataBuf);
+                    error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+                    break;
+                }
+            cmdReturn[1] = NO_ERROR;
+            cmdReturn[2] = (dataBuf >> 8) & 0xFF;  // MSB
+            cmdReturn[3] =  dataBuf & 0xFF;        // LSB
+            error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 4);
+            break;
+
+        case CURR_SENSOR_READ_POWER:
+            addr = cmd_to_current_addr(args[0]);
+            if (addr == CMD_FORMAT_ERROR){
+                cmdReturn[1] = CMD_FORMAT_ERROR;
+                error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+                break;
+            }
+            dataBuf = read_power(addr);
+
+            if ((dataBuf == CURR1_VAL_READ_ERROR_16BIT) ||
+                (dataBuf == CURR2_VAL_READ_ERROR_16BIT) ||
+                (dataBuf == CURR3_VAL_READ_ERROR_16BIT)){
+
+                    cmdReturn[1] = current_val_error_16bit_to_8bit(dataBuf);
+                    error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+                    break;
+                }
+            cmdReturn[1] = NO_ERROR;
+            cmdReturn[2] = (dataBuf >> 8) & 0xFF;  // MSB
+            cmdReturn[3] =  dataBuf & 0xFF;        // LSB
+            error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 4);
+            break;
+
+        case CURR_SENSOR_READ_PK_POWER:
+            addr = cmd_to_current_addr(args[0]);
+            if (addr == CMD_FORMAT_ERROR){
+                cmdReturn[1] = CMD_FORMAT_ERROR;
+                error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+                break;
+            }
+            dataBuf = read_pk_power(addr);
+
+            if ((dataBuf == CURR1_VAL_READ_ERROR_16BIT) ||
+                (dataBuf == CURR2_VAL_READ_ERROR_16BIT) ||
+                (dataBuf == CURR3_VAL_READ_ERROR_16BIT)){
+
+                    cmdReturn[1] = current_val_error_16bit_to_8bit(dataBuf);
+                    error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+                    break;
+                }
+            cmdReturn[1] = NO_ERROR;
+            cmdReturn[2] = (dataBuf >> 8) & 0xFF;  // MSB
+            cmdReturn[3] =  dataBuf & 0xFF;        // LSB
+            error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 4);
+            break;
+
         case CURR_SENSOR_READ_LIMIT:
-            //ADD CODE
+
+            current_limit(errorBuffer, &errorCount);
+
+            for(int x = 0; x < errorCount; x++){
+                cmdReturn[x+1] = errorBuffer[x];
+            }
+            error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 1 + errorCount);
+            break;
+
         case TEMP_SENSOR_SETUP:
-            //ADD CODE
+            addr = cmd_to_temp_addr(args[0]);
+            if (addr == CMD_FORMAT_ERROR){
+                cmdReturn[1] = CMD_FORMAT_ERROR;
+                error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+                break;
+            }
+            cmdReturn[1] = temp_setup(addr);
+            error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+            break;
+
         case TEMP_SENSOR_VALIDATE:
-            //ADD CODE
+            addr = cmd_to_temp_addr(args[0]);
+            if (addr == CMD_FORMAT_ERROR){
+                cmdReturn[1] = CMD_FORMAT_ERROR;
+                error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+                break;
+            }
+            cmdReturn[1] = temp_func_validate(addr);
+            error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+            break;
+
         case TEMP_SENSOR_STATUS:
-            //ADD CODE
-        case TEMP_SENSOR_RESET:
-            //ADD CODE
+            addr = cmd_to_temp_addr(args[0]);
+            if (addr == CMD_FORMAT_ERROR){
+                cmdReturn[1] = CMD_FORMAT_ERROR;
+                error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+                break;
+            }
+            cmdReturn[1] = temp_reset(addr);
+            error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+            break;
+
         case TEMP_SENSOR_READ:
-            //ADD CODE
+            addr = cmd_to_temp_addr(args[0]);
+            if (addr == CMD_FORMAT_ERROR){
+                cmdReturn[1] = CMD_FORMAT_ERROR;
+                error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+                break;
+            }
+
+            cmdReturn[2] = read_temperature(addr);
+
+            if ((cmdReturn[2] == TEMP1_TEMP_READ_ERROR) ||
+                (cmdReturn[2] == TEMP2_TEMP_READ_ERROR) ||
+                (cmdReturn[2] == TEMP3_TEMP_READ_ERROR) ||
+                (cmdReturn[2] == TEMP4_TEMP_READ_ERROR)){
+
+                cmdReturn[1] = cmdReturn[2];
+                error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
+                break;
+            }
+
+            cmdReturn[1] = NO_ERROR;
+            error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 3);
+            break;
+
         case TEMP_SENSOR_READ_LIMIT:
-            //ADD CODE
+            temperature_limit(errorBuffer, &errorCount);
+
+            for(int x = 0; x < errorCount; x++){
+                cmdReturn[x+1] = errorBuffer[x];
+            }
+            error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 1 + errorCount);
+            break;
+
         case USB_HUB_SETUP:
             //ADD CODE
         case USB_HUB_VALIDATE:
@@ -110,7 +299,8 @@ void cmd_center(uint8_t cmd,
         case USB_HUB_RESET:
             //ADD CODE
         case ERROR_TRANSFER:
-            //ADD CODE
+            error = iris_error_transfer(spi_dev, spi_cs_request, errorBuffer, errorCount);
+            break;
         case IMAGE_CONFIG:
             //ADD CODE
         case IMAGE_CAPTURE:
@@ -118,9 +308,10 @@ void cmd_center(uint8_t cmd,
         case FILE_TRANSFER:
             //ADD CODE
         default:
-            //cmd_return(CMD_FORMAT_ERROR); //ADD ERROR RESPONSE
+            cmdReturn[1] = CMD_FORMAT_ERROR;
+            error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
     }
-    return;
+    return error;
 }
 
 //! ISSUES WITH ARG DECODING

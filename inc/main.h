@@ -36,7 +36,7 @@
 
 
 void main(void);
-void spi_cmd_loop(int spi_dev, 
+enum IRIS_ERROR spi_cmd_loop(int spi_dev, 
                   struct gpiod_line_request *spi_cs_request, 
                   struct gpiod_edge_event_buffer *event_buffer);
 bool signal_edge_detect(struct gpiod_line_request *request, struct gpiod_edge_event_buffer *event_buffer);
