@@ -23,46 +23,50 @@
 #define EDGE_BOTH 4
 
 // IRIS GPIO Indexing
-#define ID_SD 0
-#define ID_SC 1
+typedef enum IRIS_GPIO_INDEX{
+    ID_SD = 0,
+    ID_SC = 1,
 
-#define I2C_SDA 2
-#define I2C_SCL 3
+    I2C_SDA = 2,
+    I2C_SCL = 3,
 
-#define PWR_3V3_EN 4
-#define PWR_5V_EN 5
-#define PWR_5V_CAM_EN 6
+    PWR_3V3_EN = 4,
+    PWR_5V_EN = 5,
+    PWR_5V_CAM_EN = 6,
 
-#define CM4_GPIO_7 7
+    CM4_GPIO_7 = 7,
 
-#define SPI_CE_N 8
-#define SPI_MISO 9
-#define SPI_MOSI 10
-#define SPI_SCLK 11
+    SPI_CE_N = 8,
+    SPI_MISO = 9,
+    SPI_MOSI = 10,
+    SPI_SCLK = 11,
 
-#define CM4_GPIO_12 12
-#define CM4_GPIO_13 13
+    CM4_GPIO_12 = 12,
+    CM4_GPIO_13 = 13,
 
-#define UART_TX 14
-#define UART_RX 15
+    UART_TX = 14,
+    UART_RX = 15,
 
-#define HUB_RST_L 16
-#define HUB_HS_IND 17
-#define HUB_SETUP_IND 18
+    HUB_RST_L = 16,
+    HUB_HS_IND = 17,
+    HUB_SETUP_IND = 18,
 
-#define CM4_GPIO_19 19
-#define CM4_GPIO_20 20
-#define CM4_GPIO_21 21
+    CM4_GPIO_19 = 19,
+    CM4_GPIO_20 = 20,
+    CM4_GPIO_21 = 21,
 
-#define JTAG_TRST 22
-#define JTAG_RTCK 23
-#define JTAG_TDO 24
-#define JTAG_TCK 25
-#define JTAG_TDI 26
-#define JTAG_TMS 27
+    JTAG_TRST = 22,
+    JTAG_RTCK = 23,
+    JTAG_TDO = 24,
+    JTAG_TCK = 25,
+    JTAG_TDI = 26,
+    JTAG_TMS = 27,
 
-#define ID_SCL0 45
-#define ID_SDA0 46
+    ID_SCL0 = 45,
+    ID_SDA0 = 46,
+
+    LED_ACTI = 42,
+}IRIS_GPIO_INDEX;
 
 #define NO_CHANGE 0xFFFF
 
@@ -82,6 +86,6 @@ typedef struct {
 
 int gpio_config_port(const char *chip_path, int offset, int dir, int outputVal, const char *consumer);
 struct gpiod_line_request *cs_toggle(struct gpiod_line_request *cs_request, int state);
-struct gpiod_line_request *gpio_config_group(const char *chip_path, int numOffsets, int *offset, int *dir, int *outputVal, int *drive, int *bias, const char *consumer);
+struct gpiod_line_request *gpio_config_group(const char *chip_path, unsigned int numOffsets, unsigned int *offset, unsigned int *dir, unsigned int *outputVal, unsigned int *drive, unsigned int *bias, const char *consumer);
 struct gpiod_line_request *gpio_config_input_detect(const char *chip_path, int offset, int edgeDetect, const char *consumer);
 #endif //GPIO_H

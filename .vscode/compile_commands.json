@@ -1,0 +1,290 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-I./inc",
+      "-I./main_service",
+      "-I./spi_service",
+      "-I./usr/include",
+      "-Wall",
+      "-DONE_SERVICE",
+      "-c",
+      "-o",
+      "build/main_build/main.o",
+      "main_service/main.c"
+    ],
+    "directory": "/home/iris/ex3_iris_cm4_firmware",
+    "file": "/home/iris/ex3_iris_cm4_firmware/main_service/main.c",
+    "output": "/home/iris/ex3_iris_cm4_firmware/build/main_build/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-I./inc",
+      "-I./main_service",
+      "-I./spi_service",
+      "-I./usr/include",
+      "-Wall",
+      "-DONE_SERVICE",
+      "-c",
+      "-o",
+      "build/main_build/cmd_controller.o",
+      "src/cmd_controller.c"
+    ],
+    "directory": "/home/iris/ex3_iris_cm4_firmware",
+    "file": "/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c",
+    "output": "/home/iris/ex3_iris_cm4_firmware/build/main_build/cmd_controller.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-I./inc",
+      "-I./main_service",
+      "-I./spi_service",
+      "-I./usr/include",
+      "-Wall",
+      "-DONE_SERVICE",
+      "-c",
+      "-o",
+      "build/main_build/current_sensor.o",
+      "src/current_sensor.c"
+    ],
+    "directory": "/home/iris/ex3_iris_cm4_firmware",
+    "file": "/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c",
+    "output": "/home/iris/ex3_iris_cm4_firmware/build/main_build/current_sensor.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-I./inc",
+      "-I./main_service",
+      "-I./spi_service",
+      "-I./usr/include",
+      "-Wall",
+      "-DONE_SERVICE",
+      "-c",
+      "-o",
+      "build/main_build/error_handler.o",
+      "src/error_handler.c"
+    ],
+    "directory": "/home/iris/ex3_iris_cm4_firmware",
+    "file": "/home/iris/ex3_iris_cm4_firmware/src/error_handler.c",
+    "output": "/home/iris/ex3_iris_cm4_firmware/build/main_build/error_handler.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-I./inc",
+      "-I./main_service",
+      "-I./spi_service",
+      "-I./usr/include",
+      "-Wall",
+      "-DONE_SERVICE",
+      "-c",
+      "-o",
+      "build/main_build/file_operations.o",
+      "src/file_operations.c"
+    ],
+    "directory": "/home/iris/ex3_iris_cm4_firmware",
+    "file": "/home/iris/ex3_iris_cm4_firmware/src/file_operations.c",
+    "output": "/home/iris/ex3_iris_cm4_firmware/build/main_build/file_operations.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-I./inc",
+      "-I./main_service",
+      "-I./spi_service",
+      "-I./usr/include",
+      "-Wall",
+      "-DONE_SERVICE",
+      "-c",
+      "-o",
+      "build/main_build/gpio.o",
+      "src/gpio.c"
+    ],
+    "directory": "/home/iris/ex3_iris_cm4_firmware",
+    "file": "/home/iris/ex3_iris_cm4_firmware/src/gpio.c",
+    "output": "/home/iris/ex3_iris_cm4_firmware/build/main_build/gpio.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-I./inc",
+      "-I./main_service",
+      "-I./spi_service",
+      "-I./usr/include",
+      "-Wall",
+      "-DONE_SERVICE",
+      "-c",
+      "-o",
+      "build/main_build/i2c.o",
+      "src/i2c.c"
+    ],
+    "directory": "/home/iris/ex3_iris_cm4_firmware",
+    "file": "/home/iris/ex3_iris_cm4_firmware/src/i2c.c",
+    "output": "/home/iris/ex3_iris_cm4_firmware/build/main_build/i2c.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-I./inc",
+      "-I./main_service",
+      "-I./spi_service",
+      "-I./usr/include",
+      "-Wall",
+      "-DONE_SERVICE",
+      "-c",
+      "-o",
+      "build/main_build/ipc_iris.o",
+      "src/ipc_iris.c"
+    ],
+    "directory": "/home/iris/ex3_iris_cm4_firmware",
+    "file": "/home/iris/ex3_iris_cm4_firmware/src/ipc_iris.c",
+    "output": "/home/iris/ex3_iris_cm4_firmware/build/main_build/ipc_iris.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-I./inc",
+      "-I./main_service",
+      "-I./spi_service",
+      "-I./usr/include",
+      "-Wall",
+      "-DONE_SERVICE",
+      "-c",
+      "-o",
+      "build/main_build/linux_cli.o",
+      "src/linux_cli.c"
+    ],
+    "directory": "/home/iris/ex3_iris_cm4_firmware",
+    "file": "/home/iris/ex3_iris_cm4_firmware/src/linux_cli.c",
+    "output": "/home/iris/ex3_iris_cm4_firmware/build/main_build/linux_cli.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-I./inc",
+      "-I./main_service",
+      "-I./spi_service",
+      "-I./usr/include",
+      "-Wall",
+      "-DONE_SERVICE",
+      "-c",
+      "-o",
+      "build/main_build/logger.o",
+      "src/logger.c"
+    ],
+    "directory": "/home/iris/ex3_iris_cm4_firmware",
+    "file": "/home/iris/ex3_iris_cm4_firmware/src/logger.c",
+    "output": "/home/iris/ex3_iris_cm4_firmware/build/main_build/logger.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-I./inc",
+      "-I./main_service",
+      "-I./spi_service",
+      "-I./usr/include",
+      "-Wall",
+      "-DONE_SERVICE",
+      "-c",
+      "-o",
+      "build/main_build/spi_iris.o",
+      "src/spi_iris.c"
+    ],
+    "directory": "/home/iris/ex3_iris_cm4_firmware",
+    "file": "/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c",
+    "output": "/home/iris/ex3_iris_cm4_firmware/build/main_build/spi_iris.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-I./inc",
+      "-I./main_service",
+      "-I./spi_service",
+      "-I./usr/include",
+      "-Wall",
+      "-DONE_SERVICE",
+      "-c",
+      "-o",
+      "build/main_build/spi_iris_slave.o",
+      "src/spi_iris_slave.c"
+    ],
+    "directory": "/home/iris/ex3_iris_cm4_firmware",
+    "file": "/home/iris/ex3_iris_cm4_firmware/src/spi_iris_slave.c",
+    "output": "/home/iris/ex3_iris_cm4_firmware/build/main_build/spi_iris_slave.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-I./inc",
+      "-I./main_service",
+      "-I./spi_service",
+      "-I./usr/include",
+      "-Wall",
+      "-DONE_SERVICE",
+      "-c",
+      "-o",
+      "build/main_build/temp_read.o",
+      "src/temp_read.c"
+    ],
+    "directory": "/home/iris/ex3_iris_cm4_firmware",
+    "file": "/home/iris/ex3_iris_cm4_firmware/src/temp_read.c",
+    "output": "/home/iris/ex3_iris_cm4_firmware/build/main_build/temp_read.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-I./inc",
+      "-I./main_service",
+      "-I./spi_service",
+      "-I./usr/include",
+      "-Wall",
+      "-DONE_SERVICE",
+      "-c",
+      "-o",
+      "build/main_build/timing.o",
+      "src/timing.c"
+    ],
+    "directory": "/home/iris/ex3_iris_cm4_firmware",
+    "file": "/home/iris/ex3_iris_cm4_firmware/src/timing.c",
+    "output": "/home/iris/ex3_iris_cm4_firmware/build/main_build/timing.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-I./inc",
+      "-I./main_service",
+      "-I./spi_service",
+      "-I./usr/include",
+      "-Wall",
+      "-DONE_SERVICE",
+      "-c",
+      "-o",
+      "build/main_build/usb_hub.o",
+      "src/usb_hub.c"
+    ],
+    "directory": "/home/iris/ex3_iris_cm4_firmware",
+    "file": "/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c",
+    "output": "/home/iris/ex3_iris_cm4_firmware/build/main_build/usb_hub.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-I./inc",
+      "-I./main_service",
+      "-I./spi_service",
+      "-I./usr/include",
+      "-Wall",
+      "-DONE_SERVICE",
+      "-c",
+      "-o",
+      "build/main_build/watchdog.o",
+      "src/watchdog.c"
+    ],
+    "directory": "/home/iris/ex3_iris_cm4_firmware",
+    "file": "/home/iris/ex3_iris_cm4_firmware/src/watchdog.c",
+    "output": "/home/iris/ex3_iris_cm4_firmware/build/main_build/watchdog.o"
+  }
+]

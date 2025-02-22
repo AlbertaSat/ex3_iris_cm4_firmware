@@ -64,12 +64,18 @@
 #define TEMP3_MIN -50
 #define TEMP4_MIN -50
 
+//Used to convert Temperature sensor register value into actual measurement.
+//Can be altered to help calibrate the sensor
+#define CONVERSION_FACTOR 1 
+
 enum IRIS_ERROR temp_error_code(uint8_t tempAddr, enum IRIS_ERROR errorType);
 enum IRIS_ERROR temp_setup(uint8_t tempAddr);
 enum IRIS_ERROR temp_func_validate(uint8_t tempAddr);
 enum IRIS_ERROR temp_reset_trig(uint8_t tempAddr);
+enum IRIS_ERROR temp_reset(uint8_t tempAddr);
+
 void temperature_limit(enum IRIS_ERROR *errorBuffer, uint8_t *errorCount);
-int convert_temp_read(uint8_t HighByte);
-int read_temperature(uint8_t tempAddr);
+int8_t convert_temp_read(uint8_t HighByte);
+int8_t read_temperature(uint8_t tempAddr);
 
 #endif //TEMP_READ_H

@@ -1,0 +1,86 @@
+{
+    "tasks": [
+        {
+            "label": "Build One Service C Program",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "one_service"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "detail": "Runs the 'make' command in the current workspace directory using the Makefile."
+        },
+        {
+            "label": "Build One Service Debug C Program",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "debug_one"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "detail": "Runs the 'make' command in the current workspace directory using the Makefile."
+        },
+        {
+            "label": "Build Two Service C Program",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "two_service"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "detail": "Runs the 'make' command in the current workspace directory using the Makefile."
+        },
+        {
+            "label": "Build Two Service Debug C Program",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "debug_two"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "detail": "Runs the 'make' command in the current workspace directory using the Makefile."
+        },
+        {
+            "label": "Run Clang-Tidy",
+            "type": "shell",
+            "command": "clang-tidy",
+            "args": [
+                "-checks='*,-clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,-llvmlibc-restrict-system-libc-headers,-altera-unroll-loops'",
+                "-p=.vscode/",
+                "src/*.c",
+                "main_service/*.c",
+                "spi_service/*.c",
+                ">",
+                ".vscode/clang_tidy_report.txt",
+                "2>&1"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "dependsOn": ["Create Clang-Tidy Compile Commands"],
+        },
+        {
+            "label": "Create Clang-Tidy Compile Commands",
+            "type": "shell",
+            "command": "bear",
+            "args": [
+                "--output",
+                ".vscode/compile_commands.json",
+                "--",
+                "make",
+                "one_service",
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+        }
+    ],
+    "version": "2.0.0"
+}

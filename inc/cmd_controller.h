@@ -1,8 +1,8 @@
 #ifndef CMD_CTRL_H
 #define CMD_CTRL_H
 
-#include <stdint.h>
 #include <gpiod.h>
+#include <stdint.h>
 
 typedef enum IRIS_CMD{
 
@@ -36,14 +36,20 @@ typedef enum IRIS_CMD{
 	
     FILE_TRANSFER,
 	SYNC_TIME,
+	CHECKSUM,
 
 }IRIS_CMD;
 
+#define RETURN_CMD_SIZE 8
 
+uint8_t cmd_to_current_addr(uint8_t arg);
+uint8_t cmd_to_temp_addr(uint8_t arg);
+enum IRIS_ERROR current_val_error_16bit_to_8bit(enum IRIS_ERROR error);
+
+enum IRIS_ERROR cmd_return(int spi_dev, struct gpiod_line_request **spi_cs_request, uint8_t *buffer, uint8_t numWrites);
 
 enum IRIS_ERROR cmd_center(uint8_t cmd, uint8_t *args, int nargs, int spi_dev, struct gpiod_line_request **spi_cs_request);
-
-int cmd_extracter(uint8_t *cmd, uint8_t *arg, uint8_t *rx_buffer, uint8_t rx_len);
+int cmd_extracter(uint8_t *cmd, uint8_t *arg, const uint8_t *rx_buffer, uint8_t rx_len);
 
 
 #endif //CMD_CTRL

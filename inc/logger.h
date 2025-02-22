@@ -1,6 +1,10 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 typedef enum LOG_LEVEL{
     LOG_INFO,
     LOG_DEBUG,
@@ -19,16 +23,22 @@ typedef enum LOG_LEVEL{
 #define KWHT  "\x1B[37m"
 
 //Used to either ENABLE (1) or DISABLE (0) logging style
-#define INFO_ACTIVE    1
-#define DEBUG_ACTIVE   1
-#define ERROR_ACTIVE   1
-#define LOG_TO_FILE    1
+typedef enum LOG_STATES{
+    INFO_ACTIVE  = 1,
+    DEBUG_ACTIVE = 1,
+    ERROR_ACTIVE = 1,
+    LOG_TO_FILE  = 1,
+}LOG_STATES;
 
 #define LOG_DIRECTORY "/home/iris/ex3_iris_cm4_firmware"
 #define LOG_FILENAME  "Iris_Log.txt"
 
 #define MAX_FILE_SIZE_MB 2000
+#define LOG_BUFFER_SIZE  255
+#define LOG_FILE_PATH_LEN 512
 
+void log_file_init(void);
+bool check_log_file_size(FILE *filePtr);
 void log_write(enum LOG_LEVEL logLev, const char *msg);
 
-#endif /* LOG_H */
+#endif /* LOGGER_H */

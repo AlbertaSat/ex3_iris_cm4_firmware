@@ -1,4 +1,5 @@
-
+#ifndef USB_HUB_H
+#define USB_HUB_H
 
 
 
@@ -63,3 +64,5 @@
 enum IRIS_ERROR usb_hub_setup(void);
 enum IRIS_ERROR usb_hub_func_validate(struct gpiod_line_request *gpio_request);
 enum IRIS_ERROR usb_hub_reset_trig(struct gpiod_line_request *gpio_request);
+
+#endif //USB_HUB_H

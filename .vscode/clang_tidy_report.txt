@@ -1,0 +1,1517 @@
+3429 warnings generated.
+6486 warnings generated.
+8146 warnings generated.
+11625 warnings and 1 error generated.
+Error while processing /home/iris/ex3_iris_cm4_firmware/src/file_operations.c.
+17650 warnings and 1 error generated.
+Error while processing /home/iris/ex3_iris_cm4_firmware/src/gpio.c.
+24221 warnings and 1 error generated.
+Error while processing /home/iris/ex3_iris_cm4_firmware/src/i2c.c.
+27273 warnings and 1 error generated.
+Error while processing /home/iris/ex3_iris_cm4_firmware/src/ipc_iris.c.
+30641 warnings and 1 error generated.
+Error while processing /home/iris/ex3_iris_cm4_firmware/src/linux_cli.c.
+33763 warnings and 1 error generated.
+Error while processing /home/iris/ex3_iris_cm4_firmware/src/logger.c.
+40716 warnings and 1 error generated.
+Error while processing /home/iris/ex3_iris_cm4_firmware/src/spi_iris.c.
+40716 warnings and 1 error generated.
+Error while processing /home/iris/ex3_iris_cm4_firmware/src/spi_iris_slave.c.
+43697 warnings and 1 error generated.
+Error while processing /home/iris/ex3_iris_cm4_firmware/src/temp_read.c.
+45647 warnings and 1 error generated.
+Error while processing /home/iris/ex3_iris_cm4_firmware/src/timing.c.
+52232 warnings and 1 error generated.
+Error while processing /home/iris/ex3_iris_cm4_firmware/src/usb_hub.c.
+52232 warnings and 1 error generated.
+Error while processing /home/iris/ex3_iris_cm4_firmware/src/watchdog.c.
+58399 warnings and 1 error generated.
+Error while processing /home/iris/ex3_iris_cm4_firmware/main_service/main.c.
+61909 warnings and 1 error generated.
+Error while processing /home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c.
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:3:1: warning: #includes are not sorted properly [llvm-include-order]
+#include "logger.h"
+^        ~~~~~~~~~~
+         "cmd_controller.h"
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:9:1: warning: #includes are not sorted properly [llvm-include-order]
+#include "watchdog.h"
+^        ~~~~~~~~~~~~
+         "gpio.h"
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:15:1: warning: #includes are not sorted properly [llvm-include-order]
+#include <stdio.h>
+^        ~~~~~~~~~
+         <gpiod.h>
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:63:24: warning: backward branch (for loop) is ID-dependent due to variable reference to 'event_amt' and may cause performance degradation [altera-id-dependent-backward-branch]
+    for(int index = 0; (index < MAX_ITERATIONS) && (event_amt >= EDGE_EVENT_BUFF_SIZE); index++){
+                       ^
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:70:57: warning: pointer parameter 'rx_buffer' can be pointer to const [readability-non-const-parameter]
+enum IRIS_ERROR ipc_spi_cmd_main(int ipcMsgID, uint8_t *rx_buffer, uint8_t rx_count){
+                                                        ^
+                                               const 
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:106:48: warning: 2 adjacent parameters of 'ipc_main_cmd_spi' of similar type ('uint8_t *') are easily swapped by mistake [bugprone-easily-swappable-parameters]
+enum IRIS_ERROR ipc_main_cmd_spi(int ipcMsgID, uint8_t *tx_buffer, uint8_t *tx_count){
+                                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:106:57: note: the first parameter in the range is 'tx_buffer'
+enum IRIS_ERROR ipc_main_cmd_spi(int ipcMsgID, uint8_t *tx_buffer, uint8_t *tx_count){
+                                                        ^~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:106:77: note: the last parameter in the range is 'tx_count'
+enum IRIS_ERROR ipc_main_cmd_spi(int ipcMsgID, uint8_t *tx_buffer, uint8_t *tx_count){
+                                                                            ^~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:125:26: warning: 2 adjacent parameters of 'spi_read_loop' of similar type ('int') are easily swapped by mistake [bugprone-easily-swappable-parameters]
+IRIS_ERROR spi_read_loop(int ipcMsgID, int spi_dev, struct gpiod_line_request *spi_cs_request, struct gpiod_edge_event_buffer *event_buffer) {
+                         ^~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:125:30: note: the first parameter in the range is 'ipcMsgID'
+IRIS_ERROR spi_read_loop(int ipcMsgID, int spi_dev, struct gpiod_line_request *spi_cs_request, struct gpiod_edge_event_buffer *event_buffer) {
+                             ^~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:125:44: note: the last parameter in the range is 'spi_dev'
+IRIS_ERROR spi_read_loop(int ipcMsgID, int spi_dev, struct gpiod_line_request *spi_cs_request, struct gpiod_edge_event_buffer *event_buffer) {
+                                           ^~~~~~~
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:127:5: note: inferred assignment of ID-dependent value from ID-dependent  [altera-id-dependent-backward-branch]
+    bool cs_edge = false;
+    ^
+/usr/lib/llvm-14/lib/clang/14.0.6/include/stdbool.h:15:14: note: expanded from macro 'bool'
+#define bool _Bool
+             ^
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:133:24: warning: backward branch (for loop) is ID-dependent due to variable reference to 'cs_edge' and may cause performance degradation [altera-id-dependent-backward-branch]
+    for(int index = 0; (index < SPI_MAX_LOOP_AMT) && (cs_edge == false); index++){
+                       ^
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:151:27: warning: 2 adjacent parameters of 'spi_write_loop' of similar type ('int') are easily swapped by mistake [bugprone-easily-swappable-parameters]
+IRIS_ERROR spi_write_loop(int ipcMsgID, int spi_dev, struct gpiod_line_request *spi_cs_request, struct gpiod_edge_event_buffer *event_buffer) {
+                          ^~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:151:31: note: the first parameter in the range is 'ipcMsgID'
+IRIS_ERROR spi_write_loop(int ipcMsgID, int spi_dev, struct gpiod_line_request *spi_cs_request, struct gpiod_edge_event_buffer *event_buffer) {
+                              ^~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:151:45: note: the last parameter in the range is 'spi_dev'
+IRIS_ERROR spi_write_loop(int ipcMsgID, int spi_dev, struct gpiod_line_request *spi_cs_request, struct gpiod_edge_event_buffer *event_buffer) {
+                                            ^~~~~~~
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:151:129: warning: parameter 'event_buffer' is unused [misc-unused-parameters]
+IRIS_ERROR spi_write_loop(int ipcMsgID, int spi_dev, struct gpiod_line_request *spi_cs_request, struct gpiod_edge_event_buffer *event_buffer) {
+                                                                                                                                ^
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:186:21: warning: variable 'ipcInitError' set but not used [clang-diagnostic-unused-but-set-variable]
+    enum IRIS_ERROR ipcInitError = NO_ERROR;
+                    ^
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:188:13: warning: unused variable 'errorCount' [clang-diagnostic-unused-variable]
+    uint8_t errorCount = 0;
+            ^
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:189:21: warning: unused variable 'errorBuffer' [clang-diagnostic-unused-variable]
+    enum IRIS_ERROR errorBuffer[ERROR_BUFFER_SIZE] = {NO_ERROR};
+                    ^
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:198:5: warning: Value stored to 'ipcInitError' is never read [clang-analyzer-deadcode.DeadStores]
+    ipcInitError = ipc_setup(&IPCKey, &ipcMsgID);
+    ^              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:198:5: note: Value stored to 'ipcInitError' is never read
+    ipcInitError = ipc_setup(&IPCKey, &ipcMsgID);
+    ^              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/arm-linux-gnueabihf/bits/getopt_core.h:59:12: warning: variable 'optopt' is non-const and globally accessible, consider making it const [cppcoreguidelines-avoid-non-const-global-variables]
+extern int optopt;
+           ^
+main_service/main.c:42:5: note: inferred assignment of ID-dependent value from ID-dependent  [altera-id-dependent-backward-branch]
+    enum IRIS_ERROR errorCheck = NO_ERROR;
+    ^
+/usr/include/arm-linux-gnueabihf/bits/types/__locale_t.h:38:23: warning: 13 is a magic number; consider replacing it with a named constant [readability-magic-numbers]
+  const char *__names[13];
+                      ^
+/home/iris/ex3_iris_cm4_firmware/spi_service/spi_service.c:50:5: note: inferred assignment of ID-dependent value from ID-dependent  [altera-id-dependent-backward-branch]
+    int event_amt = EDGE_EVENT_BUFF_SIZE;
+    ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:20:1: warning: #includes are not sorted properly [llvm-include-order]
+#include "spi_iris.h"
+^        ~~~~~~~~~~~~
+         "cmd_controller.h"
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:53:12: warning: backward branch (do loop) is ID-dependent due to variable reference to 'errorCheck' and may cause performance degradation [altera-id-dependent-backward-branch]
+    }while((errorCheck != NO_ERROR) && (loopCounter < MAX_USBHUB_INIT_ATTEMPTS));
+           ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:70:14: warning: loop variable name 'x' is too short, expected at least 2 characters [readability-identifier-length]
+    for (int x = 0; x < sizeof(currAddr); x++){
+             ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:62:5: note: inferred assignment of ID-dependent value from ID-dependent  [altera-id-dependent-backward-branch]
+    enum IRIS_ERROR errorCheck = NO_ERROR;
+    ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:78:16: warning: backward branch (do loop) is ID-dependent due to variable reference to 'errorCheck' and may cause performance degradation [altera-id-dependent-backward-branch]
+        }while((errorCheck != NO_ERROR) && (loopCounter < MAX_CURR_INIT_ATTEMPTS));
+               ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:97:14: warning: loop variable name 'x' is too short, expected at least 2 characters [readability-identifier-length]
+    for (int x = 0; x < sizeof(tempAddr); x++){
+             ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:90:5: note: inferred assignment of ID-dependent value from ID-dependent  [altera-id-dependent-backward-branch]
+    enum IRIS_ERROR errorCheck = NO_ERROR;
+    ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:105:16: warning: backward branch (do loop) is ID-dependent due to variable reference to 'errorCheck' and may cause performance degradation [altera-id-dependent-backward-branch]
+        }while((errorCheck != NO_ERROR) && (loopCounter < MAX_TEMP_INIT_ATTEMPTS));
+               ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:126:14: warning: loop variable name 'x' is too short, expected at least 2 characters [readability-identifier-length]
+    for (int x = 0; x < sizeof(tempAddr); x++){
+             ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:118:5: note: inferred assignment of ID-dependent value from ID-dependent  [altera-id-dependent-backward-branch]
+    enum IRIS_ERROR errorCheck = NO_ERROR;
+    ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:135:32: warning: 250000 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+                        usleep(250000); //Need to wait some time for sensor to reinitizalize
+                               ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:141:16: warning: backward branch (do loop) is ID-dependent due to variable reference to 'errorCheck' and may cause performance degradation [altera-id-dependent-backward-branch]
+        }while((errorCheck != NO_ERROR) && (loopCounter < MAX_TEMP_HOUSE_KEEPING_ATTEMPTS));
+               ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:168:14: warning: loop variable name 'x' is too short, expected at least 2 characters [readability-identifier-length]
+    for (int x = 0; x < sizeof(currAddr); x++){
+             ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:160:5: note: inferred assignment of ID-dependent value from ID-dependent  [altera-id-dependent-backward-branch]
+    enum IRIS_ERROR errorCheck = NO_ERROR;
+    ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:182:16: warning: backward branch (do loop) is ID-dependent due to variable reference to 'errorCheck' and may cause performance degradation [altera-id-dependent-backward-branch]
+        }while((errorCheck != NO_ERROR) && (loopCounter < MAX_CURR_HOUSE_KEEPING_ATTEMPTS));
+               ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:201:5: note: inferred assignment of ID-dependent value from ID-dependent 
+    struct gpiod_line_request *request = NULL;
+    ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:218:12: warning: backward branch (do loop) is ID-dependent due to variable reference to 'request' and may cause performance degradation [altera-id-dependent-backward-branch]
+    }while((request == NULL) && (loopCounter < MAX_GPIO_INIT_ATTEMPTS));
+           ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:228:96: warning: parameter 'gpio_request' is unused [misc-unused-parameters]
+void system_init(enum IRIS_ERROR *errorBuffer, uint8_t *errorCount, struct gpiod_line_request *gpio_request) {
+                                                                                               ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:244:5: note: inferred assignment of ID-dependent value from ID-dependent  [altera-id-dependent-backward-branch]
+    int event_amt = EDGE_EVENT_BUFF_SIZE;
+    ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:257:24: warning: backward branch (for loop) is ID-dependent due to variable reference to 'event_amt' and may cause performance degradation [altera-id-dependent-backward-branch]
+    for(int index = 0; (index < MAX_ITERATIONS) && (event_amt >= EDGE_EVENT_BUFF_SIZE); index++){
+                       ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:268:5: note: inferred assignment of ID-dependent value from ID-dependent 
+    bool cs_edge = false;
+    ^
+/usr/lib/llvm-14/lib/clang/14.0.6/include/stdbool.h:15:14: note: expanded from macro 'bool'
+#define bool _Bool
+             ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:275:24: warning: backward branch (for loop) is ID-dependent due to variable reference to 'cs_edge' and may cause performance degradation [altera-id-dependent-backward-branch]
+    for(int index = 0; (index < SPI_MAX_LOOP_AMT) && (cs_edge == false); index++){
+                       ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:291:105: warning: parameter 'gpio_request' is unused [misc-unused-parameters]
+void system_house_keeping(enum IRIS_ERROR *errorBuffer, uint8_t *errorCount, struct gpiod_line_request *gpio_request){
+                                                                                                        ^
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:344:5: warning: the value returned by this function should be used [cert-err33-c]
+    atexit(clean_up);
+    ^~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:344:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/main_service/main.c:370:28: warning: implicit declaration of function 'iris_error_transfer' is invalid in C99 [clang-diagnostic-implicit-function-declaration]
+                spiError = iris_error_transfer(spi_dev, spi_cs_request, errorBuffer, &errorCount);
+                           ^
+src/cmd_controller.c:63:12: warning: function 'cmd_center' has cognitive complexity of 46 (threshold 25) [readability-function-cognitive-complexity]
+IRIS_ERROR cmd_center(uint8_t cmd, uint8_t *args, int nargs, int spi_dev, struct gpiod_line_request **spi_cs_request){
+           ^
+src/cmd_controller.c:76:5: note: +1, including nesting penalty of 0, nesting level increased to 1
+    switch(cmd){
+    ^
+src/cmd_controller.c:80:13: note: +2, including nesting penalty of 1, nesting level increased to 2
+            if (addr == CMD_FORMAT_ERROR){
+            ^
+src/cmd_controller.c:91:13: note: +2, including nesting penalty of 1, nesting level increased to 2
+            if (addr == CMD_FORMAT_ERROR){
+            ^
+src/cmd_controller.c:104:13: note: +2, including nesting penalty of 1, nesting level increased to 2
+            if (addr == CMD_FORMAT_ERROR){
+            ^
+src/cmd_controller.c:115:13: note: +2, including nesting penalty of 1, nesting level increased to 2
+            if (addr == CMD_FORMAT_ERROR){
+            ^
+src/cmd_controller.c:122:13: note: +2, including nesting penalty of 1, nesting level increased to 2
+            if ((dataBuf == CURR1_VAL_READ_ERROR_16BIT) ||
+            ^
+src/cmd_controller.c:123:57: note: +1
+                (dataBuf == CURR2_VAL_READ_ERROR_16BIT) ||
+                                                        ^
+src/cmd_controller.c:138:13: note: +2, including nesting penalty of 1, nesting level increased to 2
+            if (addr == CMD_FORMAT_ERROR){
+            ^
+src/cmd_controller.c:145:13: note: +2, including nesting penalty of 1, nesting level increased to 2
+            if ((dataBuf == CURR1_VAL_READ_ERROR_16BIT) ||
+            ^
+src/cmd_controller.c:146:57: note: +1
+                (dataBuf == CURR2_VAL_READ_ERROR_16BIT) ||
+                                                        ^
+src/cmd_controller.c:161:13: note: +2, including nesting penalty of 1, nesting level increased to 2
+            if (addr == CMD_FORMAT_ERROR){
+            ^
+src/cmd_controller.c:168:13: note: +2, including nesting penalty of 1, nesting level increased to 2
+            if ((dataBuf == CURR1_VAL_READ_ERROR_16BIT) ||
+            ^
+src/cmd_controller.c:169:57: note: +1
+                (dataBuf == CURR2_VAL_READ_ERROR_16BIT) ||
+                                                        ^
+src/cmd_controller.c:184:13: note: +2, including nesting penalty of 1, nesting level increased to 2
+            if (addr == CMD_FORMAT_ERROR){
+            ^
+src/cmd_controller.c:191:13: note: +2, including nesting penalty of 1, nesting level increased to 2
+            if ((dataBuf == CURR1_VAL_READ_ERROR_16BIT) ||
+            ^
+src/cmd_controller.c:192:57: note: +1
+                (dataBuf == CURR2_VAL_READ_ERROR_16BIT) ||
+                                                        ^
+src/cmd_controller.c:209:13: note: +2, including nesting penalty of 1, nesting level increased to 2
+            if(errorCount == 0){
+            ^
+src/cmd_controller.c:212:14: note: +1, nesting level increased to 2
+            }else{
+             ^
+src/cmd_controller.c:213:17: note: +3, including nesting penalty of 2, nesting level increased to 3
+                for(int index = 0; index < errorCount; index++){
+                ^
+src/cmd_controller.c:222:13: note: +2, including nesting penalty of 1, nesting level increased to 2
+            if (addr == CMD_FORMAT_ERROR){
+            ^
+src/cmd_controller.c:233:13: note: +2, including nesting penalty of 1, nesting level increased to 2
+            if (addr == CMD_FORMAT_ERROR){
+            ^
+src/cmd_controller.c:244:13: note: +2, including nesting penalty of 1, nesting level increased to 2
+            if (addr == CMD_FORMAT_ERROR){
+            ^
+src/cmd_controller.c:255:13: note: +2, including nesting penalty of 1, nesting level increased to 2
+            if (addr == CMD_FORMAT_ERROR){
+            ^
+src/cmd_controller.c:263:13: note: +2, including nesting penalty of 1, nesting level increased to 2
+            if ((cmdReturn[2] == TEMP1_TEMP_READ_ERROR) ||
+            ^
+src/cmd_controller.c:265:57: note: +1
+                (cmdReturn[2] == TEMP3_TEMP_READ_ERROR) ||
+                                                        ^
+src/cmd_controller.c:280:13: note: +2, including nesting penalty of 1, nesting level increased to 2
+            for(int x = 0; x < errorCount; x++){
+            ^
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:63:51: warning: 2 adjacent parameters of 'cmd_center' of similar type ('int') are easily swapped by mistake [bugprone-easily-swappable-parameters]
+IRIS_ERROR cmd_center(uint8_t cmd, uint8_t *args, int nargs, int spi_dev, struct gpiod_line_request **spi_cs_request){
+                                                  ^~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:63:55: note: the first parameter in the range is 'nargs'
+IRIS_ERROR cmd_center(uint8_t cmd, uint8_t *args, int nargs, int spi_dev, struct gpiod_line_request **spi_cs_request){
+                                                      ^~~~~
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:63:66: note: the last parameter in the range is 'spi_dev'
+IRIS_ERROR cmd_center(uint8_t cmd, uint8_t *args, int nargs, int spi_dev, struct gpiod_line_request **spi_cs_request){
+                                                                 ^~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:63:55: warning: parameter 'nargs' is unused [misc-unused-parameters]
+IRIS_ERROR cmd_center(uint8_t cmd, uint8_t *args, int nargs, int spi_dev, struct gpiod_line_request **spi_cs_request){
+                                                      ^
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:65:9: warning: unused variable 'ncmdArg' [clang-diagnostic-unused-variable]
+    int ncmdArg = 0;
+        ^
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:131:28: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+            cmdReturn[2] = (dataBuf >> 8) & 0xFF;  // MSB
+                           ^~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:131:29: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+            cmdReturn[2] = (dataBuf >> 8) & 0xFF;  // MSB
+                            ^          ~
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:131:40: warning: 8 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            cmdReturn[2] = (dataBuf >> 8) & 0xFF;  // MSB
+                                       ^
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:131:45: warning: 0xFF is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            cmdReturn[2] = (dataBuf >> 8) & 0xFF;  // MSB
+                                            ^
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:132:29: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+            cmdReturn[3] =  dataBuf & 0xFF;        // LSB
+                            ^         ~~~~
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:132:39: warning: 0xFF is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            cmdReturn[3] =  dataBuf & 0xFF;        // LSB
+                                      ^
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:154:28: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+            cmdReturn[2] = (dataBuf >> 8) & 0xFF;  // MSB
+                           ^~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:154:29: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+            cmdReturn[2] = (dataBuf >> 8) & 0xFF;  // MSB
+                            ^          ~
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:154:40: warning: 8 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            cmdReturn[2] = (dataBuf >> 8) & 0xFF;  // MSB
+                                       ^
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:154:45: warning: 0xFF is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            cmdReturn[2] = (dataBuf >> 8) & 0xFF;  // MSB
+                                            ^
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:155:29: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+            cmdReturn[3] =  dataBuf & 0xFF;        // LSB
+                            ^         ~~~~
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:155:39: warning: 0xFF is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            cmdReturn[3] =  dataBuf & 0xFF;        // LSB
+                                      ^
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:177:28: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+            cmdReturn[2] = (dataBuf >> 8) & 0xFF;  // MSB
+                           ^~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:177:29: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+            cmdReturn[2] = (dataBuf >> 8) & 0xFF;  // MSB
+                            ^          ~
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:177:40: warning: 8 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            cmdReturn[2] = (dataBuf >> 8) & 0xFF;  // MSB
+                                       ^
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:177:45: warning: 0xFF is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            cmdReturn[2] = (dataBuf >> 8) & 0xFF;  // MSB
+                                            ^
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:178:29: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+            cmdReturn[3] =  dataBuf & 0xFF;        // LSB
+                            ^         ~~~~
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:178:39: warning: 0xFF is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            cmdReturn[3] =  dataBuf & 0xFF;        // LSB
+                                      ^
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:200:28: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+            cmdReturn[2] = (dataBuf >> 8) & 0xFF;  // MSB
+                           ^~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:200:29: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+            cmdReturn[2] = (dataBuf >> 8) & 0xFF;  // MSB
+                            ^          ~
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:200:40: warning: 8 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            cmdReturn[2] = (dataBuf >> 8) & 0xFF;  // MSB
+                                       ^
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:200:45: warning: 0xFF is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            cmdReturn[2] = (dataBuf >> 8) & 0xFF;  // MSB
+                                            ^
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:201:29: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+            cmdReturn[3] =  dataBuf & 0xFF;        // LSB
+                            ^         ~~~~
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:201:39: warning: 0xFF is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            cmdReturn[3] =  dataBuf & 0xFF;        // LSB
+                                      ^
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:280:21: warning: loop variable name 'x' is too short, expected at least 2 characters [readability-identifier-length]
+            for(int x = 0; x < errorCount; x++){
+                    ^
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:293:21: warning: implicit declaration of function 'iris_error_transfer' is invalid in C99 [clang-diagnostic-implicit-function-declaration]
+            error = iris_error_transfer(spi_dev, spi_cs_request, errorBuffer, errorCount);
+                    ^
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:309:19: warning: 2 adjacent parameters of 'cmd_extracter' of similar type ('uint8_t *') are easily swapped by mistake [bugprone-easily-swappable-parameters]
+int cmd_extracter(uint8_t *cmd, uint8_t *arg, const uint8_t *rx_buffer, uint8_t rx_len){
+                  ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:309:28: note: the first parameter in the range is 'cmd'
+int cmd_extracter(uint8_t *cmd, uint8_t *arg, const uint8_t *rx_buffer, uint8_t rx_len){
+                           ^~~
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:309:42: note: the last parameter in the range is 'arg'
+int cmd_extracter(uint8_t *cmd, uint8_t *arg, const uint8_t *rx_buffer, uint8_t rx_len){
+                                         ^~~
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:311:5: note: inferred assignment of ID-dependent value from ID-dependent  [altera-id-dependent-backward-branch]
+    uint8_t current_byte = 0;
+    ^
+/home/iris/ex3_iris_cm4_firmware/src/cmd_controller.c:316:24: warning: backward branch (for loop) is ID-dependent due to variable reference to 'current_byte' and may cause performance degradation [altera-id-dependent-backward-branch]
+    for(int index = 1; (index <= rx_len) && (current_byte != END_SPI_CMD); index++){
+                       ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:2:1: warning: #includes are not sorted properly [llvm-include-order]
+#include "i2c.h"
+^        ~~~~~~~
+         "error_handler.h"
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:38:36: warning: 2 adjacent parameters of 'current_error_code' of convertible types are easily swapped by mistake [bugprone-easily-swappable-parameters]
+enum IRIS_ERROR current_error_code(uint8_t currAddr, enum IRIS_ERROR errorType){
+                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:38:44: note: the first parameter in the range is 'currAddr'
+enum IRIS_ERROR current_error_code(uint8_t currAddr, enum IRIS_ERROR errorType){
+                                           ^~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:38:70: note: the last parameter in the range is 'errorType'
+enum IRIS_ERROR current_error_code(uint8_t currAddr, enum IRIS_ERROR errorType){
+                                                                     ^~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:38:36: note: 
+enum IRIS_ERROR current_error_code(uint8_t currAddr, enum IRIS_ERROR errorType){
+                                   ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:38:54: note: 'uint8_t' and 'enum IRIS_ERROR' may be implicitly converted: 'uint8_t' (as 'unsigned char') -> 'enum IRIS_ERROR', 'enum IRIS_ERROR' -> 'uint8_t' (as 'unsigned char')
+enum IRIS_ERROR current_error_code(uint8_t currAddr, enum IRIS_ERROR errorType){
+                                                     ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:52:21: warning: function is not thread safe [concurrency-mt-unsafe]
+                    exit(EXIT_FAILURE);
+                    ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:66:21: warning: function is not thread safe [concurrency-mt-unsafe]
+                    exit(EXIT_FAILURE);
+                    ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:80:21: warning: function is not thread safe [concurrency-mt-unsafe]
+                    exit(EXIT_FAILURE);
+                    ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:94:21: warning: function is not thread safe [concurrency-mt-unsafe]
+                    exit(EXIT_FAILURE);
+                    ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:108:21: warning: function is not thread safe [concurrency-mt-unsafe]
+                    exit(EXIT_FAILURE);
+                    ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:114:13: warning: function is not thread safe [concurrency-mt-unsafe]
+            exit(EXIT_FAILURE);
+            ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:135:24: warning: 13 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+    uint16_t regConfig[13] = {0};
+                       ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:136:21: warning: 13 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+    uint8_t regAddr[13] = { CURR_REG_CFG,
+                    ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:151:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "CURRENT-SENSOR-SETUP: Begin functional verification of Current Sensor 0x%02x", currAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:151:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:156:32: warning: 13 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+        uint16_t regConfigTemp[13] = CURR_SENSOR_REG_DEFAULT_3V3;
+                               ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:156:38: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+        uint16_t regConfigTemp[13] = CURR_SENSOR_REG_DEFAULT_3V3;
+                                     ^
+/home/iris/ex3_iris_cm4_firmware/./inc/current_sensor.h:138:38: note: expanded from macro 'CURR_SENSOR_REG_DEFAULT_3V3'
+                                     CURR_REG_CALIBRATION_POR_3V3,    \
+                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/./inc/current_sensor.h:69:42: note: expanded from macro 'CURR_REG_CALIBRATION_POR_3V3'
+#define CURR_REG_CALIBRATION_POR_3V3    (27307 << 1) //: 0.04096 / (CURR_LSB_VAL_3V3 * SHUNT_RESISTANCE)
+                                         ^~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:157:17: warning: loop variable name 'x' is too short, expected at least 2 characters [readability-identifier-length]
+        for(int x = 0; x < sizeof(regConfigTemp); x++){
+                ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:162:32: warning: 13 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+        uint16_t regConfigTemp[13] = CURR_SENSOR_REG_DEFAULT_5V;
+                               ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:162:38: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+        uint16_t regConfigTemp[13] = CURR_SENSOR_REG_DEFAULT_5V;
+                                     ^
+/home/iris/ex3_iris_cm4_firmware/./inc/current_sensor.h:153:38: note: expanded from macro 'CURR_SENSOR_REG_DEFAULT_5V'
+                                     CURR_REG_CALIBRATION_POR_5V,    \
+                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/./inc/current_sensor.h:70:42: note: expanded from macro 'CURR_REG_CALIBRATION_POR_5V'
+#define CURR_REG_CALIBRATION_POR_5V     (13430 << 1) //: 0.04096 / (CURR_LSB_VAL_5V  * SHUNT_RESISTANCE)
+                                         ^~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:163:17: warning: loop variable name 'x' is too short, expected at least 2 characters [readability-identifier-length]
+        for(int x = 0; x < sizeof(regConfigTemp); x++){
+                ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:168:32: warning: 13 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+        uint16_t regConfigTemp[13] = CURR_SENSOR_REG_DEFAULT_CAM;
+                               ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:168:38: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+        uint16_t regConfigTemp[13] = CURR_SENSOR_REG_DEFAULT_CAM;
+                                     ^
+/home/iris/ex3_iris_cm4_firmware/./inc/current_sensor.h:168:38: note: expanded from macro 'CURR_SENSOR_REG_DEFAULT_CAM'
+                                     CURR_REG_CALIBRATION_POR_CAM,    \
+                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/./inc/current_sensor.h:71:42: note: expanded from macro 'CURR_REG_CALIBRATION_POR_CAM'
+#define CURR_REG_CALIBRATION_POR_CAM    (13430 << 1) //: 0.04096 / (CURR_LSB_VAL_CAM * SHUNT_RESISTANCE)
+                                         ^~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:169:17: warning: loop variable name 'x' is too short, expected at least 2 characters [readability-identifier-length]
+        for(int x = 0; x < sizeof(regConfigTemp); x++){
+                ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:175:9: warning: function is not thread safe [concurrency-mt-unsafe]
+        exit(EXIT_FAILURE);
+        ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:181:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Bus Failed to Open", currAddr);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:181:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:190:13: warning: the value returned by this function should be used [cert-err33-c]
+            snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Reg 0x%02x Write Failed", currAddr, regAddr[index]);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:190:13: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:196:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "CURRENT-SENSOR-SETUP: Completed attempt for setup of Current Monitor Sensor 0x%02x", currAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:196:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:222:24: warning: 13 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+    uint16_t regConfig[13] = {0};
+                       ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:223:21: warning: 13 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+    uint8_t regAddr[13] = { CURR_REG_CFG,
+                    ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:238:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "CURRENT-FUNC-VALIDATE: Begin functional verification of Current Sensor 0x%02x", currAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:238:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:243:32: warning: 13 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+        uint16_t regConfigTemp[13] = CURR_SENSOR_REG_DEFAULT_3V3;
+                               ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:243:38: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+        uint16_t regConfigTemp[13] = CURR_SENSOR_REG_DEFAULT_3V3;
+                                     ^
+/home/iris/ex3_iris_cm4_firmware/./inc/current_sensor.h:138:38: note: expanded from macro 'CURR_SENSOR_REG_DEFAULT_3V3'
+                                     CURR_REG_CALIBRATION_POR_3V3,    \
+                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/./inc/current_sensor.h:69:42: note: expanded from macro 'CURR_REG_CALIBRATION_POR_3V3'
+#define CURR_REG_CALIBRATION_POR_3V3    (27307 << 1) //: 0.04096 / (CURR_LSB_VAL_3V3 * SHUNT_RESISTANCE)
+                                         ^~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:244:17: warning: loop variable name 'x' is too short, expected at least 2 characters [readability-identifier-length]
+        for(int x = 0; x < sizeof(regConfigTemp); x++){
+                ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:248:32: warning: 13 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+        uint16_t regConfigTemp[13] = CURR_SENSOR_REG_DEFAULT_5V;
+                               ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:248:38: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+        uint16_t regConfigTemp[13] = CURR_SENSOR_REG_DEFAULT_5V;
+                                     ^
+/home/iris/ex3_iris_cm4_firmware/./inc/current_sensor.h:153:38: note: expanded from macro 'CURR_SENSOR_REG_DEFAULT_5V'
+                                     CURR_REG_CALIBRATION_POR_5V,    \
+                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/./inc/current_sensor.h:70:42: note: expanded from macro 'CURR_REG_CALIBRATION_POR_5V'
+#define CURR_REG_CALIBRATION_POR_5V     (13430 << 1) //: 0.04096 / (CURR_LSB_VAL_5V  * SHUNT_RESISTANCE)
+                                         ^~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:249:17: warning: loop variable name 'x' is too short, expected at least 2 characters [readability-identifier-length]
+        for(int x = 0; x < sizeof(regConfigTemp); x++){
+                ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:253:32: warning: 13 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+        uint16_t regConfigTemp[13] = CURR_SENSOR_REG_DEFAULT_CAM;
+                               ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:253:38: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+        uint16_t regConfigTemp[13] = CURR_SENSOR_REG_DEFAULT_CAM;
+                                     ^
+/home/iris/ex3_iris_cm4_firmware/./inc/current_sensor.h:168:38: note: expanded from macro 'CURR_SENSOR_REG_DEFAULT_CAM'
+                                     CURR_REG_CALIBRATION_POR_CAM,    \
+                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/./inc/current_sensor.h:71:42: note: expanded from macro 'CURR_REG_CALIBRATION_POR_CAM'
+#define CURR_REG_CALIBRATION_POR_CAM    (13430 << 1) //: 0.04096 / (CURR_LSB_VAL_CAM * SHUNT_RESISTANCE)
+                                         ^~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:254:17: warning: loop variable name 'x' is too short, expected at least 2 characters [readability-identifier-length]
+        for(int x = 0; x < sizeof(regConfigTemp); x++){
+                ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:260:9: warning: function is not thread safe [concurrency-mt-unsafe]
+        exit(EXIT_FAILURE);
+        ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:265:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Bus Failed to Open", currAddr);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:265:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:273:13: warning: the value returned by this function should be used [cert-err33-c]
+            snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Reg 0x%02x Read Failed", currAddr, regAddr[index]);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:273:13: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:278:13: warning: the value returned by this function should be used [cert-err33-c]
+            snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Reg 0x%02x Value Incorrect 0x%02x", currAddr, regAddr[index], regData[0]);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:278:13: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:284:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "CURRENT-FUNC-VALIDATE: Completed attempt for functional verification of Current Sensor 0x%02x", currAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:284:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:306:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "CURRENT-SENSOR-RESET-TRIG: Begin triggering reset of Current Sensor 0x%02x", currAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:306:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:312:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Bus Failed to Open", currAddr);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:312:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:318:25: warning: 0xB99F is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+    uint16_t resetReg = 0xB99F;
+                        ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:321:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Reg 0x%02x Write Failed", currAddr, 0xB99F);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:321:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:321:113: warning: 0xB99F is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Reg 0x%02x Write Failed", currAddr, 0xB99F);
+                                                                                                                ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:327:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "CURRENT-SENSOR-RESET-TRIG: Successfully triggered reset of Current Sensor 0x%02x", currAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:327:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:349:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "CURRENT-SENSOR-RESET: Begin reset of Current Sensor 0x%02x", currAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:349:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:352:5: warning: Value stored to 'errorCheck' is never read [clang-analyzer-deadcode.DeadStores]
+    errorCheck = NO_ERROR;
+    ^            ~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:352:5: note: Value stored to 'errorCheck' is never read
+    errorCheck = NO_ERROR;
+    ^            ~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:358:12: warning: backward branch (do loop) is ID-dependent due to variable reference to 'errorCheck' and may cause performance degradation [altera-id-dependent-backward-branch]
+    }while((errorCheck != NO_ERROR) && (loopCounter < MAX_CURR_INIT_ATTEMPTS));
+           ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:345:5: note: inferred assignment of ID-dependent value from ID-dependent 
+    enum IRIS_ERROR errorCheck = 0;
+    ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:372:12: warning: backward branch (do loop) is ID-dependent due to variable reference to 'errorCheck' and may cause performance degradation [altera-id-dependent-backward-branch]
+    }while((errorCheck != NO_ERROR) && (loopCounter < MAX_CURR_INIT_ATTEMPTS));
+           ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:375:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "CURRENT-SENSOR-RESET: Finished reset attempt of Current Sensor 0x%02x", currAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:375:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:345:5: note: inferred assignment of ID-dependent value from ID-dependent  [altera-id-dependent-backward-branch]
+    enum IRIS_ERROR errorCheck = 0;
+    ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:430:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Bus Failed to Open", currAddr);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:430:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:437:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Reg 0x%02x Read Failed", currAddr, reg);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:437:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:447:63: warning: 1000 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            currBuf = (uint16_t)(currReg * CURR_LSB_VAL_3V3 * 1000);
+                                                              ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:449:9: warning: switch has 2 consecutive identical branches [bugprone-branch-clone]
+        case CURRENT_SENSOR_ADDR_5V:
+        ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:454:18: note: last of these clones ends here
+            break;
+                 ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:450:63: warning: 1000 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            currBuf = (uint16_t)(currReg * CURR_LSB_VAL_5V  * 1000);
+                                                              ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:453:63: warning: 1000 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            currBuf = (uint16_t)(currReg * CURR_LSB_VAL_CAM * 1000);
+                                                              ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:458:13: warning: function is not thread safe [concurrency-mt-unsafe]
+            exit(EXIT_FAILURE);
+            ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:461:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "BUS-CURR: Measured a Current of %umA from Sensor 0x%02x", (uint16_t)currBuf, currAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:461:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:461:103: warning: redundant cast to the same type [google-readability-casting]
+    snprintf(logBuffer, sizeof(logBuffer), "BUS-CURR: Measured a Current of %umA from Sensor 0x%02x", (uint16_t)currBuf, currAddr);
+                                                                                                      ^~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:486:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Bus Failed to Open", currAddr);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:486:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:493:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Reg 0x%02x Read Failed", currAddr, reg);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:493:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:503:62: warning: 1000 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            powerBuf = (uint16_t)(pwrReg * PWR_LSB_VAL_3V3 * 1000);
+                                                             ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:505:9: warning: switch has 2 consecutive identical branches [bugprone-branch-clone]
+        case CURRENT_SENSOR_ADDR_5V:
+        ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:510:18: note: last of these clones ends here
+            break;
+                 ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:506:62: warning: 1000 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            powerBuf = (uint16_t)(pwrReg * PWR_LSB_VAL_5V  * 1000);
+                                                             ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:509:62: warning: 1000 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            powerBuf = (uint16_t)(pwrReg * PWR_LSB_VAL_CAM * 1000);
+                                                             ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:514:13: warning: function is not thread safe [concurrency-mt-unsafe]
+            exit(EXIT_FAILURE);
+            ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:517:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "BUS-PWR: Measured a Power of %umW from Sensor 0x%02x", (uint16_t)powerBuf, currAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:517:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:517:100: warning: redundant cast to the same type [google-readability-casting]
+    snprintf(logBuffer, sizeof(logBuffer), "BUS-PWR: Measured a Power of %umW from Sensor 0x%02x", (uint16_t)powerBuf, currAddr);
+                                                                                                   ^~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:543:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Bus Failed to Open", currAddr);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:543:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:550:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Reg 0x%02x Read Failed", currAddr, reg);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:550:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:560:62: warning: 1000 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            powerBuf = (uint16_t)(pwrReg * PWR_LSB_VAL_3V3 * 1000);
+                                                             ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:562:9: warning: switch has 2 consecutive identical branches [bugprone-branch-clone]
+        case CURRENT_SENSOR_ADDR_5V:
+        ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:567:18: note: last of these clones ends here
+            break;
+                 ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:563:62: warning: 1000 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            powerBuf = (uint16_t)(pwrReg * PWR_LSB_VAL_5V  * 1000);
+                                                             ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:566:62: warning: 1000 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            powerBuf = (uint16_t)(pwrReg * PWR_LSB_VAL_CAM * 1000);
+                                                             ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:571:13: warning: function is not thread safe [concurrency-mt-unsafe]
+            exit(EXIT_FAILURE);
+            ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:574:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "BUS-PK-PWR: Measured a Peak Power of %umW from Sensor 0x%02x", (uint16_t)powerBuf, currAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:574:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:574:108: warning: redundant cast to the same type [google-readability-casting]
+    snprintf(logBuffer, sizeof(logBuffer), "BUS-PK-PWR: Measured a Peak Power of %umW from Sensor 0x%02x", (uint16_t)powerBuf, currAddr);
+                                                                                                           ^~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:600:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Bus Failed to Open", currAddr);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:600:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:607:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Current Sensor 0x%02x - I2C Reg 0x%02x Read Failed", currAddr, reg);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:607:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:615:26: warning: 1000 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+    voltBuf = (uint16_t)(1000 * (voltReg >> 3) * 0.004); // LSB = 10uV
+                         ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:615:34: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+    voltBuf = (uint16_t)(1000 * (voltReg >> 3) * 0.004); // LSB = 10uV
+                                 ^          ~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:615:50: warning: 0.004 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+    voltBuf = (uint16_t)(1000 * (voltReg >> 3) * 0.004); // LSB = 10uV
+                                                 ^
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:616:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "BUS-VOLT: Measured a Bus Voltage of %umV from Sensor 0x%02x", (uint16_t)voltBuf, currAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:616:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:616:107: warning: redundant cast to the same type [google-readability-casting]
+    snprintf(logBuffer, sizeof(logBuffer), "BUS-VOLT: Measured a Bus Voltage of %umV from Sensor 0x%02x", (uint16_t)voltBuf, currAddr);
+                                                                                                          ^~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:645:13: warning: the value returned by this function should be used [cert-err33-c]
+            snprintf(logBuffer, sizeof(logBuffer), "CURR-LIMIT: 3V3 Current Limit Reached - Measured %umA", curr3v3);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:645:13: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:656:13: warning: the value returned by this function should be used [cert-err33-c]
+            snprintf(logBuffer, sizeof(logBuffer), "CURR-LIMIT: CM4 Current Limit Reached - Measured %umA", curr5v);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:656:13: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:667:13: warning: the value returned by this function should be used [cert-err33-c]
+            snprintf(logBuffer, sizeof(logBuffer), "CURR-LIMIT: Camera Current Limit Reached - Measured %umA", currcam);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/current_sensor.c:667:13: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/file_operations.c:4:1: warning: #includes are not sorted properly [llvm-include-order]
+#include <stdio.h>
+^        ~~~~~~~~~
+         <openssl/sha.h>
+/home/iris/ex3_iris_cm4_firmware/src/file_operations.c:12:26: warning: 1024 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+    unsigned char buffer[1024];
+                         ^
+/home/iris/ex3_iris_cm4_firmware/src/file_operations.c:15:34: warning: use 'fopen' mode 'e' to set O_CLOEXEC [android-cloexec-fopen]
+    FILE *file = fopen(filename, "rb");
+                                 ^~~~
+                                 "rbe"
+/home/iris/ex3_iris_cm4_firmware/src/file_operations.c:18:9: error: non-void function 'sha256_checksum' should return a value [clang-diagnostic-return-type]
+        return;
+        ^
+/home/iris/ex3_iris_cm4_firmware/src/file_operations.c:21:5: warning: 'SHA256_Init' is deprecated [clang-diagnostic-deprecated-declarations]
+    SHA256_Init(&sha256);
+    ^
+/usr/include/openssl/sha.h:73:1: note: 'SHA256_Init' has been explicitly marked deprecated here
+OSSL_DEPRECATEDIN_3_0 int SHA256_Init(SHA256_CTX *c);
+^
+/usr/include/openssl/macros.h:182:49: note: expanded from macro 'OSSL_DEPRECATEDIN_3_0'
+#   define OSSL_DEPRECATEDIN_3_0                OSSL_DEPRECATED(3.0)
+                                                ^
+/usr/include/openssl/macros.h:62:52: note: expanded from macro 'OSSL_DEPRECATED'
+#     define OSSL_DEPRECATED(since) __attribute__((deprecated))
+                                                   ^
+/home/iris/ex3_iris_cm4_firmware/src/file_operations.c:22:12: warning: variable 'bytesRead' is not initialized [cppcoreguidelines-init-variables]
+    size_t bytesRead;
+           ^
+                     = 0
+/home/iris/ex3_iris_cm4_firmware/src/file_operations.c:23:12: warning: backward branch (while loop) is ID-dependent due to variable reference to 'bytesRead' and may cause performance degradation [altera-id-dependent-backward-branch]
+    while ((bytesRead = fread(buffer, 1, sizeof(buffer), file))) {
+           ^
+/home/iris/ex3_iris_cm4_firmware/src/file_operations.c:24:9: warning: 'SHA256_Update' is deprecated [clang-diagnostic-deprecated-declarations]
+        SHA256_Update(&sha256, buffer, bytesRead);
+        ^
+/usr/include/openssl/sha.h:74:1: note: 'SHA256_Update' has been explicitly marked deprecated here
+OSSL_DEPRECATEDIN_3_0 int SHA256_Update(SHA256_CTX *c,
+^
+/usr/include/openssl/macros.h:182:49: note: expanded from macro 'OSSL_DEPRECATEDIN_3_0'
+#   define OSSL_DEPRECATEDIN_3_0                OSSL_DEPRECATED(3.0)
+                                                ^
+/usr/include/openssl/macros.h:62:52: note: expanded from macro 'OSSL_DEPRECATED'
+#     define OSSL_DEPRECATED(since) __attribute__((deprecated))
+                                                   ^
+/home/iris/ex3_iris_cm4_firmware/src/file_operations.c:26:5: warning: 'SHA256_Final' is deprecated [clang-diagnostic-deprecated-declarations]
+    SHA256_Final(checksum, &sha256);
+    ^
+/usr/include/openssl/sha.h:76:1: note: 'SHA256_Final' has been explicitly marked deprecated here
+OSSL_DEPRECATEDIN_3_0 int SHA256_Final(unsigned char *md, SHA256_CTX *c);
+^
+/usr/include/openssl/macros.h:182:49: note: expanded from macro 'OSSL_DEPRECATEDIN_3_0'
+#   define OSSL_DEPRECATEDIN_3_0                OSSL_DEPRECATED(3.0)
+                                                ^
+/usr/include/openssl/macros.h:62:52: note: expanded from macro 'OSSL_DEPRECATED'
+#     define OSSL_DEPRECATED(since) __attribute__((deprecated))
+                                                   ^
+/home/iris/ex3_iris_cm4_firmware/src/file_operations.c:27:5: warning: the value returned by this function should be used [cert-err33-c]
+    fclose(file);
+    ^~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/file_operations.c:27:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/file_operations.c:22:5: note: inferred assignment of ID-dependent value from ID-dependent  [altera-id-dependent-backward-branch]
+    size_t bytesRead;
+    ^
+/home/iris/ex3_iris_cm4_firmware/src/gpio.c:41:45: warning: 3 adjacent parameters of 'gpio_config_port' of similar type ('int') are easily swapped by mistake [bugprone-easily-swappable-parameters]
+int gpio_config_port(const char *chip_path, int offset, int dir, int outputVal, const char *consumer) {
+                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/gpio.c:41:49: note: the first parameter in the range is 'offset'
+int gpio_config_port(const char *chip_path, int offset, int dir, int outputVal, const char *consumer) {
+                                                ^~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/gpio.c:41:70: note: the last parameter in the range is 'outputVal'
+int gpio_config_port(const char *chip_path, int offset, int dir, int outputVal, const char *consumer) {
+                                                                     ^~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/gpio.c:73:54: warning: passing 'int *' to parameter of type 'const unsigned int *' converts between pointers to integer types with different sign [clang-diagnostic-pointer-sign]
+        ret = gpiod_line_config_add_line_settings(line_cfg, &offset, 1, settings);
+                                                            ^~~~~~~
+/usr/include/gpiod.h:879:26: note: passing argument to parameter 'offsets' here
+                                        const unsigned int *offsets,
+                                                            ^
+/home/iris/ex3_iris_cm4_firmware/src/gpio.c:113:31: warning: unused variable 'req_cfg' [clang-diagnostic-unused-variable]
+        struct gpiod_request_config *req_cfg = NULL;
+                                     ^
+/home/iris/ex3_iris_cm4_firmware/src/gpio.c:168:94: warning: 5 adjacent parameters of 'gpio_config_group' of similar type ('unsigned int *') are easily swapped by mistake [bugprone-easily-swappable-parameters]
+struct gpiod_line_request *gpio_config_group(const char *chip_path, unsigned int numOffsets, unsigned int *offset, unsigned int *dir, unsigned int *outputVal, unsigned int *drive, unsigned int *bias, const char *consumer) {
+                                                                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/gpio.c:168:108: note: the first parameter in the range is 'offset'
+struct gpiod_line_request *gpio_config_group(const char *chip_path, unsigned int numOffsets, unsigned int *offset, unsigned int *dir, unsigned int *outputVal, unsigned int *drive, unsigned int *bias, const char *consumer) {
+                                                                                                           ^~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/gpio.c:168:195: note: the last parameter in the range is 'bias'
+struct gpiod_line_request *gpio_config_group(const char *chip_path, unsigned int numOffsets, unsigned int *offset, unsigned int *dir, unsigned int *outputVal, unsigned int *drive, unsigned int *bias, const char *consumer) {
+                                                                                                                                                                                                  ^~~~
+/home/iris/ex3_iris_cm4_firmware/src/gpio.c:168:130: warning: pointer parameter 'dir' can be pointer to const [readability-non-const-parameter]
+struct gpiod_line_request *gpio_config_group(const char *chip_path, unsigned int numOffsets, unsigned int *offset, unsigned int *dir, unsigned int *outputVal, unsigned int *drive, unsigned int *bias, const char *consumer) {
+                                                                                                                                 ^
+                                                                                                                   const 
+/home/iris/ex3_iris_cm4_firmware/src/gpio.c:168:149: warning: pointer parameter 'outputVal' can be pointer to const [readability-non-const-parameter]
+struct gpiod_line_request *gpio_config_group(const char *chip_path, unsigned int numOffsets, unsigned int *offset, unsigned int *dir, unsigned int *outputVal, unsigned int *drive, unsigned int *bias, const char *consumer) {
+                                                                                                                                                    ^
+                                                                                                                                      const 
+/home/iris/ex3_iris_cm4_firmware/src/gpio.c:168:174: warning: pointer parameter 'drive' can be pointer to const [readability-non-const-parameter]
+struct gpiod_line_request *gpio_config_group(const char *chip_path, unsigned int numOffsets, unsigned int *offset, unsigned int *dir, unsigned int *outputVal, unsigned int *drive, unsigned int *bias, const char *consumer) {
+                                                                                                                                                                             ^
+                                                                                                                                                               const 
+/home/iris/ex3_iris_cm4_firmware/src/gpio.c:168:195: warning: pointer parameter 'bias' can be pointer to const [readability-non-const-parameter]
+struct gpiod_line_request *gpio_config_group(const char *chip_path, unsigned int numOffsets, unsigned int *offset, unsigned int *dir, unsigned int *outputVal, unsigned int *drive, unsigned int *bias, const char *consumer) {
+                                                                                                                                                                                                  ^
+                                                                                                                                                                                    const 
+/home/iris/ex3_iris_cm4_firmware/src/gpio.c:258:76: warning: 2 adjacent parameters of 'gpio_config_input_detect' of similar type ('int') are easily swapped by mistake [bugprone-easily-swappable-parameters]
+struct gpiod_line_request *gpio_config_input_detect(const char *chip_path, int offset, int edgeDetect, const char *consumer) {
+                                                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/gpio.c:258:80: note: the first parameter in the range is 'offset'
+struct gpiod_line_request *gpio_config_input_detect(const char *chip_path, int offset, int edgeDetect, const char *consumer) {
+                                                                               ^~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/gpio.c:258:92: note: the last parameter in the range is 'edgeDetect'
+struct gpiod_line_request *gpio_config_input_detect(const char *chip_path, int offset, int edgeDetect, const char *consumer) {
+                                                                                           ^~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/gpio.c:290:54: warning: passing 'int *' to parameter of type 'const unsigned int *' converts between pointers to integer types with different sign [clang-diagnostic-pointer-sign]
+        ret = gpiod_line_config_add_line_settings(line_cfg, &offset, 1, settings);
+                                                            ^~~~~~~
+/usr/include/gpiod.h:879:26: note: passing argument to parameter 'offsets' here
+                                        const unsigned int *offsets,
+                                                            ^
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:47:35: warning: 'open' should use O_CLOEXEC where possible [android-cloexec-open]
+    fileDesc = open(i2cBus, O_RDWR);
+                                  ^
+                                   | O_CLOEXEC
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:49:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Unable to open I2C Bus: %s", strerror(errno));
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:49:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:49:78: warning: function is not thread safe [concurrency-mt-unsafe]
+        snprintf(logBuffer, sizeof(logBuffer), "Unable to open I2C Bus: %s", strerror(errno));
+                                                                             ^
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:56:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Unable to configure peripheral I2C Address: %s", strerror(errno));
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:56:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:56:98: warning: function is not thread safe [concurrency-mt-unsafe]
+        snprintf(logBuffer, sizeof(logBuffer), "Unable to configure peripheral I2C Address: %s", strerror(errno));
+                                                                                                 ^
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:70:15: warning: 2 adjacent parameters of 'i2c_setup' of convertible types are easily swapped by mistake [bugprone-easily-swappable-parameters]
+int i2c_setup(int i2cBus, uint8_t devID){
+              ^~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:70:19: note: the first parameter in the range is 'i2cBus'
+int i2c_setup(int i2cBus, uint8_t devID){
+                  ^~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:70:35: note: the last parameter in the range is 'devID'
+int i2c_setup(int i2cBus, uint8_t devID){
+                                  ^~~~~
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:70:15: note: 
+int i2c_setup(int i2cBus, uint8_t devID){
+              ^
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:70:27: note: 'int' and 'uint8_t' may be implicitly converted: 'int' -> 'uint8_t' (as 'unsigned char'), 'uint8_t' (as 'unsigned char') -> 'int'
+int i2c_setup(int i2cBus, uint8_t devID){
+                          ^
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:89:13: warning: function is not thread safe [concurrency-mt-unsafe]
+            exit(EXIT_FAILURE);
+            ^
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:103:31: warning: 2 adjacent parameters of 'i2c_interface' of convertible types are easily swapped by mistake [bugprone-easily-swappable-parameters]
+enum IRIS_ERROR i2c_interface(int fileDesc, enum I2C_OPERATION rwType, int sizeByte, uint8_t *data){
+                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:103:35: note: the first parameter in the range is 'fileDesc'
+enum IRIS_ERROR i2c_interface(int fileDesc, enum I2C_OPERATION rwType, int sizeByte, uint8_t *data){
+                                  ^~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:103:64: note: the last parameter in the range is 'rwType'
+enum IRIS_ERROR i2c_interface(int fileDesc, enum I2C_OPERATION rwType, int sizeByte, uint8_t *data){
+                                                               ^~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:103:45: note: 'int' and 'enum I2C_OPERATION' may be implicitly converted
+enum IRIS_ERROR i2c_interface(int fileDesc, enum I2C_OPERATION rwType, int sizeByte, uint8_t *data){
+                                            ^
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:113:9: warning: function is not thread safe [concurrency-mt-unsafe]
+        exit(EXIT_FAILURE);
+        ^
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:122:5: warning: potential uncovered code path; add a default label [hicpp-multiway-paths-covered]
+    switch (rwType){
+    ^
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:145:9: warning: function is not thread safe [concurrency-mt-unsafe]
+        exit(EXIT_FAILURE);
+        ^
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:168:9: warning: function is not thread safe [concurrency-mt-unsafe]
+        exit(EXIT_FAILURE);
+        ^
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:174:33: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+        tempData[2*index - 1] = (data[index - 1] >> 8) & 0xFF;
+                                ^~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:174:34: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+        tempData[2*index - 1] = (data[index - 1] >> 8) & 0xFF;
+                                 ^                  ~
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:174:53: warning: 8 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+        tempData[2*index - 1] = (data[index - 1] >> 8) & 0xFF;
+                                                    ^
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:174:58: warning: 0xFF is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+        tempData[2*index - 1] = (data[index - 1] >> 8) & 0xFF;
+                                                         ^
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:175:29: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+        tempData[2*index] = data[index - 1] & 0xFF; 
+                            ^                 ~~~~
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:175:47: warning: 0xFF is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+        tempData[2*index] = data[index - 1] & 0xFF; 
+                                              ^
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:194:9: warning: function is not thread safe [concurrency-mt-unsafe]
+        exit(EXIT_FAILURE);
+        ^
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:217:9: warning: function is not thread safe [concurrency-mt-unsafe]
+        exit(EXIT_FAILURE);
+        ^
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:221:23: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+        data[index] = (tempData[index] << 8) | tempData[index + 1]; 
+                      ^~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:221:24: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+        data[index] = (tempData[index] << 8) | tempData[index + 1]; 
+                       ^                  ~
+/home/iris/ex3_iris_cm4_firmware/src/i2c.c:221:43: warning: 8 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+        data[index] = (tempData[index] << 8) | tempData[index + 1]; 
+                                          ^
+src/ipc_iris.c:63:27: warning: 0660 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+    *msgid = msgget(*key, 0660 | IPC_CREAT);      // Create message queue with restricted permissions
+                          ^
+/home/iris/ex3_iris_cm4_firmware/src/ipc_iris.c:63:27: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+    *msgid = msgget(*key, 0660 | IPC_CREAT);      // Create message queue with restricted permissions
+                          ^~~~
+src/linux_cli.c:12:17: warning: 128 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+    char buffer[128];
+                ^
+src/linux_cli.c:13:17: warning: 1024 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+    char result[1024] = {0};  // Store the full command output
+                ^
+src/linux_cli.c:14:18: warning: calling 'popen' uses a command processor [cert-env33-c]
+    FILE *pipe = popen("ls -l", "r"); // Run a shell command
+                 ^
+/home/iris/ex3_iris_cm4_firmware/src/linux_cli.c:22:9: warning: Call to function 'strcat' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcat'. CWE-119 [clang-analyzer-security.insecureAPI.strcpy]
+        strcat(result, buffer);
+        ^~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/linux_cli.c:22:9: note: Call to function 'strcat' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcat'. CWE-119
+        strcat(result, buffer);
+        ^~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/linux_cli.c:33:31: warning: 2 adjacent parameters of 'exec_linux_cli_cmd' of similar type ('char *') are easily swapped by mistake [bugprone-easily-swappable-parameters]
+IRIS_ERROR exec_linux_cli_cmd(char* input_cmd, char* output_response){
+                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/linux_cli.c:33:37: note: the first parameter in the range is 'input_cmd'
+IRIS_ERROR exec_linux_cli_cmd(char* input_cmd, char* output_response){
+                                    ^~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/linux_cli.c:33:54: note: the last parameter in the range is 'output_response'
+IRIS_ERROR exec_linux_cli_cmd(char* input_cmd, char* output_response){
+                                                     ^~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/linux_cli.c:38:5: note: inferred assignment of ID-dependent value from ID-dependent  [altera-id-dependent-backward-branch]
+    FILE *cliPipe = popen(input_cmd, "r");
+    ^
+/home/iris/ex3_iris_cm4_firmware/src/linux_cli.c:35:20: warning: 255 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+    char logBuffer[255];
+                   ^
+/home/iris/ex3_iris_cm4_firmware/src/linux_cli.c:36:21: warning: 255 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+    char tempBuffer[255];
+                    ^
+/home/iris/ex3_iris_cm4_firmware/src/linux_cli.c:38:21: warning: calling 'popen' uses a command processor [cert-env33-c]
+    FILE *cliPipe = popen(input_cmd, "r");
+                    ^
+/home/iris/ex3_iris_cm4_firmware/src/linux_cli.c:41:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Unable to open Linux CLI Pipe: %s", strerror(errno));
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/linux_cli.c:41:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/linux_cli.c:41:85: warning: function is not thread safe [concurrency-mt-unsafe]
+        snprintf(logBuffer, sizeof(logBuffer), "Unable to open Linux CLI Pipe: %s", strerror(errno));
+                                                                                    ^
+/home/iris/ex3_iris_cm4_firmware/src/linux_cli.c:47:12: warning: backward branch (while loop) is ID-dependent due to variable reference to 'cliPipe' and may cause performance degradation [altera-id-dependent-backward-branch]
+    while (fgets(tempBuffer, sizeof(tempBuffer), cliPipe) != NULL) {
+           ^
+/home/iris/ex3_iris_cm4_firmware/src/linux_cli.c:48:9: warning: Call to function 'strcat' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcat'. CWE-119 [clang-analyzer-security.insecureAPI.strcpy]
+        strcat(output_response, tempBuffer);
+        ^~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/linux_cli.c:48:9: note: Call to function 'strcat' is insecure as it does not provide bounding of the memory buffer. Replace unbounded copy functions with analogous functions that support length arguments such as 'strlcat'. CWE-119
+        strcat(output_response, tempBuffer);
+        ^~~~~~
+src/logger.c:25:5: warning: variable 'LOG_FILE_LOOPS' is non-const and globally accessible, consider making it const [cppcoreguidelines-avoid-non-const-global-variables]
+int LOG_FILE_LOOPS = 0; 
+    ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:36:5: warning: the value returned by this function should be used [cert-err33-c]
+    fseek(filePtr, 0, SEEK_END);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:36:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:39:47: warning: 1e6 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+    if (file_size > (long)(MAX_FILE_SIZE_MB * 1e6)){
+                                              ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:52:6: warning: function 'log_write' has cognitive complexity of 39 (threshold 25) [readability-function-cognitive-complexity]
+void log_write(enum LOG_LEVEL logLev, const char *msg){
+     ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:60:5: note: +1, including nesting penalty of 0, nesting level increased to 1
+    if(!(INFO_ACTIVE || DEBUG_ACTIVE || ERROR_ACTIVE ))
+    ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:60:38: note: +1
+    if(!(INFO_ACTIVE || DEBUG_ACTIVE || ERROR_ACTIVE ))
+                                     ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:68:5: note: +1, including nesting penalty of 0, nesting level increased to 1
+    if(LOG_TO_FILE){
+    ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:71:9: note: +2, including nesting penalty of 1, nesting level increased to 2
+        if(filePtr == NULL){
+        ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:74:10: note: +1, nesting level increased to 2
+        }else{
+         ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:77:13: note: +3, including nesting penalty of 2, nesting level increased to 3
+            if(check_log_file_size(filePtr)){
+            ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:82:17: note: +4, including nesting penalty of 3, nesting level increased to 4
+                if(filePtr == NULL){
+                ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:85:18: note: +1, nesting level increased to 4
+                }else{
+                 ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:95:5: note: +1, including nesting penalty of 0, nesting level increased to 1
+    switch (logLev){
+    ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:97:9: note: +2, including nesting penalty of 1, nesting level increased to 2
+        if (ERROR_ACTIVE){
+        ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:99:13: note: +3, including nesting penalty of 2, nesting level increased to 3
+            if (LOG_TO_FILE && openedFile){
+            ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:99:29: note: +1
+            if (LOG_TO_FILE && openedFile){
+                            ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:105:9: note: +2, including nesting penalty of 1, nesting level increased to 2
+        if (ERROR_ACTIVE){
+        ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:107:13: note: +3, including nesting penalty of 2, nesting level increased to 3
+            if (LOG_TO_FILE  && openedFile){
+            ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:107:30: note: +1
+            if (LOG_TO_FILE  && openedFile){
+                             ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:113:9: note: +2, including nesting penalty of 1, nesting level increased to 2
+        if (DEBUG_ACTIVE){
+        ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:115:13: note: +3, including nesting penalty of 2, nesting level increased to 3
+            if (LOG_TO_FILE && openedFile){
+            ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:115:29: note: +1
+            if (LOG_TO_FILE && openedFile){
+                            ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:121:9: note: +2, including nesting penalty of 1, nesting level increased to 2
+        if (INFO_ACTIVE){
+        ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:123:13: note: +3, including nesting penalty of 2, nesting level increased to 3
+            if (LOG_TO_FILE && openedFile){
+            ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:123:29: note: +1
+            if (LOG_TO_FILE && openedFile){
+                            ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:57:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(filepath, sizeof(filepath), "%s/%s", LOG_DIRECTORY, LOG_FILENAME);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:57:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:60:56: warning: statement should be inside braces [google-readability-braces-around-statements,hicpp-braces-around-statements,readability-braces-around-statements]
+    if(!(INFO_ACTIVE || DEBUG_ACTIVE || ERROR_ACTIVE ))
+                                                       ^
+                                                        {
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:65:27: warning: function is not thread safe [concurrency-mt-unsafe]
+    struct tm tmStruct = *localtime(&curr_time);
+                          ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:69:35: warning: use 'fopen' mode 'e' to set O_CLOEXEC [android-cloexec-fopen]
+        filePtr = fopen(filepath, "a");
+                                  ^~~
+                                  "ae"
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:79:17: warning: the value returned by this function should be used [cert-err33-c]
+                fclose(filePtr);
+                ^~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:79:17: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:80:43: warning: use 'fopen' mode 'e' to set O_CLOEXEC [android-cloexec-fopen]
+                filePtr = fopen(filepath, "w");
+                                          ^~~
+                                          "we"
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:87:126: warning: 1900 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+                    printf("%d-%02d-%02d %02d:%02d:%02d | " KMAG "ERROR: LOG FILE OVERFLOWED #%d\n" KNRM, tmStruct.tm_year + 1900, tmStruct.tm_mon + 1, tmStruct.tm_mday, tmStruct.tm_hour, tmStruct.tm_min, tmStruct.tm_sec, LOG_FILE_LOOPS + 1);
+                                                                                                                             ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:88:21: warning: the value returned by this function should be used [cert-err33-c]
+                    fprintf(filePtr, "%d-%02d-%02d %02d:%02d:%02d | " "ERROR: LOG FILE OVERFLOWED #%d\n", tmStruct.tm_year + 1900, tmStruct.tm_mon + 1, tmStruct.tm_mday, tmStruct.tm_hour, tmStruct.tm_min, tmStruct.tm_sec, LOG_FILE_LOOPS + 1);
+                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:88:21: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:88:126: warning: 1900 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+                    fprintf(filePtr, "%d-%02d-%02d %02d:%02d:%02d | " "ERROR: LOG FILE OVERFLOWED #%d\n", tmStruct.tm_year + 1900, tmStruct.tm_mon + 1, tmStruct.tm_mday, tmStruct.tm_hour, tmStruct.tm_min, tmStruct.tm_sec, LOG_FILE_LOOPS + 1);
+                                                                                                                             ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:98:97: warning: 1900 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            printf("%d-%02d-%02d %02d:%02d:%02d | " KRED "ERROR: %s\n" KNRM, tmStruct.tm_year + 1900, tmStruct.tm_mon + 1, tmStruct.tm_mday, tmStruct.tm_hour, tmStruct.tm_min, tmStruct.tm_sec, msg);
+                                                                                                ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:100:17: warning: the value returned by this function should be used [cert-err33-c]
+                fprintf(filePtr, "%d-%02d-%02d %02d:%02d:%02d | " "ERROR: %s\n", tmStruct.tm_year + 1900, tmStruct.tm_mon + 1, tmStruct.tm_mday, tmStruct.tm_hour, tmStruct.tm_min, tmStruct.tm_sec, msg);
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:100:17: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:100:101: warning: 1900 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+                fprintf(filePtr, "%d-%02d-%02d %02d:%02d:%02d | " "ERROR: %s\n", tmStruct.tm_year + 1900, tmStruct.tm_mon + 1, tmStruct.tm_mday, tmStruct.tm_hour, tmStruct.tm_min, tmStruct.tm_sec, msg);
+                                                                                                    ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:106:97: warning: 1900 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            printf("%d-%02d-%02d %02d:%02d:%02d | " KYEL "WARN : %s\n" KNRM, tmStruct.tm_year + 1900, tmStruct.tm_mon + 1, tmStruct.tm_mday, tmStruct.tm_hour, tmStruct.tm_min, tmStruct.tm_sec, msg);
+                                                                                                ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:108:17: warning: the value returned by this function should be used [cert-err33-c]
+                fprintf(filePtr, "%d-%02d-%02d %02d:%02d:%02d | " "WARN : %s\n", tmStruct.tm_year + 1900, tmStruct.tm_mon + 1, tmStruct.tm_mday, tmStruct.tm_hour, tmStruct.tm_min, tmStruct.tm_sec, msg);
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:108:17: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:108:101: warning: 1900 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+                fprintf(filePtr, "%d-%02d-%02d %02d:%02d:%02d | " "WARN : %s\n", tmStruct.tm_year + 1900, tmStruct.tm_mon + 1, tmStruct.tm_mday, tmStruct.tm_hour, tmStruct.tm_min, tmStruct.tm_sec, msg);
+                                                                                                    ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:114:97: warning: 1900 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            printf("%d-%02d-%02d %02d:%02d:%02d | " KGRN "DEBUG: %s\n" KNRM, tmStruct.tm_year + 1900, tmStruct.tm_mon + 1, tmStruct.tm_mday, tmStruct.tm_hour, tmStruct.tm_min, tmStruct.tm_sec, msg);
+                                                                                                ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:116:17: warning: the value returned by this function should be used [cert-err33-c]
+                fprintf(filePtr, "%d-%02d-%02d %02d:%02d:%02d | " "DEBUG: %s\n", tmStruct.tm_year + 1900, tmStruct.tm_mon + 1, tmStruct.tm_mday, tmStruct.tm_hour, tmStruct.tm_min, tmStruct.tm_sec, msg);
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:116:17: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:116:101: warning: 1900 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+                fprintf(filePtr, "%d-%02d-%02d %02d:%02d:%02d | " "DEBUG: %s\n", tmStruct.tm_year + 1900, tmStruct.tm_mon + 1, tmStruct.tm_mday, tmStruct.tm_hour, tmStruct.tm_min, tmStruct.tm_sec, msg);
+                                                                                                    ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:122:97: warning: 1900 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+            printf("%d-%02d-%02d %02d:%02d:%02d | " KWHT "INFO : %s\n" KNRM, tmStruct.tm_year + 1900, tmStruct.tm_mon + 1, tmStruct.tm_mday, tmStruct.tm_hour, tmStruct.tm_min, tmStruct.tm_sec, msg);
+                                                                                                ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:124:17: warning: the value returned by this function should be used [cert-err33-c]
+                fprintf(filePtr, "%d-%02d-%02d %02d:%02d:%02d | " "INFO : %s\n", tmStruct.tm_year + 1900, tmStruct.tm_mon + 1, tmStruct.tm_mday, tmStruct.tm_hour, tmStruct.tm_min, tmStruct.tm_sec, msg);
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:124:17: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:124:101: warning: 1900 is a magic number; consider replacing it with a named constant [cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers]
+                fprintf(filePtr, "%d-%02d-%02d %02d:%02d:%02d | " "INFO : %s\n", tmStruct.tm_year + 1900, tmStruct.tm_mon + 1, tmStruct.tm_mday, tmStruct.tm_hour, tmStruct.tm_min, tmStruct.tm_sec, msg);
+                                                                                                    ^
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:129:5: warning: the value returned by this function should be used [cert-err33-c]
+    fclose(filePtr);
+    ^~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:129:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:138:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(filepath, sizeof(filepath), "%s/%s", LOG_DIRECTORY, LOG_FILENAME);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:138:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:139:34: warning: use 'fopen' mode 'e' to set O_CLOEXEC [android-cloexec-fopen]
+    FILE *file = fopen(filepath, "w"); // Open file for writing (creates if it doesn't exist)
+                                 ^~~
+                                 "we"
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:146:5: warning: the value returned by this function should be used [cert-err33-c]
+    fclose(file);
+    ^~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/logger.c:146:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:24:1: warning: #includes are not sorted properly [llvm-include-order]
+#include "gpio.h"
+^        ~~~~~~~~
+         "file_operations.h"
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:36:1: warning: #includes are not sorted properly [llvm-include-order]
+#include <stdio.h>
+^        ~~~~~~~~~
+         <stdint.h>
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:55:35: warning: 'open' should use O_CLOEXEC where possible [android-cloexec-open]
+    fileDesc = open(device, O_RDWR);
+                                  ^
+                                   | O_CLOEXEC
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:136:5: warning: Value stored to 'loopCounter' is never read [clang-analyzer-deadcode.DeadStores]
+    loopCounter = 0;
+    ^             ~
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:136:5: note: Value stored to 'loopCounter' is never read
+    loopCounter = 0;
+    ^             ~
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:165:49: warning: pointer parameter 'rx_buffer' can be pointer to const [readability-non-const-parameter]
+enum IRIS_ERROR spi_read(int fileDesc, uint8_t *rx_buffer, uint16_t rx_len, struct gpiod_line_request *cs_request){
+                                                ^
+                                       const 
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:176:5: warning: Value stored to 'cs_request' is never read [clang-analyzer-deadcode.DeadStores]
+    cs_request = cs_toggle(cs_request, CS_MONITOR);
+    ^            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:176:5: note: Value stored to 'cs_request' is never read
+    cs_request = cs_toggle(cs_request, CS_MONITOR);
+    ^            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:204:5: warning: Value stored to 'cs_request' is never read [clang-analyzer-deadcode.DeadStores]
+    cs_request = cs_toggle(cs_request, CS_MONITOR);
+    ^            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:204:5: note: Value stored to 'cs_request' is never read
+    cs_request = cs_toggle(cs_request, CS_MONITOR);
+    ^            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:282:139: warning: parameter 'event_buffer' is unused [misc-unused-parameters]
+enum IRIS_ERROR spi_file_write(int spi_dev, struct gpiod_line_request **spi_cs_request, char *file_path, struct gpiod_edge_event_buffer **event_buffer){
+                                                                                                                                          ^
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:296:35: warning: use 'fopen' mode 'e' to set O_CLOEXEC [android-cloexec-fopen]
+    FILE *file = fopen(file_path, "rb");
+                                  ^~~~
+                                  "rbe"
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:316:18: warning: backward branch (do loop) is ID-dependent due to variable reference to 'bytesRead' and may cause performance degradation [altera-id-dependent-backward-branch]
+        } while (bytesRead > 0);
+                 ^
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:317:9: warning: the value returned by this function should be used [cert-err33-c]
+        fclose(file);
+        ^~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:317:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:286:5: note: inferred assignment of ID-dependent value from ID-dependent  [altera-id-dependent-backward-branch]
+    int bytesRead = 0;
+    ^
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:323:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "SPI-FILE-WRITE: Failed to open file %s", file_path);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:323:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:331:121: warning: parameter 'event_buffer' is unused [misc-unused-parameters]
+enum IRIS_ERROR spi_file_read(int spi_dev, struct gpiod_line_request **spi_cs_request, struct gpiod_edge_event_buffer **event_buffer, const char *file_path){
+                                                                                                                        ^
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:343:35: warning: use 'fopen' mode 'e' to set O_CLOEXEC [android-cloexec-fopen]
+    FILE *file = fopen(file_path, "wb");
+                                  ^~~~
+                                  "wbe"
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:359:18: warning: backward branch (do loop) is ID-dependent due to variable reference to 'bytesWrote' and may cause performance degradation [altera-id-dependent-backward-branch]
+        } while (bytesWrote > 0);
+                 ^
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:360:9: warning: the value returned by this function should be used [cert-err33-c]
+        fclose(file);
+        ^~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:360:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:335:5: note: inferred assignment of ID-dependent value from ID-dependent  [altera-id-dependent-backward-branch]
+    int bytesWrote = 0;
+    ^
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:366:5: warning: the value returned by this function should be used [cert-err33-c]
+    fclose(file);
+    ^~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:366:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:368:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "SPI-FILE-WRITE: Failed to open file %s", file_path);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/spi_iris.c:368:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:38:33: warning: 2 adjacent parameters of 'temp_error_code' of convertible types are easily swapped by mistake [bugprone-easily-swappable-parameters]
+enum IRIS_ERROR temp_error_code(uint8_t tempAddr, enum IRIS_ERROR errorType){
+                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:38:41: note: the first parameter in the range is 'tempAddr'
+enum IRIS_ERROR temp_error_code(uint8_t tempAddr, enum IRIS_ERROR errorType){
+                                        ^~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:38:67: note: the last parameter in the range is 'errorType'
+enum IRIS_ERROR temp_error_code(uint8_t tempAddr, enum IRIS_ERROR errorType){
+                                                                  ^~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:38:33: note: 
+enum IRIS_ERROR temp_error_code(uint8_t tempAddr, enum IRIS_ERROR errorType){
+                                ^
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:38:51: note: 'uint8_t' and 'enum IRIS_ERROR' may be implicitly converted: 'uint8_t' (as 'unsigned char') -> 'enum IRIS_ERROR', 'enum IRIS_ERROR' -> 'uint8_t' (as 'unsigned char')
+enum IRIS_ERROR temp_error_code(uint8_t tempAddr, enum IRIS_ERROR errorType){
+                                                  ^
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:54:21: warning: function is not thread safe [concurrency-mt-unsafe]
+                    exit(EXIT_FAILURE);
+                    ^
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:70:21: warning: function is not thread safe [concurrency-mt-unsafe]
+                    exit(EXIT_FAILURE);
+                    ^
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:86:21: warning: function is not thread safe [concurrency-mt-unsafe]
+                    exit(EXIT_FAILURE);
+                    ^
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:102:21: warning: function is not thread safe [concurrency-mt-unsafe]
+                    exit(EXIT_FAILURE);
+                    ^
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:118:21: warning: function is not thread safe [concurrency-mt-unsafe]
+                    exit(EXIT_FAILURE);
+                    ^
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:123:13: warning: function is not thread safe [concurrency-mt-unsafe]
+            exit(EXIT_FAILURE);
+            ^
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:144:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "TEMP-SETUP: Begin setup of Temperature Sensor 0x%02x",tempAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:144:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:150:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Temp Sensor 0x%02x - I2C Bus Failed to Open", tempAddr);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:150:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:161:13: warning: the value returned by this function should be used [cert-err33-c]
+            snprintf(logBuffer, sizeof(logBuffer), "Temp Sensor 0x%02x - I2C Reg 0x%02x Write Failed", tempAddr, regAddr[index]);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:161:13: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:167:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "TEMP-SETUP: Completed attempt for setup of Temperature Sensor 0x%02x",tempAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:167:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:193:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "TEMP-FUNC-VALIDATE: Begin functional verification of Temperature Sensor 0x%02x",tempAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:193:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:199:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Temp Sensor 0x%02x - I2C Bus Failed to Open", tempAddr);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:199:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:208:13: warning: the value returned by this function should be used [cert-err33-c]
+            snprintf(logBuffer, sizeof(logBuffer), "Temp Sensor 0x%02x - I2C Reg 0x%02x Read Failed", tempAddr, regAddr[index]);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:208:13: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:213:13: warning: the value returned by this function should be used [cert-err33-c]
+            snprintf(logBuffer, sizeof(logBuffer), "Temp Sensor 0x%02x - I2C Reg 0x%02x Value Incorrect 0x%02x", tempAddr, regAddr[index], regData[0]);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:213:13: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:223:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Temp Sensor 0x%02x - I2C Reg 0x%02x Read Failed", tempAddr, regAddr[0]);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:223:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:229:10: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+    if ((regData[0] & (0x01)) == 0x01){
+         ^            ~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:230:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Temp Sensor 0x%02x - Open Circuit Flag Asserted in Reg 0x%02x", tempAddr, regAddr[0]);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:230:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:234:10: warning: use of a signed integer operand with a binary bitwise operator [hicpp-signed-bitwise]
+    if ((regData[0] & (0x02)) == 0x02){
+         ^            ~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:235:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Temp Sensor 0x%02x - Low Supply Voltage Flag Asserted in Reg 0x%02x", tempAddr, regAddr[0]);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:235:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:240:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "TEMP-FUNC-VALIDATE: Completed attempt for functional verification of Temperature Sensor 0x%02x",tempAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:240:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:262:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "TEMP-RESET-TRIG: Begin trigger reset of Temperature Sensor 0x%02x",tempAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:262:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:268:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Temp Sensor 0x%02x - I2C Bus Failed to Open", tempAddr);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:268:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:276:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Temp Sensor 0x%02x - I2C Reg 0x%02x Write Failed", tempAddr, regData[0]);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:276:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:282:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "TEMP-RESET-TRIG: Successfully triggered reset trigger of Temperature Sensor 0x%02x",tempAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:282:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:302:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "TEMP-SENSOR-RESET: Begin reset of Temperature Sensor 0x%02x", tempAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:302:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:305:5: warning: Value stored to 'errorCheck' is never read [clang-analyzer-deadcode.DeadStores]
+    errorCheck = NO_ERROR;
+    ^            ~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:305:5: note: Value stored to 'errorCheck' is never read
+    errorCheck = NO_ERROR;
+    ^            ~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:311:12: warning: backward branch (do loop) is ID-dependent due to variable reference to 'errorCheck' and may cause performance degradation [altera-id-dependent-backward-branch]
+    }while((errorCheck != NO_ERROR) && (loopCounter < MAX_TEMP_INIT_ATTEMPTS));
+           ^
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:299:5: note: inferred assignment of ID-dependent value from ID-dependent 
+    enum IRIS_ERROR errorCheck = NO_ERROR;
+    ^
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:325:12: warning: backward branch (do loop) is ID-dependent due to variable reference to 'errorCheck' and may cause performance degradation [altera-id-dependent-backward-branch]
+    }while((errorCheck != NO_ERROR) && (loopCounter < MAX_TEMP_INIT_ATTEMPTS));
+           ^
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:328:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "TEMP-SENSOR-RESET: Finished reset attempt of Temperature Sensor 0x%02x", tempAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:328:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:299:5: note: inferred assignment of ID-dependent value from ID-dependent  [altera-id-dependent-backward-branch]
+    enum IRIS_ERROR errorCheck = NO_ERROR;
+    ^
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:354:14: warning: result of comparison of constant 'TEMP1_TEMP_READ_ERROR' (200) with expression of type 'int8_t' (aka 'signed char') is always true [clang-diagnostic-tautological-constant-out-of-range-compare]
+    if(temp1 != TEMP1_TEMP_READ_ERROR){
+       ~~~~~ ^  ~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:357:13: warning: the value returned by this function should be used [cert-err33-c]
+            snprintf(logBuffer, sizeof(logBuffer), "TEMP-LIMIT: Temperature 1 Limit Reached - Measured %dC", temp1);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:357:13: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:365:14: warning: result of comparison of constant 'TEMP2_TEMP_READ_ERROR' (201) with expression of type 'int8_t' (aka 'signed char') is always true [clang-diagnostic-tautological-constant-out-of-range-compare]
+    if(temp2 != TEMP2_TEMP_READ_ERROR){
+       ~~~~~ ^  ~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:368:13: warning: the value returned by this function should be used [cert-err33-c]
+            snprintf(logBuffer, sizeof(logBuffer), "TEMP-LIMIT: Temperature 2 Limit Reached - Measured %dC", temp2);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:368:13: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:376:14: warning: result of comparison of constant 'TEMP3_TEMP_READ_ERROR' (202) with expression of type 'int8_t' (aka 'signed char') is always true [clang-diagnostic-tautological-constant-out-of-range-compare]
+    if(temp3 != TEMP3_TEMP_READ_ERROR){
+       ~~~~~ ^  ~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:379:13: warning: the value returned by this function should be used [cert-err33-c]
+            snprintf(logBuffer, sizeof(logBuffer), "TEMP-LIMIT: Temperature 3 Limit Reached - Measured %dC", temp3);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:379:13: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:387:14: warning: result of comparison of constant 'TEMP4_TEMP_READ_ERROR' (203) with expression of type 'int8_t' (aka 'signed char') is always true [clang-diagnostic-tautological-constant-out-of-range-compare]
+    if(temp4 != TEMP4_TEMP_READ_ERROR){
+       ~~~~~ ^  ~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:390:13: warning: the value returned by this function should be used [cert-err33-c]
+            snprintf(logBuffer, sizeof(logBuffer), "TEMP-LIMIT: Temperature 4 Limit Reached - Measured %dC", temp4);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:390:13: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:408:12: warning: narrowing conversion from 'int' to signed type 'int8_t' (aka 'signed char') is implementation-defined [bugprone-narrowing-conversions,cppcoreguidelines-narrowing-conversions]
+    return HighByte * CONVERSION_FACTOR;
+           ^
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:440:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "Temp Sensor 0x%02x - I2C Temperature Reg 0x%02x Read Failed", tempAddr, regData[0]);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:440:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:449:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "TEMP-READ: Read Temperature of %dC from Sensor 0x%02x", temp, tempAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/temp_read.c:449:5: note: cast the expression to void to silence this warning
+src/timing.c:13:21: warning: variable name 'ts' is too short, expected at least 3 characters [readability-identifier-length]
+    struct timespec ts;
+                    ^
+src/timing.c:19:21: warning: variable name 'ts' is too short, expected at least 3 characters [readability-identifier-length]
+    struct timespec ts;
+                    ^
+src/timing.c:20:17: warning: narrowing conversion from 'double' to '__time_t' (aka 'long') [bugprone-narrowing-conversions,cppcoreguidelines-narrowing-conversions]
+    ts.tv_sec = setTime;
+                ^
+src/timing.c:40:28: warning: backward branch (for loop) is ID-dependent due to variable reference to 'event_amt' and may cause performance degradation [altera-id-dependent-backward-branch]
+        for(int index = 0; (index < MAX_ITERATIONS) && (event_amt >= EDGE_EVENT_BUFF_SIZE); index++){
+                           ^
+src/timing.c:31:5: note: inferred assignment of ID-dependent value from ID-dependent 
+    int event_amt = EDGE_EVENT_BUFF_SIZE;
+    ^
+/home/iris/ex3_iris_cm4_firmware/src/timing.c:53:5: warning: Value stored to 'event_amt' is never read [clang-analyzer-deadcode.DeadStores]
+    event_amt = gpiod_line_request_read_edge_events(request, event_buffer, EDGE_EVENT_BUFF_SIZE);
+    ^           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/timing.c:53:5: note: Value stored to 'event_amt' is never read
+    event_amt = gpiod_line_request_read_edge_events(request, event_buffer, EDGE_EVENT_BUFF_SIZE);
+    ^           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/timing.c:63:28: warning: backward branch (for loop) is ID-dependent due to variable reference to 'event_amt' and may cause performance degradation [altera-id-dependent-backward-branch]
+        for(int index = 0; (index < MAX_ITERATIONS) && (event_amt >= EDGE_EVENT_BUFF_SIZE); index++){
+                           ^
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:2:1: warning: #includes are not sorted properly [llvm-include-order]
+#include "main.h"
+^        ~~~~~~~~
+         "error_handler.h"
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:11:1: warning: #includes are not sorted properly [llvm-include-order]
+#include <stdio.h>
+^
+note: this fix will not be applied because it overlaps with another fix
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:11:1: warning: duplicate include [readability-duplicate-include]
+#include <stdio.h>
+^~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:164:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "USB-HUB-SETUP: Begin setup of USB Hub 0x%02x", hubAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:164:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:170:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "USB Hub 0x%02x - I2C Bus Failed to Open", hubAddr);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:170:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:181:13: warning: the value returned by this function should be used [cert-err33-c]
+            snprintf(logBuffer, sizeof(logBuffer), "USB Hub 0x%02x - I2C Reg 0x%02x Write Failed", hubAddr, regAddr[index]);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:181:13: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:187:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "USB-HUB-SETUP: Completed attempt for setup of USB Hub 0x%02x",hubAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:187:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:214:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "USB-HUB-FUNC-VALIDATE: Begin functional verification of USB Hub 0x%02x", hubAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:214:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:220:9: warning: the value returned by this function should be used [cert-err33-c]
+        snprintf(logBuffer, sizeof(logBuffer), "USB Hub 0x%02x - I2C Bus Failed to Open", hubAddr);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:220:9: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:229:13: warning: the value returned by this function should be used [cert-err33-c]
+            snprintf(logBuffer, sizeof(logBuffer), "USB Hub 0x%02x - I2C Reg 0x%02x Read Failed", hubAddr, regAddr[index]);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:229:13: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:234:13: warning: the value returned by this function should be used [cert-err33-c]
+            snprintf(logBuffer, sizeof(logBuffer), "USB Hub 0x%02x - I2C Reg 0x%02x Value Incorrect 0x%02x", hubAddr, regAddr[index], regData[0]);
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:234:13: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:253:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "USB-HUB-FUNC-VALIDATE: Completed attempt for functional verification of USB Hub 0x%02x", hubAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:253:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:275:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "USB-HUB-RESET: Begin reset of USB Hub 0x%02x", hubAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:275:5: note: cast the expression to void to silence this warning
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:289:5: warning: the value returned by this function should be used [cert-err33-c]
+    snprintf(logBuffer, sizeof(logBuffer), "USB-HUB-RESET: Successful reset trigger of USB Hub 0x%02x", hubAddr);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/iris/ex3_iris_cm4_firmware/src/usb_hub.c:289:5: note: cast the expression to void to silence this warning
+Suppressed 61523 warnings (61523 in non-user code).
+Use -header-filter=.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.
+Found compiler error(s).

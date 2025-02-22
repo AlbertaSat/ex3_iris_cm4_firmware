@@ -1,21 +1,5 @@
 // sudo apt install libgpiod-dev -  GPIOD C LIBRARY
 
-#include "/usr/include/gpiod.h"
-
-#include <stdio.h>
-#include <stdint.h>
-#include <string.h>
-#include <gpiod.h>
-#include <unistd.h>
-
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "gpio.h"
-#include "spi_iris.h"
-
 /**
  * @file gpio.c
  * @author Noah Klager
@@ -30,6 +14,18 @@
  * @copyright Copyright (c) 2024
  * 
  */
+
+//----- Header Files -----//
+#include "gpio.h"
+#include "spi_iris.h"
+
+#include "/usr/include/gpiod.h"
+
+#include <gpiod.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 /**
  * @brief Modifies specified GPIO's port configuration to requested direction and output value. 
@@ -49,7 +45,7 @@ int gpio_config_port(const char *chip_path, int offset, int dir, int outputVal, 
 	struct gpiod_line_settings *settings= NULL;
 	struct gpiod_line_config *line_cfg= NULL;
 	struct gpiod_chip *chip= NULL;
-	int ret;
+	int ret = 0;
 
 	settings = gpiod_line_settings_new();
 	line_cfg = gpiod_line_config_new();
@@ -70,7 +66,7 @@ int gpio_config_port(const char *chip_path, int offset, int dir, int outputVal, 
 	if (!chip){
 		gpiod_line_config_free(line_cfg);
 		gpiod_line_settings_free(settings);
-		return NULL;
+		return -1;
 	}
 
 	// Add the settings to the configuration
@@ -79,7 +75,7 @@ int gpio_config_port(const char *chip_path, int offset, int dir, int outputVal, 
 		gpiod_line_config_free(line_cfg);
 		gpiod_chip_close(chip);
 		gpiod_line_settings_free(settings);
-		return NULL;
+		return -1;
 	}
 
 	// If 'consumer' label was inputted
@@ -90,7 +86,7 @@ int gpio_config_port(const char *chip_path, int offset, int dir, int outputVal, 
 			gpiod_line_config_free(line_cfg);
 			gpiod_line_settings_free(settings);
 			gpiod_chip_close(chip);
-			return NULL;
+			return -1;
 		}
 		gpiod_request_config_set_consumer(req_cfg, consumer);
 	}
@@ -102,7 +98,7 @@ int gpio_config_port(const char *chip_path, int offset, int dir, int outputVal, 
 	gpiod_line_settings_free(settings);
 	gpiod_chip_close(chip);
 	gpiod_line_request_release(request);
-	return 0;
+	return -1;
 }
 
 /**
@@ -110,7 +106,7 @@ int gpio_config_port(const char *chip_path, int offset, int dir, int outputVal, 
  * 
  * @param cs_request Structure of CS Request Instance
  * @param state Desired state of the CS GPIO either Monitor or Select WR
- * @return Structure of CS Request Instance
+ * @return Structure of CS Request Instance or NULL if Error
  */
 struct gpiod_line_request *cs_toggle(struct gpiod_line_request *cs_request, int state){
 
@@ -118,8 +114,8 @@ struct gpiod_line_request *cs_toggle(struct gpiod_line_request *cs_request, int 
 	struct gpiod_line_settings *settings= NULL;
 	struct gpiod_line_config *line_cfg= NULL;
 	struct gpiod_chip *chip= NULL;
-	int ret;
-	int offset = SPI_CE_N;
+	unsigned int offset = SPI_CE_N;
+	int ret = 0;
 
 	settings = gpiod_line_settings_new();
 	line_cfg = gpiod_line_config_new();
@@ -169,14 +165,14 @@ struct gpiod_line_request *cs_toggle(struct gpiod_line_request *cs_request, int 
  * @param consumer [Optional] Consumer Name to indicate which process is utilizing GPIO, input NULL if no name is required
  * @return Structure of GPIO Request Instance, NULL if an error occured
  */
-struct gpiod_line_request *gpio_config_group(const char *chip_path, int numOffsets, int *offset, int *dir, int *outputVal, int *drive, int *bias, const char *consumer) {
+struct gpiod_line_request *gpio_config_group(const char *chip_path, unsigned int numOffsets, unsigned int *offset, unsigned int *dir, unsigned int *outputVal, unsigned int *drive, unsigned int *bias, const char *consumer) {
 
 	struct gpiod_request_config *req_cfg = NULL;
 	struct gpiod_line_request *request = NULL;
 	struct gpiod_line_settings *settings= NULL;
 	struct gpiod_line_config *line_cfg= NULL;
 	struct gpiod_chip *chip= NULL;
-	int ret;
+	int ret = 0;
 
 	settings = gpiod_line_settings_new();
 	line_cfg = gpiod_line_config_new();
@@ -266,7 +262,7 @@ struct gpiod_line_request *gpio_config_input_detect(const char *chip_path, int o
 	struct gpiod_line_settings *settings= NULL;
 	struct gpiod_line_config *line_cfg= NULL;
 	struct gpiod_chip *chip= NULL;
-	int ret;
+	int ret = 0;
 
 	settings = gpiod_line_settings_new();
 	line_cfg = gpiod_line_config_new();

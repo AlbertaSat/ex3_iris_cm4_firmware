@@ -1,19 +1,12 @@
 
-#include "gpio.h"
-#include "spi_iris.h"
 #include "cmd_controller.h"
-#include "error_handler.h"
 #include "current_sensor.h"
+#include "error_handler.h"
+#include "spi_iris.h"
 #include "temp_read.h"
 
-#include <stdio.h>
+#include <gpiod.h>
 #include <stdint.h>
-#include <string.h>
-#include <gpiod.h>
-#include <unistd.h>
-
-#include <errno.h>
-#include <gpiod.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,7 +14,6 @@
 uint8_t cmd_to_current_addr(uint8_t arg){
 
     switch (arg){
-
         case 1:
             return CURRENT_SENSOR_ADDR_3V3;
         case 2:
@@ -36,7 +28,6 @@ uint8_t cmd_to_current_addr(uint8_t arg){
 uint8_t cmd_to_temp_addr(uint8_t arg){
 
     switch (arg){
-
         case 1:
             return TEMP_SENSOR_1_ADDR;
         case 2:
@@ -53,7 +44,6 @@ uint8_t cmd_to_temp_addr(uint8_t arg){
 IRIS_ERROR current_val_error_16bit_to_8bit(IRIS_ERROR error){
 
     switch (error){
-
         case CURR1_VAL_READ_ERROR_16BIT:
             return CURR1_VAL_READ_ERROR_8BIT;
         case CURR2_VAL_READ_ERROR_16BIT:
@@ -65,27 +55,23 @@ IRIS_ERROR current_val_error_16bit_to_8bit(IRIS_ERROR error){
     }
 
 }
-IRIS_ERROR cmd_return(int spi_dev, struct gpiod_line_request **spi_cs_request, uint8_t *buffer, uint8_t numWrites){
 
-    return spi_write(spi_dev, buffer, numWrites, spi_cs_request);
+IRIS_ERROR cmd_return(int spi_dev, struct gpiod_line_request **spi_cs_request, uint8_t *buffer, uint8_t numWrites){
+    return spi_write(spi_dev, buffer, numWrites, *spi_cs_request);
 }
 
-IRIS_ERROR cmd_center(uint8_t cmd, 
-                      uint8_t *args,
-                      int nargs,
-                      int spi_dev, 
-                      struct gpiod_line_request **spi_cs_request){
+IRIS_ERROR cmd_center(uint8_t cmd, uint8_t *args, int nargs, int spi_dev, struct gpiod_line_request **spi_cs_request){
 
-    int ncmdArg;
+    int ncmdArg = 0;
     uint8_t addr = 0;
     uint16_t dataBuf = 0;
     enum IRIS_ERROR error = NO_ERROR;
 
-    uint8_t cmdReturn[8] = {NO_ERROR};
+    uint8_t cmdReturn[RETURN_CMD_SIZE] = {NO_ERROR};
     cmdReturn[0] = CMD_RETURN;
 
     uint8_t errorCount = 0;
-    enum IRIS_ERROR errorBuffer[8] = {NO_ERROR};
+    enum IRIS_ERROR errorBuffer[RETURN_CMD_SIZE] = {NO_ERROR};
 
     switch(cmd){
 
@@ -220,8 +206,13 @@ IRIS_ERROR cmd_center(uint8_t cmd,
 
             current_limit(errorBuffer, &errorCount);
 
-            for(int x = 0; x < errorCount; x++){
-                cmdReturn[x+1] = errorBuffer[x];
+            if(errorCount == 0){
+                cmdReturn[2] = NO_ERROR;
+                errorCount = 1;
+            }else{
+                for(int index = 0; index < errorCount; index++){
+                    cmdReturn[index+1] = errorBuffer[index];
+                }
             }
             error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 1 + errorCount);
             break;
@@ -248,7 +239,7 @@ IRIS_ERROR cmd_center(uint8_t cmd,
             error = cmd_return(spi_dev, spi_cs_request, cmdReturn, 2);
             break;
 
-        case TEMP_SENSOR_STATUS:
+        case TEMP_SENSOR_RESET:
             addr = cmd_to_temp_addr(args[0]);
             if (addr == CMD_FORMAT_ERROR){
                 cmdReturn[1] = CMD_FORMAT_ERROR;
@@ -315,9 +306,9 @@ IRIS_ERROR cmd_center(uint8_t cmd,
 }
 
 //! ISSUES WITH ARG DECODING
-int cmd_extracter(uint8_t *cmd, uint8_t *arg, uint8_t *rx_buffer, uint8_t rx_len){
+int cmd_extracter(uint8_t *cmd, uint8_t *arg, const uint8_t *rx_buffer, uint8_t rx_len){
 
-    uint8_t current_byte = NULL;
+    uint8_t current_byte = 0;
     int arg_num = -1;
 
     *cmd = rx_buffer[0];

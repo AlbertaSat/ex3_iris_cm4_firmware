@@ -1,22 +1,25 @@
 #ifndef ERROR_HANDLER_H
 #define ERROR_HANDLER_H
 
+#include <stdint.h>
+#include <stdio.h>
+
 //----- Temperature Sensor -----//
 // Temperature General ERROR Flags
-#define TMP1_MAX_ERROR_FLG (1 << 0)
-#define TMP2_MAX_ERROR_FLG (1 << 1)
-#define TMP3_MAX_ERROR_FLG (1 << 2)
-#define TMP4_MAX_ERROR_FLG (1 << 3)
-#define TMP1_GEN_ERROR_FLG (1 << 4)
-#define TMP2_GEN_ERROR_FLG (1 << 5)
-#define TMP3_GEN_ERROR_FLG (1 << 6)
-#define TMP4_GEN_ERROR_FLG (1 << 7)
+// #define TMP1_MAX_ERROR_FLG (1 << 0)
+// #define TMP2_MAX_ERROR_FLG (1 << 1)
+// #define TMP3_MAX_ERROR_FLG (1 << 2)
+// #define TMP4_MAX_ERROR_FLG (1 << 3)
+// #define TMP1_GEN_ERROR_FLG (1 << 4)
+// #define TMP2_GEN_ERROR_FLG (1 << 5)
+// #define TMP3_GEN_ERROR_FLG (1 << 6)
+// #define TMP4_GEN_ERROR_FLG (1 << 7)
 
-// Temperature Specific Error Flags
-#define TMP_I2C_BUS_ERROR_FLG 0
-#define TMP_CFG1_ERROR_FLG    1
-#define TMP_CFG2_ERROR_FLG    2
-#define TMP_DIODE_ERROR_FLG   3
+// // Temperature Specific Error Flags
+// #define TMP_I2C_BUS_ERROR_FLG 0
+// #define TMP_CFG1_ERROR_FLG    1
+// #define TMP_CFG2_ERROR_FLG    2
+// #define TMP_DIODE_ERROR_FLG   3
 
 #define ERROR_BUFFER_SIZE 256
 
@@ -73,7 +76,7 @@ typedef enum IRIS_ERROR{
     CURR1_VAL_READ_ERROR_16BIT = 60000,
     CURR2_VAL_READ_ERROR_16BIT = 60001,
     CURR3_VAL_READ_ERROR_16BIT = 60002,
-    CURR1_VAL_READ_ERROR_8BIT,
+    CURR1_VAL_READ_ERROR_8BIT = 124, 
     CURR2_VAL_READ_ERROR_8BIT,
     CURR3_VAL_READ_ERROR_8BIT,
 
@@ -83,27 +86,14 @@ typedef enum IRIS_ERROR{
 
     USB_HUB_SETUP_ERROR,
     USB_HUB_VERIFICATION_ERROR,
-    USB_HUB_RESET_ERROR
-    
+    USB_HUB_RESET_ERROR,
+
+    LINUX_CLI_ERROR,
+    IPC_ERROR,
+    ERROR_TRANSFER_FAIL
+        
 } IRIS_ERROR;
 
-
-//------------ GPIO ------------//
-
-
-
-
-
-
-//---------- I2C BUS -----------//
-
-
-//---------- SPI BUS -----------//
-
-//---------- USB HUB -----------//
-
-//------- CURRENT SENSOR -------//
-
-//-------- IRIS GENERAL --------//
+//enum IRIS_ERROR iris_error_transfer(int spi_dev, struct gpiod_line_request *spi_cs_request, const enum IRIS_ERROR *errorBuffer, uint8_t *errorCount);
 
 #endif //ERROR_HANDLER

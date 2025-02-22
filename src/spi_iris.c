@@ -1,23 +1,4 @@
 
-#include <linux/spi/spidev.h>
-
-#include <stdio.h>
-#include <stdint.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <sys/ioctl.h>
-#include <string.h>
-#include <time.h>
-
-#include "spi_iris.h"
-#include "main.h"
-#include "gpio.h"
-#include "error_handler.h"
-#include "logger.h"
-
-
 /**
  * @file spi_iris.c
  * @author Noah Klager
@@ -37,6 +18,29 @@
  * 
  */
 
+//---- Headers ----//
+#include "cmd_controller.h"
+#include "error_handler.h"
+#include "gpio.h"
+#include "file_operations.h"
+#include "logger.h"
+#include "main.h"
+#include "spi_iris.h"
+#include "timing.h"
+
+#include <fcntl.h>
+#include <gpiod.h>
+#include <linux/spi/spidev.h>
+#include <openssl/sha.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/ioctl.h>
+#include <time.h>
+#include <unistd.h>
+#include <stdint.h>
+
 
 /**
  * @brief Configures the selected SPI Interface to communicate with SPI Peripherals
@@ -45,114 +49,165 @@
  * @param config 'spi_config_t' structure containing configuration information for the interface
  * @return Either ID of SPI bus instance or Error Code if unsuccessful
  */
-int spi_open(char *device, spi_config_t config) {
+int spi_open(const char *device, spi_config_t config) {
 
-    int fd;
-    // Open block device
-    fd = open(device, O_RDWR);
-    if (fd < 0) {
+    int fileDesc = 0;
+    fileDesc = open(device, O_RDWR);
+    if (fileDesc < 0) {
         return SPI_SETUP_ERROR;
     }
 
     // Set SPI_POL and SPI_PHA
-    if (ioctl(fd, SPI_IOC_WR_MODE, &config.mode) < 0) {
+    if (ioctl(fileDesc, SPI_IOC_WR_MODE, &config.mode) < 0) {
         log_write(LOG_ERROR, "SPI Bus - Failed to Set WR IOC");
         return SPI_SETUP_ERROR;
     }
-    if (ioctl(fd, SPI_IOC_RD_MODE, &config.mode) < 0) {
+    if (ioctl(fileDesc, SPI_IOC_RD_MODE, &config.mode) < 0) {
         log_write(LOG_ERROR, "SPI Bus - Failed to Set RD IOC");
         return SPI_SETUP_ERROR;
     }
 
     // Set bits per word
-    if (ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &config.bits_per_word) < 0) {
+    if (ioctl(fileDesc, SPI_IOC_WR_BITS_PER_WORD, &config.bits_per_word) < 0) {
         log_write(LOG_ERROR, "SPI Bus - Failed to Set WR Bits-per-Word");
         return SPI_SETUP_ERROR;
     }
-    if (ioctl(fd, SPI_IOC_RD_BITS_PER_WORD, &config.bits_per_word) < 0) {
+    if (ioctl(fileDesc, SPI_IOC_RD_BITS_PER_WORD, &config.bits_per_word) < 0) {
         log_write(LOG_ERROR, "SPI Bus - Failed to Set RD Bits-per-Word");
         return SPI_SETUP_ERROR;
     }
 
     // Set SPI speed
-    if (ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &config.speed) < 0) {
+    if (ioctl(fileDesc, SPI_IOC_WR_MAX_SPEED_HZ, &config.speed) < 0) {
         log_write(LOG_ERROR, "SPI Bus - Failed to Set WR Speed");
         return SPI_SETUP_ERROR;
     }
-    if (ioctl(fd, SPI_IOC_RD_MAX_SPEED_HZ, &config.speed) < 0) {
+    if (ioctl(fileDesc, SPI_IOC_RD_MAX_SPEED_HZ, &config.speed) < 0) {
         log_write(LOG_ERROR, "SPI Bus - Failed to Set RD Speed");
         return SPI_SETUP_ERROR;
     }
 
     // Return file descriptor
-    return fd;
+    return fileDesc;
 }
 
 /**
  * @brief Closes instance of SPI Interface
  * 
- * @param fd Configured SPI bus instance
+ * @param fileDesc Configured SPI bus instance
  */
-int spi_close(int fd) {
-    return close(fd);
+int spi_close(int fileDesc) {
+    return close(fileDesc);
 }
+
+
+//! ADD DESCRIPTIONNNNNNNNNNNNNNNNNNNNNNNNNNNNN
+enum IRIS_ERROR spi_init(int *spi_dev, struct gpiod_line_request **spi_cs_request, struct gpiod_edge_event_buffer **event_buffer){
+
+    int errorCheck = NO_ERROR;
+    int loopCounter = 0;
+
+    log_write(LOG_INFO, "SPI-INIT: Start setup of SPI interface with OBC");
+    
+    //! SHOULD I SPLIT EACH ATTEMPT UP INTO SEPARATE LOOPS
+    do{
+        loopCounter++;
+        *spi_dev = spi_bus_setup();
+        if (*spi_dev == SPI_SETUP_ERROR){
+            errorCheck = SPI_SETUP_ERROR;
+            continue;
+        } 
+        *spi_cs_request = spi_cs_setup();
+        if (*spi_cs_request == NULL){
+            spi_close(*spi_dev);
+            errorCheck = SPI_SETUP_ERROR;
+            continue;
+        }
+        *event_buffer = gpiod_edge_event_buffer_new(EDGE_EVENT_BUFF_SIZE);
+        if (*event_buffer == NULL){
+            spi_close(*spi_dev);
+            gpiod_line_request_release(*spi_cs_request);
+            errorCheck = SPI_SETUP_ERROR;
+            continue;
+        }
+        errorCheck = NO_ERROR;
+    }while((errorCheck == SPI_SETUP_ERROR) && (loopCounter < MAX_SPI_INIT_ATTEMPTS));
+    
+    loopCounter = 0;
+    // if(errorCheck == NO_ERROR){
+    //     do{
+    //         errorCheck = spi_bus_test(*spi_dev, *spi_cs_request, *event_buffer);
+    //         loopCounter++;
+    //     }while((errorCheck == SPI_TEST_ERROR) && (loopCounter < MAX_SPI_INIT_ATTEMPTS));
+
+    //     if(errorCheck != NO_ERROR){
+    //         spi_close(*spi_dev);
+    //         gpiod_edge_event_buffer_free(*event_buffer);
+    //         gpiod_line_request_release(*spi_cs_request);
+    //     }
+    // }
+
+    log_write(LOG_INFO, "SPI-INIT: Finished setup attempt of SPI interface with OBC");
+
+    return errorCheck;
+}
+
 
 /**
  * @brief Read data as 8-bit packets from SPI Peripheral
  * 
- * @param fd Configured SPI bus instance
+ * @param fileDesc Configured SPI bus instance
  * @param rx_buffer Pointer to array buffer that will store data being read
  * @param rx_len Number of 8-bit packets to read from SPI Peripheral
  * @param cs_request Pointer to structure that contains the CS instance
  * @return Iris error code indicating the success or failure of function
  */
-//! NEED TO ADD ERROR CHECKING
-enum IRIS_ERROR spi_read(int fd, uint8_t *rx_buffer, uint8_t rx_len, struct gpiod_line_request *cs_request){
+enum IRIS_ERROR spi_read(int fileDesc, uint8_t *rx_buffer, uint16_t rx_len, struct gpiod_line_request *cs_request){
+
+    int retVal = 0;
     struct spi_ioc_transfer spi_msg[1];
-    int val;
     memset(spi_msg, 0, sizeof(spi_msg));
 
     spi_msg[0].rx_buf = (unsigned long)rx_buffer;
     spi_msg[0].len = rx_len;
 
     cs_request = cs_toggle(cs_request, CS_RW);
-    val = ioctl(fd, SPI_IOC_MESSAGE(1), spi_msg);
+    retVal = ioctl(fileDesc, SPI_IOC_MESSAGE(1), spi_msg);
     cs_request = cs_toggle(cs_request, CS_MONITOR);
 
-    if(val == rx_len){
+    if(retVal == rx_len){
         return NO_ERROR;
-    }else{
-        return SPI_READ_ERROR;
     }
+    return SPI_READ_ERROR;
 }
 
 /**
  * @brief Write data as 8-bit packets to SPI Peripheral
  * 
- * @param fd Configured SPI bus instance
+ * @param fileDesc Configured SPI bus instance
  * @param tx_buffer Pointer to array buffer storing data to be written
  * @param tx_len Number of 8-bit packets to write to SPI Peripheral
  * @param cs_request Pointer to structure that contains the CS instance
  * @return Iris error code indicating the success or failure of function
  */
-//! NEED TO ADD ERROR CHECKING
-enum IRIS_ERROR spi_write(int fd, uint8_t *tx_buffer, uint16_t tx_len, struct gpiod_line_request *cs_request){
+enum IRIS_ERROR spi_write(int fileDesc, const uint8_t *tx_buffer, uint16_t tx_len, struct gpiod_line_request *cs_request){
+
+    int retVal = 0;
     struct spi_ioc_transfer spi_msg[1];
     memset(spi_msg, 0, sizeof(spi_msg));
-    int val;
 
     spi_msg[0].tx_buf = (unsigned long)tx_buffer;
     spi_msg[0].len = tx_len;
 
     cs_request = cs_toggle(cs_request, CS_RW);
-    val = ioctl(fd, SPI_IOC_MESSAGE(1), spi_msg);
+    retVal = ioctl(fileDesc, SPI_IOC_MESSAGE(1), spi_msg);
     cs_request = cs_toggle(cs_request, CS_MONITOR);
 
-    if(val == tx_len){
+    if(retVal == tx_len){
         return NO_ERROR;
-    }else{
-        return SPI_WRITE_ERROR;
     }
+    return SPI_WRITE_ERROR;
+
 }
 
 
@@ -164,7 +219,7 @@ enum IRIS_ERROR spi_write(int fd, uint8_t *tx_buffer, uint16_t tx_len, struct gp
 struct gpiod_line_request *spi_cs_setup(void){
 
     struct gpiod_line_request *request = NULL;
-    char *gpioDev = GPIOCHIP;
+    const char *gpioDev = GPIOCHIP;
     //create request for SPI CS configuration
     request = gpio_config_input_detect(gpioDev, SPI_CE_N, EDGE_FALL, "IRIS SPI CS");
 
@@ -181,7 +236,7 @@ struct gpiod_line_request *spi_cs_setup(void){
 int spi_bus_setup(void){
 
     spi_config_t spi_config_test;
-    int spi_dev;
+    int spi_dev = 0;
 
     spi_config_test.mode = SPI_MODE_TYP_0;
     spi_config_test.speed = SPI_SPEED;
@@ -193,18 +248,6 @@ int spi_bus_setup(void){
     spi_dev = spi_open(spi_device_name, spi_config_test);
 
     return spi_dev;
-
-}
-
-uint8_t checksum_calc(uint8_t *tx_buffer, uint8_t bytesRead){
-
-    uint16_t sum = 0; // Use 16 bits to prevent overflow during summation
-    
-    for (int i = 1; i < bytesRead + 1; i++) {
-        sum += tx_buffer[i]; // Add each packet to the sum
-    }
-
-    return (uint8_t)(sum & 0xFF); // Reduce sum to 8 bits
 
 }
 
@@ -225,9 +268,6 @@ enum IRIS_ERROR spi_reinit(int *spi_dev, struct gpiod_line_request **spi_cs_requ
 }
 
 
-
-
-
 /**
  * @brief Write a file to SPI Peripheral. Currently only simple files such as binary / text have been verified, 
  *        may need to be modified to handle image files.
@@ -241,28 +281,37 @@ enum IRIS_ERROR spi_reinit(int *spi_dev, struct gpiod_line_request **spi_cs_requ
 //! MODIFY TO WORK WITH IMAGE FILES
 enum IRIS_ERROR spi_file_write(int spi_dev, struct gpiod_line_request **spi_cs_request, char *file_path, struct gpiod_edge_event_buffer **event_buffer){
 
-    uint8_t txBuffer[SPI_FILE_BUFFER_LEN * 3];
-    uint8_t checksum;
-    char logBuffer[255];
+    uint8_t txBuffer[SPI_FILE_BUFFER_LEN * 3] = {0};
+    char logBuffer[LOG_BUFFER_SIZE];
     int bytesRead = 0;
-    int writeNum = 0;
+    IRIS_ERROR error = NO_ERROR;
+    uint8_t checksum[SHA256_DIGEST_LENGTH + 1];
+    checksum[0] = FILE_TRANSFER;
 
     log_write(LOG_INFO, "SPI-FILE-WRITE: Begin file write onto SPI bus too OBC");
+
+    //! ADD ERROR DETECT FOR CHECKSUM
+    sha256_checksum(file_path, checksum + 1);
 
     FILE *file = fopen(file_path, "rb");
 
     if (file) {
+        error = spi_write(spi_dev, checksum, sizeof(checksum), *spi_cs_request);
+        if (error == SPI_WRITE_ERROR){
+            log_write(LOG_ERROR, "SPI-FILE-WRITE: Failed to write Checksum onto SPI bus due to 'spi_write' FAIL");
+            return SPI_FILE_WRITE_ERROR;
+        }
 
-        bytesRead = fread(txBuffer, 1, SPI_FILE_BUFFER_LEN, file);
+        bytesRead = (int)fread(txBuffer, 1, SPI_FILE_BUFFER_LEN, file);
         do {
-            writeNum = spi_write(spi_dev, txBuffer, bytesRead, spi_cs_request);
-            if (writeNum != bytesRead){
+            error = spi_write(spi_dev, txBuffer, bytesRead, *spi_cs_request);
+            if (error == SPI_WRITE_ERROR){
                 log_write(LOG_ERROR, "SPI-FILE-WRITE: Failed to write file onto SPI bus due to 'spi_write' FAIL");
                 return SPI_FILE_WRITE_ERROR;
             }
             //usleep(15);
 
-            bytesRead = fread(txBuffer, 1, SPI_FILE_BUFFER_LEN, file);
+            bytesRead = (int)fread(txBuffer, 1, SPI_FILE_BUFFER_LEN, file);
 
         } while (bytesRead > 0);
         fclose(file);
@@ -277,15 +326,18 @@ enum IRIS_ERROR spi_file_write(int spi_dev, struct gpiod_line_request **spi_cs_r
 }
 
 
-
-enum IRIS_ERROR spi_file_read(int spi_dev, struct gpiod_line_request **spi_cs_request, struct gpiod_edge_event_buffer **event_buffer, char *file_path){
+//! NEED TO FIX FUNCTION
+//! NEED IT TO PROPERLY DETECT WHEN THE FILE READ IS DONE
+enum IRIS_ERROR spi_file_read(int spi_dev, struct gpiod_line_request **spi_cs_request, struct gpiod_edge_event_buffer **event_buffer, const char *file_path){
 
     uint8_t rxBuffer[SPI_FILE_BUFFER_LEN];
-    uint8_t checksum;
-    char logBuffer[255];
-    int bytesRead = 0;
-    int readNum = 0;
-    bool cs_edge = false;
+    char logBuffer[LOG_BUFFER_SIZE];
+    int bytesWrote = 0;
+    IRIS_ERROR error = NO_ERROR;
+    
+    //bool cs_edge = false;
+    //uint8_t checksum[SHA256_DIGEST_LENGTH];
+
     log_write(LOG_INFO, "SPI-FILE-WRITE: Begin file write onto SPI bus too OBC");
 
     FILE *file = fopen(file_path, "wb");
@@ -294,28 +346,43 @@ enum IRIS_ERROR spi_file_read(int spi_dev, struct gpiod_line_request **spi_cs_re
         do {
             //cs_edge = signal_edge_detect(*spi_cs_request, *event_buffer);
             //if (cs_edge == true){
-                readNum = spi_read(spi_dev, rxBuffer, 255, spi_cs_request);
+                error = spi_read(spi_dev, rxBuffer, SPI_FILE_BUFFER_LEN, *spi_cs_request);
                 //checksum = checksum_calc(txBuffer, bytesRead);
                 //txBuffer[0] = checksum;
-            if (readNum != 255){
+            if (error != NO_ERROR){
                 log_write(LOG_ERROR, "SPI-FILE-WRITE: Failed to write file onto SPI bus due to 'spi_write' FAIL");
                 return SPI_FILE_WRITE_ERROR;
             }
             
-            bytesRead = fwrite(rxBuffer, 1, SPI_FILE_BUFFER_LEN, file);
+            bytesWrote = (int)fwrite(rxBuffer, 1, SPI_FILE_BUFFER_LEN, file);
             //}
-        } while (bytesRead > 0);
+        } while (bytesWrote > 0);
         fclose(file);
 
         log_write(LOG_INFO, "SPI-FILE-WRITE: Completed file write onto SPI bus too OBC");
         return NO_ERROR;
     }
 
+    fclose(file);
+
     snprintf(logBuffer, sizeof(logBuffer), "SPI-FILE-WRITE: Failed to open file %s", file_path);
     log_write(LOG_ERROR, logBuffer);
+
     return SPI_FILE_WRITE_ERROR;
 }
 
+enum IRIS_ERROR spi_bus_test_compare(const uint8_t *buffer){
+
+    uint8_t reference[SPI_TEST_MSG_SIZE] = SPI_TEST_MSG;
+
+    for (int index = 0; index < sizeof(reference); index++){
+        if(buffer[index] != reference[index]){
+            return SPI_TEST_ERROR;
+        }
+    }
+    return NO_ERROR;
+
+}
 
 /**
  * @brief Test functionality of the SPI Interface.
@@ -329,21 +396,19 @@ enum IRIS_ERROR spi_file_read(int spi_dev, struct gpiod_line_request **spi_cs_re
  */
 enum IRIS_ERROR spi_bus_test(int spi_dev, struct gpiod_line_request *spi_cs_request, struct gpiod_edge_event_buffer *event_buffer){
 
-    uint8_t buffer[9] = SPI_TEST_MSG;
-    int rwVal = 0;
+    uint8_t buffer[SPI_TEST_MSG_SIZE] = SPI_TEST_MSG;
     uint16_t rwNum = sizeof(buffer);
     enum IRIS_ERROR error = NO_ERROR;
 
     log_write(LOG_INFO, "SPI-BUS-TEST: Begin SPI bus test transfer too OBC");
 
-    rwVal = spi_write(spi_dev, buffer, rwNum, spi_cs_request);
-    if (rwVal != rwNum){
+    error = spi_write(spi_dev, buffer, rwNum, spi_cs_request);
+    if (error == SPI_WRITE_ERROR){
         log_write(LOG_ERROR, "SPI-BUS-TEST: Failed to write test message onto SPI bus");
-        error = SPI_TEST_ERROR;
+        return SPI_TEST_ERROR;
     }
 
-    clock_t start_time = clock();
-    double elaspsedTime = 0;
+    int start_time = get_time_seconds();
     bool cs_edge = false;
 
     log_write(LOG_INFO, "SPI-BUS-TEST: Begin SPI bus test read from OBC");
@@ -352,18 +417,16 @@ enum IRIS_ERROR spi_bus_test(int spi_dev, struct gpiod_line_request *spi_cs_requ
         cs_edge = signal_edge_detect(spi_cs_request, event_buffer);
 
         if(cs_edge == true){
-            rwVal = spi_read(spi_dev, buffer, (rwNum-1), spi_cs_request);
-            if (rwVal != (rwNum - 1)){
+            error = spi_read(spi_dev, buffer, rwNum, spi_cs_request);
+            if (error == SPI_READ_ERROR){
                 log_write(LOG_ERROR, "SPI-BUS-TEST: Failed to read test message from OBC");
                 return SPI_TEST_ERROR;
-            }else{
-                log_write(LOG_INFO, "SPI-BUS-TEST: Completed read test message from OBC");
-                return error;
             }
+            log_write(LOG_INFO, "SPI-BUS-TEST: Completed read of test message from OBC");
+            return spi_bus_test_compare(buffer);
         }
-
-        elaspsedTime = ((double)(clock() - start_time) / CLOCKS_PER_SEC);
-    }while(elaspsedTime < SPI_TEST_TIMEOUT);
+ 
+    }while((get_time_seconds() - start_time) < SPI_TEST_TIMEOUT);
 
     log_write(LOG_ERROR, "SPI-BUS-TEST: TIMEOUT Failed to read test message from OBC");
     return SPI_TEST_ERROR;

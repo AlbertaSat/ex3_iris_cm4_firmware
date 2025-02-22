@@ -178,20 +178,23 @@
 #define CURRENT_SENSOR_ADDR_5V  0x40
 #define CURRENT_SENSOR_ADDR_CAM 0x41
 
-//Max Current WARNINGS in Mili-Amps!
-#define CURR_3V3_MAX  250  //250mA
-#define CURR_5V_MAX   600  //600mA
-#define CURR_CAM_MAX  1000 //1000mA
+//Max Current WARNINGS in Mili-Amps!ddd
+#define CURR_3V3_MAX  100  //250mA
+#define CURR_5V_MAX   400  //600mA
+#define CURR_CAM_MAX  1 //1000mA
 
 
 enum IRIS_ERROR current_error_code(uint8_t currAddr, enum IRIS_ERROR errorType);
 enum IRIS_ERROR current_setup(uint8_t currAddr);
 enum IRIS_ERROR current_func_validate(uint8_t currAddr);
 enum IRIS_ERROR current_monitor_reset_trig(uint8_t currAddr);
+enum IRIS_ERROR current_monitor_reset(uint8_t currAddr);
 int current_monitor_status(uint8_t currAddr, uint8_t *errorCount);
 uint16_t read_current(uint8_t currAddr);
 uint16_t read_power(uint8_t currAddr);
 uint16_t read_bus_voltage(uint8_t currAddr);
+uint16_t read_pk_power(uint8_t currAddr);
+void current_limit(enum IRIS_ERROR *errorBuffer, uint8_t *errorCount);
 
 
 #endif

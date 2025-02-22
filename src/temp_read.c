@@ -1,15 +1,3 @@
-#include "temp_read.h"
-#include "i2c.h"
-#include "main.h"
-#include "gpio.h"
-#include "logger.h"
-#include "error_handler.h"
-
-#include <stdint.h>
-#include <stdio.h>
-#include <errno.h>
-#include <stdlib.h>
-
 /**
  * @file temp_read.c
  * @author Noah Klager
@@ -28,9 +16,16 @@
  * 
  */
 
-//Used to convert Temperature sensor register value into actual measurement.
-//Can be altered to help calibrate the sensor
-#define CONVERSION_FACTOR 1 
+#include "error_handler.h"
+#include "i2c.h"
+#include "logger.h"
+#include "main.h"
+#include "temp_read.h"
+
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 
 /**
  * @brief Converts a general error code into a specific one used to indicate which
@@ -137,10 +132,10 @@ enum IRIS_ERROR temp_error_code(uint8_t tempAddr, enum IRIS_ERROR errorType){
  */
 enum IRIS_ERROR temp_setup(uint8_t tempAddr){
 
-    int bus; 
-    int tempErrorCheck;
-    char logBuffer[255];
+    int bus = 0;
+    enum IRIS_ERROR tempErrorCheck = NO_ERROR;
     enum IRIS_ERROR error = NO_ERROR;
+    char logBuffer[LOG_BUFFER_SIZE];
 
     uint8_t regAddr[2] = TEMP_REG_ADDR;
     uint8_t regConfig[2] = TEMP_REG_DEFAULT; 
@@ -185,11 +180,11 @@ enum IRIS_ERROR temp_setup(uint8_t tempAddr){
 //! ADD CODE FOR RESETING DEVICE AND CHECKING FOR FAULTS IE OPEN CIRCUIT
 //! ADD CODE FOR DEALING WITH DIFFERNET ERROR (WRONG CONFIG REG, INVALID TEMP MEAS)
 enum IRIS_ERROR temp_func_validate(uint8_t tempAddr){
-    
-    int bus;
-    int tempErrorCheck;
+
+    int bus = 0;
+    enum IRIS_ERROR tempErrorCheck = NO_ERROR;
     enum IRIS_ERROR error = NO_ERROR;
-    char logBuffer[255];
+    char logBuffer[LOG_BUFFER_SIZE];
 
     uint8_t regAddr[2] = TEMP_REG_ADDR;
     uint8_t regConfig[2] = TEMP_REG_DEFAULT; 
@@ -259,9 +254,9 @@ enum IRIS_ERROR temp_func_validate(uint8_t tempAddr){
  */
 enum IRIS_ERROR temp_reset_trig(uint8_t tempAddr){
 
-    int bus;
-    int errorCheck;
-    char logBuffer[255];
+    int bus = 0;
+    enum IRIS_ERROR errorCheck = NO_ERROR;
+    char logBuffer[LOG_BUFFER_SIZE];
     uint8_t regData[2] = {TMP_REG_SW_RST, 0x01};
 
     snprintf(logBuffer, sizeof(logBuffer), "TEMP-RESET-TRIG: Begin trigger reset of Temperature Sensor 0x%02x",tempAddr);
@@ -300,9 +295,9 @@ enum IRIS_ERROR temp_reset_trig(uint8_t tempAddr){
  */
 enum IRIS_ERROR temp_reset(uint8_t tempAddr){
 
-    int errorCheck;
     int loopCounter = 0;
-    char logBuffer[255];
+    enum IRIS_ERROR errorCheck = NO_ERROR;
+    char logBuffer[LOG_BUFFER_SIZE];
 
     snprintf(logBuffer, sizeof(logBuffer), "TEMP-SENSOR-RESET: Begin reset of Temperature Sensor 0x%02x", tempAddr);
     log_write(LOG_INFO, logBuffer);
@@ -348,7 +343,7 @@ void temperature_limit(enum IRIS_ERROR *errorBuffer, uint8_t *errorCount){
     int8_t temp3 = 0;
     int8_t temp4 = 0;
 
-    char logBuffer[255];
+    char logBuffer[LOG_BUFFER_SIZE];
 
     temp1 = read_temperature(TEMP_SENSOR_1_ADDR);
     temp2 = read_temperature(TEMP_SENSOR_2_ADDR);
@@ -409,7 +404,7 @@ void temperature_limit(enum IRIS_ERROR *errorBuffer, uint8_t *errorCount){
  * @param HighByte Content of register from temperature sensor
  * @return Signed temperature value from sensor
  */
-int convert_temp_read(uint8_t HighByte){
+int8_t convert_temp_read(uint8_t HighByte){
     return HighByte * CONVERSION_FACTOR;
 }
 
@@ -422,11 +417,12 @@ int convert_temp_read(uint8_t HighByte){
  */
 //! NEED TO MAKE ERROR CODES OUT OF 'READ_TEMPERATURE' RANGE (-40 -> 120)
 //! MAYBE CHECK IF THE TEMPERATURE VALUIE WILL BE CORRECT 
-int read_temperature(uint8_t tempAddr){
+int8_t read_temperature(uint8_t tempAddr){
 
-    int bus;
-    int errorCheck;
-    char logBuffer[255];
+    int bus = 0;
+    enum IRIS_ERROR errorCheck = NO_ERROR;
+    char logBuffer[LOG_BUFFER_SIZE];
+    int8_t temp = 0;
 
     uint8_t reg = TMP_REG_RMT_1_HIGH;
     uint8_t regData[1];
@@ -448,5 +444,10 @@ int read_temperature(uint8_t tempAddr){
     }
     
     i2c_close(bus);
-    return convert_temp_read(*regData);
+
+    temp = convert_temp_read(*regData);
+    snprintf(logBuffer, sizeof(logBuffer), "TEMP-READ: Read Temperature of %dC from Sensor 0x%02x", temp, tempAddr);
+    log_write(LOG_INFO, logBuffer);
+
+    return temp;
 }

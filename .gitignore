@@ -52,7 +52,7 @@ Mkfile.old
 dkms.conf
 
 #VSCode Info
-/.vscode/* 
+#/.vscode/* 
 
 #Build Files
 /build/*
